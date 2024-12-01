@@ -1,25 +1,19 @@
-import { Text, View, StyleSheet } from "react-native";
-import * as Location from "expo-location"
-import { useState } from "react";
-
-export default function Index() {
-  // Trang thai cua location service
-  const [locationServiceEnabled, setLocationService] = useState(false)
-  // Dia chi hien tai
-  const [currentAddress, setCurrentAddress] = useState("Locating ...")
-
-
+import { Text, View, StyleSheet, Alert, Linking, Platform, Button } from "react-native";
+import { Link } from "expo-router";
+export default function index() {
   return (
-    <View style={styles.center}>
-      <Text>Home Screen</Text>
+    <View>
+      <Link href="/first">First Screen</Link>
+      <Link href="/welcome">Welcome Screen</Link>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  center : {
+  firstScreen: {
     flex: 1,
+    backgroundColor: "#F5CB58",
     justifyContent: "center",
-    alignItems: "center",
-  }
-})
+    alignItems: "center"
+  },
+});
