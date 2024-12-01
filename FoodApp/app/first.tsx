@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Alert, Linking, Platform, Button } from "react-native";
+import { View, StyleSheet, Alert, Linking } from "react-native";
 import * as Location from "expo-location";
 import { useState, useEffect } from "react";
 import Constrains from "expo-constants";
@@ -16,8 +16,8 @@ export default function firstScreen() {
 
   useEffect(() => {
     const checkAndGetLocation = async () => {
-      await checkLocationServicesEnabled();
       await checkLocationPermission();
+      await checkLocationServicesEnabled();
       await getCurrentLocation();
     };
 
@@ -29,7 +29,7 @@ export default function firstScreen() {
 
     if (!enabled) {
       Alert.alert(
-        "Location Services not Enabled",
+        "Location Services Not Enabled",
         `Please enable location services on your device`,
         [
           {
@@ -57,11 +57,7 @@ export default function firstScreen() {
           {
             text: "OK",
             onPress: () => {
-              if (Platform.OS === "ios") {
-                Linking.openURL("app-settings:");
-              } else if (Platform.OS === "android") {
-                Linking.openSettings();
-              }
+              Linking.openSettings();
             },
           },
         ]
@@ -85,16 +81,6 @@ export default function firstScreen() {
   return (
     <View style={styles.firstScreen}>
       <Logo />
-      {/* <Button
-        onPress={async () => {
-          await checkLocationServicesEnabled();
-          await checkLocationPermission();
-          await getCurrentLocation();
-          console.log(currentAddress);
-        }}
-        title="Press me">
-      </Button>
-      <Text>{`${currentAddress?.name}, ${currentAddress?.district}, ${currentAddress?.city}, ${currentAddress?.country}`}</Text> */}
     </View>
   );
 }
