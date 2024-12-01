@@ -3,6 +3,8 @@
 __generated__
 web-build
 bare-apps
+expo-env.d.ts
+app-example
 
 # macOS
 .DS_Store
@@ -45,6 +47,7 @@ xcuserdata
 *.iml
 .gradle
 .idea
+.vscode
 
 # Eclipse
 .project
@@ -128,3 +131,6 @@ docs/pages/versions/*/react-native/*.diff
 
 # iOS
 **/ios/.xcode.env.local
+
+
+
