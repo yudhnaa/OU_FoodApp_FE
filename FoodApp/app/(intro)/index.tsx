@@ -2,22 +2,25 @@ import { View, StyleSheet, Alert, Linking } from "react-native";
 import * as Location from "expo-location";
 import { useState, useEffect } from "react";
 import Constrains from "expo-constants";
-import Logo from "../assets/images/logo-first.svg";
+import Logo from "../../assets/images/logo-first.svg";
+import { router } from "expo-router";
+import {canGoBack} from "expo-router/build/global-state/routing";
 
-export default function firstScreen() {
+export default function index() {
+
   // Trang thai cua location service cua thiet bi
-  const [locationServicesEnabled, setLocationServices] =
-    useState<boolean>(false);
+  const [locationServicesEnabled, setLocationServices] = useState<boolean>(false);
+
   // Trang thai cua quyen truy cap vi tri
-  const [locationPermission, setLocationPermission] =
-    useState<string>("denied");
+  const [locationPermission, setLocationPermission] = useState<string>("denied");
+
   // Dia chi hien tai
   const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress | null>(null);
 
   useEffect(() => {
     const checkAndGetLocation = async () => {
-      await checkLocationPermission();
       await checkLocationServicesEnabled();
+      await checkLocationPermission();
       await getCurrentLocation();
     };
 
@@ -77,6 +80,12 @@ export default function firstScreen() {
     });
     setCurrentAddress(address[0]);
   };
+
+  useEffect(() => {
+    if (locationServicesEnabled && locationPermission === "granted" && currentAddress) {
+      router.replace("/welcome");
+    }
+  }, [locationServicesEnabled, locationPermission, currentAddress]);
 
   return (
     <View style={styles.firstScreen}>

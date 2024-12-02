@@ -1,17 +1,25 @@
 import { Text, View, StyleSheet, Alert, Linking, Platform, Button, Pressable } from "react-native";
-import * as Location from "expo-location";
 import { useState, useEffect } from "react";
 import Constrains from "expo-constants";
-import Logo from "../assets/images/logo-welcome.svg";
+import Logo from "../../assets/images/logo-welcome.svg";
+import {Link, router} from "expo-router";
 
 export default function welcome() {
+
+  const login = () => {
+
+  }
+  const register = () => {
+
+  }
+
   return (
     <View style={styles.welcomeScreen}>
       <Logo style={styles.logo} />
-      <Pressable style={[styles.button, {backgroundColor: "#f5cb58"}]} onPress={() => { }}>
+      <Pressable style={[styles.button, {backgroundColor: "#f5cb58"}]} onPress={() => {router.push("/register")}}>
         <Text style={styles.text}>Log In</Text>
       </Pressable>
-      <Pressable style={[styles.button, {backgroundColor: "#F3E9B5"}]} onPress={() => { }}>
+      <Pressable style={[styles.button, {backgroundColor: "#F3E9B5"}]} onPress={() => {router.push("/register")}}>
         <Text style={styles.text}>Register</Text>
       </Pressable>
     </View>
