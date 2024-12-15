@@ -1,192 +1,199 @@
-import {Text, View, StyleSheet, Alert, Linking, Platform, Button, Pressable, TextInput} from "react-native";
-import {useState, useEffect} from "react";
-import Constrains from "expo-constants";
-import Logo from "../../assets/images/logo-welcome.svg";
-import {Link, router} from "expo-router";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
-import {Dropdown} from 'react-native-element-dropdown';
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, TextInput, Pressable } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Dropdown } from "react-native-element-dropdown";
+import {router} from "expo-router";
 
 const data = [
-    {label: 'Item 1', value: '1'},
-    {label: 'Item 2', value: '2'},
-    {label: 'Item 3', value: '3'},
+    { label: "Item 1", value: "1" },
+    { label: "Item 2", value: "2" },
+    { label: "Item 3", value: "3" },
 ];
 
 export default function CSignUp() {
-    const [dropdownValue, setdropdownValue] = useState<string | null>(null);
-
+    const [dropdownValue, setDropdownValue] = useState<string | null>(null);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [dayOfBirth, setDayOfBirth] = useState<Date>(new Date())
+    const [dayOfBirth, setDayOfBirth] = useState<Date>(new Date());
 
     useEffect(() => {
 
-    }, [dayOfBirth])
+    }, [dayOfBirth]);
 
     return (
         <View style={styles.backGround}>
             <Text style={styles.title}>New Account</Text>
 
             <View style={styles.signUp}>
-
+                {/* First and Last Name */}
                 <View style={styles.nameFieldContainer}>
-                    <View style={styles.nameFieldItem}>
-                        <Text style={styles.text}>First Name</Text>
-                        <View style={styles.textInput}>
-                            <TextInput style={{"marginLeft": 10, "marginRight": 10}}
-                                       placeholder={"First Name"}></TextInput>
+                    {["First Name", "Last Name"].map((label, index) => (
+                        <View style={styles.nameFieldItem} key={index}>
+                            <Text style={styles.text}>{label}</Text>
+                            <View style={styles.textInput}>
+                                <TextInput
+                                    style={styles.placeHolder}
+                                    placeholder={label}
+                                />
+                            </View>
                         </View>
-                    </View>
-
-                    <View style={styles.nameFieldItem}>
-                        <Text style={styles.text}>Last Name</Text>
-                        <View style={styles.textInput}>
-                            <TextInput style={{"marginLeft": 10, "marginRight": 10}}
-                                       placeholder={"Last Name"}></TextInput>
-                        </View>
-                    </View>
+                    ))}
                 </View>
 
-                <View style={styles.textInputCotainer}>
+                {/* Password */}
+                <View style={styles.textInputContainer}>
                     <Text style={styles.text}>Password</Text>
                     <View style={styles.textInput}>
-                        <TextInput style={{"marginLeft": 10, "marginRight": 10}}
-                                   placeholder={"Enter password ..."}></TextInput>
+                        <TextInput style={styles.placeHolder} placeholder="Enter password ..." />
                     </View>
                 </View>
 
-                <View style={styles.textInputCotainer}>
+                {/* Email */}
+                <View style={styles.textInputContainer}>
                     <Text style={styles.text}>Email</Text>
                     <View style={styles.textInput}>
-                        <TextInput style={{"marginLeft": 10, "marginRight": 10}}
-                                   placeholder={"Enter email ..."}></TextInput>
+                        <TextInput style={styles.placeHolder} placeholder="Enter email ..." />
                     </View>
                 </View>
 
-                <View style={styles.textInputCotainer}>
+                {/* Phone Number */}
+                <View style={styles.textInputContainer}>
                     <Text style={styles.text}>Phone Number</Text>
-                    <View style={[styles.textInput, {"flexDirection": "row"}]}>
-                        <TextInput style={{"marginLeft": 30, "width": "10%"}} editable={false}>+84</TextInput>
-                        <TextInput style={{"marginRight": 10, "width": "90%"}}
-                                   placeholder={"Enter phone number ..."}></TextInput>
+                    <View style={[styles.textInput, { flexDirection: "row" }]}>
+                        <TextInput style={{ marginLeft: 10, width: "15%" }} editable={false}>
+                            +84
+                        </TextInput>
+                        <TextInput
+                            style={{ marginLeft: 10, width: "80%" }}
+                            placeholder="Enter phone number ..."
+                        />
                     </View>
                 </View>
 
+                {/* Role and Date of Birth */}
                 <View style={styles.nameFieldContainer}>
                     <View style={styles.nameFieldItem}>
                         <Text style={styles.text}>Role</Text>
                         <View style={styles.textInput}>
                             <Dropdown
-                                style={[styles.dropdown]}
-                                placeholderStyle={styles.placeholderStyle}
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeHolder}
                                 selectedTextStyle={styles.selectedTextStyle}
                                 iconStyle={styles.iconStyle}
                                 data={data}
                                 maxHeight={300}
                                 labelField="label"
                                 valueField="value"
-                                placeholder={'Select item'}
+                                placeholder="Select item"
                                 value={dropdownValue}
-                                onChange={item => {
-                                    setdropdownValue(item.value);
-                                }}
+                                onChange={(item) => setDropdownValue(item.value)}
                             />
-
                         </View>
                     </View>
 
                     <View style={styles.nameFieldItem}>
                         <Text style={styles.text}>Date Of Birth</Text>
-                        <View style={[styles.textInput, { alignItems: "center", justifyContent: "center" }]}>
+                        <View style={[styles.textInput, { alignItems: "center" }]}>
                             <Pressable onPress={() => setDatePickerVisibility(true)}>
-                                <Text>{`${dayOfBirth.getDate()}/${(dayOfBirth.getMonth() + 1).toString()}/${dayOfBirth.getFullYear().toString()}`}</Text>
-                                <DateTimePickerModal
-                                    isVisible={isDatePickerVisible}
-                                    mode="date"
-                                    onConfirm={(date) => {
-                                        setDatePickerVisibility(false);
-                                        setDayOfBirth(date);
-                                    }}
-                                    onCancel={() => {
-                                        setDatePickerVisibility(false);
-                                    }}
-                                />
+                                <Text>
+                                    {`${dayOfBirth.getDate()}/${dayOfBirth.getMonth() + 1}/${dayOfBirth.getFullYear()}`}
+                                </Text>
                             </Pressable>
+                            <DateTimePickerModal
+                                isVisible={isDatePickerVisible}
+                                mode="date"
+                                onConfirm={(date) => {
+                                    setDatePickerVisibility(false);
+                                    setDayOfBirth(date);
+                                }}
+                                onCancel={() => setDatePickerVisibility(false)}
+                            />
                         </View>
-
                     </View>
                 </View>
 
+                <Pressable style={[styles.button, {marginVertical: "3%"}]} onPress={() => {router.push("/register")}}>
+                    <Text style={styles.loginText}>Sign Up</Text>
+                </Pressable>
 
+                <View>
+                    <Text>Or sign-up with</Text>
+                    <Pressable style={{justifyContent:"center"}}>
+                        <Text style={{textAlign:"center"}}>Google</Text>
+                    </Pressable>
+                </View>
+
+                {/* Terms of Use */}
+                <View style={styles.termsContainer}>
+                    <Text style={{ textAlign: "center" }}>
+                        By continuing, you agree to Terms of Use and Privacy Policy
+                    </Text>
+                </View>
             </View>
-
         </View>
     );
-};
-const styles = StyleSheet.create({
-    nameFieldContainer: {
-        flex: 0.105,
-        flexDirection: "row",
-        marginTop: "5%",
-        width: "80%",
+}
 
-    },
-    nameFieldItem: {
-        flex: 1,
-        flexDirection: "column",
-    },
+const styles = StyleSheet.create({
     backGround: {
         backgroundColor: "#f5cb58",
         flex: 1,
-        justifyContent: "flex-end",
     },
     title: {
         color: "#F8F8F8",
-        fontFamily: "League Spartan",
         fontSize: 28,
-        fontStyle: "normal",
-        fontWeight: 700,
+        fontWeight: "700",
         alignSelf: "center",
-        marginBottom: "10%",
+        marginVertical: 60,
     },
     signUp: {
-        flex: 0.9,
+        flex: 1,
         backgroundColor: "#F5F5F5",
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        alignItems: "center"
+        paddingVertical: 20,
+        alignItems: "center",
     },
-    textInputCotainer: {
-        flex: 0.11,
+    nameFieldContainer: {
+        flexDirection: "row",
         width: "80%",
-        marginTop: "3%"
+        marginBottom: 20,
+    },
+    nameFieldItem: {
+        flex: 1,
+    },
+    textInputContainer: {
+        width: "80%",
+        marginBottom: 20,
     },
     textInput: {
         backgroundColor: "#F3E9B5",
-        flex: 1,
         borderRadius: 15,
+        paddingHorizontal: 10,
+        height: 40,
         justifyContent: "center",
     },
     text: {
         fontSize: 16,
         fontWeight: "500",
-        fontFamily: "LeagueSpartan-Medium",
         color: "#391713",
-        textAlign: "left",
         marginBottom: 4,
-        marginLeft: 8,
-    },
-
-
-    container: {
-        backgroundColor: 'white',
-        padding: 16,
     },
     dropdown: {
         height: 50,
-        borderColor: 'gray',
         borderRadius: 8,
         paddingHorizontal: 8,
+    },
+    placeHolder: {
+        fontSize: 15,
+    },
+    termsContainer: {
+        marginTop: "auto",
+        paddingHorizontal: "10%",
+        paddingBottom: 20,
+    },
+    container: {
+        backgroundColor: 'white',
+        padding: 16,
     },
     label: {
         position: 'absolute',
@@ -197,9 +204,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         fontSize: 14,
     },
-    placeholderStyle: {
-        fontSize: 15,
-    },
     selectedTextStyle: {
         fontSize: 16,
     },
@@ -207,4 +211,20 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
     },
+    button: {
+        width: "45%",
+        height: "6%",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: "5%",
+        backgroundColor: "#e95322",
+    },
+    loginText: {
+        fontSize: 20,
+        textTransform: "capitalize",
+        fontWeight: "500",
+        fontFamily: "LeagueSpartan-Medium",
+        color: "white",
+}
 });
