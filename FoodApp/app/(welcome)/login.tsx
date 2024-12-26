@@ -2,24 +2,25 @@ import React from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import { router } from "expo-router";
 import InputField from "@/components/welcome/inputField";
-import colors from "../../constrants/color";
+import colors from "../../styles/colors";
+import { useState } from "react";
 
 export default function Login() {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <View style={styles.backGround}>
-      <View style={styles.signUp}>
-        
+      <View style={styles.signIn}>
 
         {/* Email */}
-        <InputField label="Email" placeholder="Enter email ..." />
+        <InputField label="Email or phone number" placeholder="Enter email or phone number ..." value={userName} onChange={setUserName} />
 
         {/* Password */}
-        <InputField label="Password" placeholder="Enter password ..." />
-
+        <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword} />
 
         <View style={[styles.buttonContainer, {}]}>
           <Pressable style={[styles.button, { paddingHorizontal: 30 }]} onPress={() => router.push("/registration")}>
-            <Text style={[styles.loginText, {}]}>Sign Up</Text>
+            <Text style={[styles.loginText, {}]}>Sign In</Text>
           </Pressable>
           <Text style={{ paddingHorizontal: 30 }}>Or</Text>
           <Text style={{ paddingHorizontal: 30 }}>Google</Text>
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.Yellow_Base,
     flex: 1,
   },
-  signUp: {
+  signIn: {
     flex: 1,
     backgroundColor: colors.Font_2,
     borderTopLeftRadius: 30,
