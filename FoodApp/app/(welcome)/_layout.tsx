@@ -8,7 +8,7 @@ export default function WelcomeLayout() {
     // route = useRouter()
     return (
         <Stack screenOptions={{
-            headerShown: true,
+            // headerShown: true,
             headerTitleAlign: "center",
             headerTitleStyle: styles.title,
             headerStyle: { backgroundColor: '#F5CB58' },

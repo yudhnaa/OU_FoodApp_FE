@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Image } from "expo-image";
 import {router, Link} from "expo-router";
 
+
 export default function Welcome() {
   return (
     <View style={styles.welcomeScreen}>
