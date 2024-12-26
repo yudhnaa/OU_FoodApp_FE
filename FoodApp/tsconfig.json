@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/(welcome)/welcome.jsx"  ]
+, "app/(welcome)/welcome.tsx", "app/_layout.tsx", "app/(welcome)/registration.tsx", "app/(welcome)/login.tsx", "app/index.tsx", "app/(welcome)/_layout.tsx"  ]
 }

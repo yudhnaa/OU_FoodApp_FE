@@ -1,8 +1,9 @@
 import { Text, View, StyleSheet, Alert, Linking, Platform, Button, Pressable } from "react-native";
 import { useState, useEffect } from "react";
-// import Logo from "../../assets/images/logo/logo-welcome.svg";
 import { Image } from "expo-image";
-import {router, Link} from "expo-router";
+import { router, Link } from "expo-router";
+import colors from "../../styles/colors";
+import fontStyles from "../../styles/fontStyles";
 
 export default function Welcome() {
   return (
@@ -10,15 +11,15 @@ export default function Welcome() {
       <Image
         style={styles.image}
         source={require("../../assets/images/logo/logo-welcome.svg")}
-        contentFit="contain"/>
-        <View style={{flex:0.5, marginTop: "30%"}}>
-            <Pressable style={[styles.button, {backgroundColor: "#f5cb58"}]} onPress={() => {router.push("/login")}}>
-                <Text style={styles.text}>Log In</Text>
-            </Pressable>
-            <Pressable style={[styles.button, {backgroundColor: "#F3E9B5"}]} onPress={() => {router.push("/registration")}}>
-                <Text style={styles.text}>Register</Text>
-            </Pressable>
-        </View>
+        contentFit="contain" />
+      <View style={{ flex: 0.5, marginTop: "30%" }}>
+        <Pressable style={[styles.button, { backgroundColor: "#f5cb58" }]} onPress={() => { router.push("/login") }}>
+          <Text style={[styles.text, fontStyles.Title]}>Log In</Text>
+        </Pressable>
+        <Pressable style={[styles.button, { backgroundColor: "#F3E9B5" }]} onPress={() => { router.push("/registration") }}>
+          <Text style={[styles.text, fontStyles.Title]}>Register</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -31,19 +32,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    width: "150",
-    height: "50",
+    width: 150,
+    height: 50,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: "5%",
   },
   text: {
-    fontSize: 20,
     textTransform: "capitalize",
-    fontWeight: "500",
-    fontFamily: "LeagueSpartan-Medium",
-    color: "#e95322",
+    color: colors.Orange_Base,
   },
   image: {
     marginTop: "50%",

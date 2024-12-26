@@ -17,4 +17,18 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 50,
     },
+    phonePrefix: {
+        flex: 1,
+        backgroundColor: "#F3E9B5",
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        height: 50,
+    },
+    phoneInput: {
+        flex: 3,
+        backgroundColor: "#F3E9B5",
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        height: 50,
+    },
 });
