@@ -31,9 +31,15 @@ export default function Home() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      router.replace("/loading");
+      router.replace("/home");
     }
   }, [fontsLoaded]);
+
+  // useEffect(() => {
+  //   if (fontsLoaded) {
+  //     router.replace("/loading");
+  //   }
+  // }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return (
