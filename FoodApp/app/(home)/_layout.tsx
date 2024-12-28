@@ -10,7 +10,7 @@ export default function HomeLayout() {
             headerStyle: { backgroundColor: '#F5CB58' },
             headerShadowVisible: false,
             headerTitle: () => (
-                <View className="flex-1 flex-row items-center mt-2" style={{flexWrap:"wrap"}}>
+                <View className="flex-1 flex-row items-center mt-2">
                     <TextInput
                         className="bg-white w-[65%] rounded-full h-10 px-3 text-base"
                         placeholder="Search"
@@ -43,16 +43,12 @@ export default function HomeLayout() {
                             />
                         </Pressable>
                     </View>
-                    <View>
-                        <Text className='text-white text-lg font-bold mt-3 pt-2' style={styles.txtGreeting}>Good Morning</Text>
-                        <Text className='font-bold text-white mb-2' style={{color:"#E95322"}}>Rise and shine! It's breakfast time</Text>
-                    </View>
                 </View>
             )
         }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: true }} />
+            <Stack.Screen name="(category)" options={{ headerShown: true }} />
         </Stack>
-        
     )
 }
 

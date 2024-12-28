@@ -1,6 +1,8 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {View,Text} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default function TabBarLayout() {
   return (
@@ -10,7 +12,8 @@ export default function TabBarLayout() {
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: '#E95322',
-          borderRadius: 20,
+          borderTopLeftRadius: 25,
+          borderTopRightRadius: 25,
           height: 60,
           overflow: 'hidden',
         },
@@ -22,8 +25,14 @@ export default function TabBarLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialCommunityIcons name="home-outline" color={focused ? "white" : "black"} size={24} />
           ),
-          headerShown: false,
-        }}
+          headerShown: true,
+          headerStyle: { backgroundColor: '#F5CB58' },
+          headerTitle: () => (
+            <View className="flex-1 flex-col">
+                <Text style={{fontSize: 25, fontFamily: "Spartan_700Bold",color : "white"}}>Good Morning</Text>
+                <Text style={{fontSize: 12, fontFamily: "Spartan_700Bold",color : "#e95322"}}>Rise and Shine! It's breakfast time</Text>
+            </View>
+          )}}
       />
       <Tabs.Screen
         name="food"
@@ -61,6 +70,39 @@ export default function TabBarLayout() {
           headerShown: false,
         }}
       />
+      <Tabs.Screen
+        name="category"
+        options={{
+          href : null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   );
 }
+
+
+const styles = StyleSheet.create({
+  title: {
+    color: "#F8F8F8",
+    fontSize: 25,
+    fontWeight: "700",
+    alignSelf: "center",
+    marginTop: 30,
+    marginBottom: 20
+  },
+  header: {
+      backgroundColor: '#F8C471', // Màu nền của header
+      padding: 10,
+      paddingTop: 40, // Để tạo khoảng cách cho status bar
+    },
+  searchInput: {
+      height: 25,
+      fontSize : 12,
+      width: 100,
+  },
+  txtGreeting:{
+      fontSize:30,
+      fontFamily : "Spartan_700Bold"
+  }
+})

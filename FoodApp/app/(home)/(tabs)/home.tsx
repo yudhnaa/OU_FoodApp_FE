@@ -61,7 +61,7 @@ const renderItem = ({ item }) => {
             <View className='ml-4 flex-col justify-center items-center'>
                 <View className='h-20 rounded-full' style={{backgroundColor: '#F3E9B5',flex : 1,justifyContent: 'center',alignItems: 'center'}}>
                     <Pressable
-                        onPress={() => router.push(`/category/${category.name}`)} // chuyển đến trang food với category.name
+                        onPress={() => router.navigate(`/(tabs)/category/${category.name}`)} // chuyển đến trang food với category.name
                         style={styles.categoryItem}
                     >
                         <Image source={category.icon}
