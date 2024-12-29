@@ -1,10 +1,15 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {View,Text} from 'react-native';
-import { StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { Icon } from 'react-native-paper';
+import { router } from 'expo-router';
+import { usePathname } from 'expo-router';
+import SearchHeader from '@/components/home/searchHeader';
+import BackButton from '@/components/home/backButton';
 
 export default function TabBarLayout() {
+  const pathname = usePathname();
   return (
     <Tabs
       screenOptions={{
@@ -16,6 +21,8 @@ export default function TabBarLayout() {
           borderTopRightRadius: 25,
           height: 60,
           overflow: 'hidden',
+          flex: 1,
+          justifyContent: 'center',
         },
       }}
     >
@@ -27,20 +34,24 @@ export default function TabBarLayout() {
           ),
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          headerTitle: () => (
-            <View className="flex-1 flex-col">
-                <Text style={{fontSize: 25, fontFamily: "Spartan_700Bold",color : "white"}}>Good Morning</Text>
-                <Text style={{fontSize: 12, fontFamily: "Spartan_700Bold",color : "#e95322"}}>Rise and Shine! It's breakfast time</Text>
-            </View>
-          )}}
+          headerTitle: () => <SearchHeader showBackButton={false}/>
+          }}
       />
       <Tabs.Screen
         name="food"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <MaterialCommunityIcons name="food-outline" color={focused ? "white" : "black"} size={24} />
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons name="food-outline" color={(pathname.includes('/category/Snacks') || focused)? "white" : "black"} size={24} />
           ),
-          headerShown: false,
+          // headerShown: true,
+          headerStyle: { backgroundColor: '#F5CB58' },
+          tabBarButton: ({...props}) => (
+            <Pressable
+              {...props}
+              onPress={() => router.replace('/category/Snacks')}
+            >
+            </Pressable>
+          ),
         }}
       />
       <Tabs.Screen
@@ -49,7 +60,12 @@ export default function TabBarLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialCommunityIcons name="heart-outline" color={focused ? "white" : "black"} size={24} />
           ),
-          headerShown: false,
+          headerShown: true,
+          headerStyle: { backgroundColor: '#F5CB58' },
+          title : "My favorite",
+          headerTitleAlign: "center",
+          headerTitleStyle: styles.headerTitle,
+          headerLeft: () => (<BackButton/>)
         }}
       />
       <Tabs.Screen
@@ -58,23 +74,35 @@ export default function TabBarLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialCommunityIcons name="clipboard-outline" color={focused ? "white" : "black"} size={24} />
           ),
-          headerShown: false,
+          headerShown: true,
+          headerStyle: { backgroundColor: '#F5CB58' },
+          title : "My orders",
+          headerTitleAlign: "center",
+          headerTitleStyle: styles.headerTitle,
+          headerLeft: () => (<BackButton/>)
         }}
       />
       <Tabs.Screen
         name="help"
         options={{
-          tabBarIcon: ({ color, size, focused  }) => (
+          tabBarIcon: ({ color, size, focused }) => (
             <MaterialCommunityIcons name="headset" color={focused ? "white" : "black"} size={24} />
           ),
-          headerShown: false,
+          headerShown: true,
+          headerStyle: { backgroundColor: '#F5CB58' },
+          title : "Help",
+          headerTitleAlign: "center",
+          headerTitleStyle: styles.headerTitle,
+          headerLeft: () => (<BackButton/>)
         }}
       />
       <Tabs.Screen
         name="category"
         options={{
-          href : null,
-          headerShown: false,
+          href: null,
+          headerShown: true,
+          headerStyle: { backgroundColor: '#F5CB58' },
+          headerTitle: () => <SearchHeader showBackButton={true}/>
         }}
       />
     </Tabs>
@@ -88,21 +116,24 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "700",
     alignSelf: "center",
-    marginTop: 30,
-    marginBottom: 20
+    marginTop: 20,
+    marginBottom: 30,
+    fontFamily: "Spartan_700Bold"
   },
   header: {
-      backgroundColor: '#F8C471', // Màu nền của header
-      padding: 10,
-      paddingTop: 40, // Để tạo khoảng cách cho status bar
-    },
-  searchInput: {
-      height: 25,
-      fontSize : 12,
-      width: 100,
+    backgroundColor: '#F8C471', // Màu nền của header
+    padding: 10,
+    paddingTop: 40, // Để tạo khoảng cách cho status bar
   },
-  txtGreeting:{
-      fontSize:30,
-      fontFamily : "Spartan_700Bold"
-  }
+  headerTitle: {
+    fontFamily: "Spartan_700Bold",
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#f8f8f8",
+  },
+  searchInput: {
+    height: 25,
+    fontSize: 12,
+    width: 100,
+  },
 })
