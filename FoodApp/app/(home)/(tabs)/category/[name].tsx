@@ -5,7 +5,7 @@ export default function CategoryPage() {
     const { name } = useLocalSearchParams();
     return (
         <View>
-            <Text>This is the {name} page</Text>
+            <Text>This is the category {name} page</Text>
         </View>
     );
 }

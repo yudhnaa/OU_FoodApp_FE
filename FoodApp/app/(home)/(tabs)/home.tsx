@@ -154,7 +154,7 @@ return (
                 paddingVertical: 20,
              }// Đảm bảo chiều cao FlatList
             ]}
-            style={{ flex: 1, backgroundColor: colors.Yellow_Base}}
+            style={{ flex: 1, backgroundColor: colors.Yellow_Base }}
         />
 );
 }
