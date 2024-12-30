@@ -31,7 +31,7 @@ export default function Home() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      router.replace("/loading");
+      router.replace("/profile_menu");
     }
   }, [fontsLoaded]);
 
