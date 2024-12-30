@@ -53,7 +53,7 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                 </Pressable>
             </View>
             <View className="ml-2 flex-row items-center justify-center w-10 h-10" style={styles.iconStyle}>
-                <Pressable>
+                <Pressable onPress={() => router.push("/profile")}>
                     <Icon
                         source="account-outline"
                         color={"#E95322"}
