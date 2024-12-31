@@ -12,7 +12,8 @@ export default function HomeLayout() {
             headerShadowVisible: false,
         }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="category/[name]" options={{ headerShown: false }} />
+            {/* <Stack.Screen name="category/[name]" options={{ headerShown: false }} /> */}
+            <Stack.Screen name="category" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ headerShown: false }} />
         </Stack>
     )

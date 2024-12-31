@@ -56,9 +56,8 @@ const orders = [
 ]
 export default function OrderPage() {
 
-    const hasActiveOrders = orders.length > 0;
     const [filteredOrders, setFilteredOrders] = useState<string>("active");
-
+    const hasOrders = orders.filter(order => order.status === filteredOrders).length > 0;
     return (
         <View style={styles.backGround}>
             <View style={styles.bodyPage}>
@@ -73,7 +72,7 @@ export default function OrderPage() {
                         <Text style={filteredOrders === "cancelled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
                     </Pressable>
                 </View>
-                {hasActiveOrders ? (
+                {hasOrders ? (
                     <FlatList
                         data={orders.filter(order => order.status === filteredOrders)}
                         renderItem={({ item }) => (

@@ -9,9 +9,9 @@ export default function StackLayout() {
   return (
     <Stack screenOptions={{
       headerStyle: { backgroundColor: '#F5CB58' },
-      headerShown: false,
-     }}>
-      <Stack.Screen name="[name]" /> {/* Màn hình động */}
+      headerShown: true,
+      headerTitle: () => <SearchHeader showBackButton={true} />
+    }}>
     </Stack>
   );
 }

@@ -18,7 +18,13 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
         <View className="flex-1 flex-row items-center mt-2">
             {showBackButton && (
                 <Pressable
-                    onPress={() => router.back()}
+                    onPress={() => {
+                        try {
+                            router.back()
+                        } catch (error) {
+                            router.navigate("/(tabs)/home")
+                        }
+                    }}
                     className="mr-2"
                 >
                     <Icon

@@ -34,26 +34,26 @@ export default function TabBarLayout() {
           ),
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          headerTitle: () => <SearchHeader showBackButton={false}/>
-          }}
+          headerTitle: () => <SearchHeader showBackButton={false} />
+        }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="food"
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name="food-outline" color={(pathname.includes('/category/Snacks') || focused)? "white" : "black"} size={24} />
+            <MaterialCommunityIcons name="food-outline" color={(pathname.includes('/category/Snacks') || focused) ? "white" : "black"} size={24} />
           ),
           // headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          tabBarButton: ({...props}) => (
-            <Pressable
-              {...props}
-              onPress={() => router.replace('/category/Snacks')}
-            >
-            </Pressable>
-          ),
+          // tabBarButton: ({ ...props }) => (
+          // <Pressable
+          //   {...props}
+          //   onPress={() => router.replace('/category/Snacks')}
+          // >
+          // </Pressable>
+          // ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="favorite"
         options={{
@@ -62,10 +62,10 @@ export default function TabBarLayout() {
           ),
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          title : "My favorite",
+          title: "My favorite",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton/>)
+          headerLeft: () => (<BackButton />)
         }}
       />
       <Tabs.Screen
@@ -76,10 +76,10 @@ export default function TabBarLayout() {
           ),
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          title : "My orders",
+          title: "My orders",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton/>)
+          headerLeft: () => (<BackButton />)
         }}
       />
       <Tabs.Screen
@@ -90,21 +90,21 @@ export default function TabBarLayout() {
           ),
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          title : "Help",
+          title: "Help",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton/>)
+          headerLeft: () => (<BackButton />)
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="category"
         options={{
           href: null,
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
-          headerTitle: () => <SearchHeader showBackButton={true}/>
+          headerTitle: () => <SearchHeader showBackButton={true} />
         }}
-      />
+      /> */}
     </Tabs>
   );
 }
