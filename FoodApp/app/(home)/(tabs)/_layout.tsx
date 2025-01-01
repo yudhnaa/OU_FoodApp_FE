@@ -37,23 +37,6 @@ export default function TabBarLayout() {
           headerTitle: () => <SearchHeader showBackButton={false} />
         }}
       />
-      {/* <Tabs.Screen
-        name="food"
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons name="food-outline" color={(pathname.includes('/category/Snacks') || focused) ? "white" : "black"} size={24} />
-          ),
-          // headerShown: true,
-          headerStyle: { backgroundColor: '#F5CB58' },
-          // tabBarButton: ({ ...props }) => (
-          // <Pressable
-          //   {...props}
-          //   onPress={() => router.replace('/category/Snacks')}
-          // >
-          // </Pressable>
-          // ),
-        }}
-      /> */}
       <Tabs.Screen
         name="favorite"
         options={{
@@ -65,7 +48,7 @@ export default function TabBarLayout() {
           title: "My favorite",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton />)
+          // headerLeft: () => (<BackButton />)
         }}
       />
       <Tabs.Screen
@@ -74,12 +57,7 @@ export default function TabBarLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialCommunityIcons name="clipboard-outline" color={focused ? "white" : "black"} size={24} />
           ),
-          headerShown: true,
-          headerStyle: { backgroundColor: '#F5CB58' },
-          title: "My orders",
-          headerTitleAlign: "center",
-          headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton />)
+          headerShown: false
         }}
       />
       <Tabs.Screen
@@ -93,18 +71,9 @@ export default function TabBarLayout() {
           title: "Help",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton />)
+          // headerLeft: () => (<BackButton />)
         }}
       />
-      {/* <Tabs.Screen
-        name="category"
-        options={{
-          href: null,
-          headerShown: true,
-          headerStyle: { backgroundColor: '#F5CB58' },
-          headerTitle: () => <SearchHeader showBackButton={true} />
-        }}
-      /> */}
     </Tabs>
   );
 }

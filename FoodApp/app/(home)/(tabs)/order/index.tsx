@@ -6,6 +6,7 @@ import colors from "@/styles/colors";
 import { styles } from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
 import { useState } from "react";
+import { Tabs } from "expo-router";
 
 const orders = [
     {
@@ -86,7 +87,7 @@ export default function OrderPage() {
                                         <Text style={styles1.orderDetails}>{item.items} items</Text>
                                     </View>
                                     <View className="flex-row justify-between">
-                                        <Pressable style={styles1.cancelButton}>
+                                        <Pressable style={styles1.cancelButton} onPress={() => router.push('/order/order_cancel')}>
                                             <Text style={{ color: colors.Font_2, ...fontsStyles.subtitulo, fontSize: 13 }}>Cancel Order</Text>
                                         </Pressable>
                                         <Pressable style={styles1.trackButton}>
@@ -109,7 +110,7 @@ export default function OrderPage() {
     );
 }
 
-// Add your styles here
+
 const styles1 = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
