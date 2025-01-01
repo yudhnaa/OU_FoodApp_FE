@@ -1,31 +1,25 @@
 import {View, Text, StyleSheet} from 'react-native'
 import React from 'react'
-import { Stack } from 'expo-router'
+import {Stack} from 'expo-router'
 import BackButton from '@/components/home/backButton'
 
 export default function OrderLayout() {
     return (
-        <Stack>
+        <Stack screenOptions={{
+            headerShown: true,
+            headerStyle: {backgroundColor: '#F5CB58'},
+            headerTitleAlign: "center",
+            headerTitleStyle: styles.headerTitle,
+            headerLeft: () => (<BackButton/>),
+            headerShadowVisible: false
+        }}>
             <Stack.Screen name="index" options={{
-                headerShown: true,
-                headerStyle: { backgroundColor: '#F5CB58' },
-                title: "My orders",
-                headerTitleAlign: "center",
-                headerTitleStyle: styles.headerTitle,
-                headerLeft: () => (<BackButton />),
-                headerShadowVisible: false
-            }} />
-
-            <Stack.Screen name="order_cancel" options={{
-                headerShown: true,
-                headerStyle: { backgroundColor: '#F5CB58' },
-                title: "Cancel orders",
-                headerTitleAlign: "center",
-                headerTitleStyle: styles.headerTitle,
-                headerLeft: () => (<BackButton />),
-                headerShadowVisible: false
-
-            }} />
+                headerTitle: "My  Orders",
+                headerLeft: () => <></>
+            }}/>
+            <Stack.Screen name="orderCancel" options={{headerTitle: "Cancel Order"}}/>
+            <Stack.Screen name="orderCancelled" options={{headerTitle: ""}}/>
+            <Stack.Screen name="reviewOrder" options={{headerTitle: "Review Order"}}/>
         </Stack>
     )
 }

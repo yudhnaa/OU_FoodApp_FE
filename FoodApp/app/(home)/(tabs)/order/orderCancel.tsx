@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, Button, ScrollView, Pressable} from 'react-native';
+import {View, Text, Button, ScrollView, Pressable} from 'react-native';
 import {RadioButton} from "react-native-paper";
 import {StyleSheet} from 'react-native';
 
@@ -8,6 +8,7 @@ import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
 import {styles as homeStyles} from "@/components/home/Styles";
 import {router} from "expo-router";
+import { TextInputUser } from "@/components/home/textInput";
 
 const reasons = [
     "Lorem ipsum dolor sit amet1",
@@ -23,11 +24,12 @@ function OrderCancel() {
     const [otherReason, setOtherReason] = useState('');
 
     const handleSubmit = () => {
-        if (reason === "Others") {
-            console.log("Reason:", reason)
-            console.log("Other reason:", otherReason)
-        } else
-            console.log("Reason:", reason)
+        router.replace("/order/orderCancelled");
+        // if (reason === "Others") {
+        //     console.log("Reason:", reason)
+        //     console.log("Other reason:", otherReason)
+        // } else
+        //     console.log("Reason:", reason)
 
     };
 
@@ -38,7 +40,7 @@ function OrderCancel() {
                     hàng phù hợp:</Text>
                 {reasons.map((r, index) => (
                     <Pressable key={index} className={"flex-row justify-between items-center mt-2 mb-2"}
-                               style={[ r === "Others" ? {borderBottomWidth: 0} : {borderBottomWidth: 2}, {borderColor: colors.Orange_2}]}
+                               style={[r === "Others" ? {borderBottomWidth: 0} : {borderBottomWidth: 2}, {borderColor: colors.Orange_2}]}
                                onPress={() => setReason(r)}>
                         <Text className={"mt-4 mb-4"}
                               style={styles.reasonContainer}>{r}</Text>
@@ -51,17 +53,11 @@ function OrderCancel() {
                         />
                     </Pressable>
                 ))}
-                <TextInput
-                    className={"border border-gray-300 rounded p-2 mt-2 h-16"}
-                    placeholder="Others reason..."
-                    value={otherReason}
-                    onChangeText={setOtherReason}
-                    multiline={true}
-                    style={[fontStyles.Paragraph, {height: 100, backgroundColor: colors.Yellow_2, borderWidth:0, borderRadius: 20, padding:15}]}
-                />
+
+                <TextInputUser placeholder={"Others reason..."} value={otherReason} onChangeText={setOtherReason}/>
 
                 <Pressable style={[styles.button]} onPress={handleSubmit}>
-                    <Text style={[fontStyles.Title, {color:colors.Font_2, fontSize: 17}]}>Submit</Text>
+                    <Text style={[fontStyles.Title, {color: colors.Font_2, fontSize: 17}]}>Submit</Text>
                 </Pressable>
 
             </ScrollView>
