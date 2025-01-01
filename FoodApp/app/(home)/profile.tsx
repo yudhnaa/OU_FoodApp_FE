@@ -18,12 +18,12 @@ export default function ProfileMenu() {
                 </View>
             </View>
 
-            <View style={styles.menuItem}>
+            {/* <View style={styles.menuItem}>
                 <Image source={require("../../assets/images/icons/order.png")} style={styles.icon} />
                 <TouchableOpacity onPress={() => { }}>
                     <Text style={styles.menuText}>My Orders</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
 
             <View style={styles.menuItem}>
                 <Image source={require("../../assets/images/icons/profile.png")} style={styles.icon} />
