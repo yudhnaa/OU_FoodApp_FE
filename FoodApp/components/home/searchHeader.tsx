@@ -18,7 +18,13 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
         <View className="flex-1 flex-row items-center mt-2">
             {showBackButton && (
                 <Pressable
-                    onPress={() => router.back()}
+                    onPress={() => {
+                        try {
+                            router.back()
+                        } catch (error) {
+                            router.navigate("/(tabs)/home")
+                        }
+                    }}
                     className="mr-2"
                 >
                     <Icon
@@ -53,7 +59,7 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                 </Pressable>
             </View>
             <View className="ml-2 flex-row items-center justify-center w-10 h-10" style={styles.iconStyle}>
-                <Pressable>
+                <Pressable onPress={() => router.push("/profile")}>
                     <Icon
                         source="account-outline"
                         color={"#E95322"}

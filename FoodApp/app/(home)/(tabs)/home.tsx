@@ -1,5 +1,6 @@
 import { View, Text, FlatList, Image, Pressable, StyleSheet } from 'react-native';
 import { router, Link } from "expo-router";
+import { router, Link } from "expo-router";
 import colors from "@/styles/colors";
 import { styles } from "@/components/home/Styles";
 import { useRouter } from 'expo-router';
@@ -170,6 +171,8 @@ export default function HomePage() {
 
     return (
         <FlatList
+    return (
+        <FlatList
             data={data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
@@ -182,8 +185,17 @@ export default function HomePage() {
                     borderTopRightRadius: 30,
                     paddingVertical: 20,
                 }// Đảm bảo chiều cao FlatList
+                {
+                    paddingBottom: 50, // Thêm khoảng trống để cuộn mượt
+                    flexGrow: 1,
+                    backgroundColor: colors.Font_2,
+                    borderTopLeftRadius: 30,
+                    borderTopRightRadius: 30,
+                    paddingVertical: 20,
+                }// Đảm bảo chiều cao FlatList
             ]}
             style={{ flex: 1, backgroundColor: colors.Yellow_Base }}
         />
+    );
     );
 }
