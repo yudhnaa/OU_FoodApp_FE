@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import {router, Link} from "expo-router";
+import { router, Link } from "expo-router";
 import { StyleSheet } from "react-native";
 import colors from "@/styles/colors";
 import { styles } from "@/components/home/Styles";
