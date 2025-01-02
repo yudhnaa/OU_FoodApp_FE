@@ -60,21 +60,123 @@ export const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 5,
       },
-      promotion: {
-        backgroundColor: '#E95322',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginVertical: 10,
-      },
-      promotionText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-      },
-      promotionDiscount: {
-        color: 'white',
-        fontSize: 24,
-        fontWeight: 'bold',
-      },
+      // promotion: {
+      //   backgroundColor: '#E95322',
+      //   padding: 20,
+      //   borderRadius: 10,
+      //   alignItems: 'center',
+      //   marginVertical: 10,
+      // },
+      // promotionText: {
+      //   color: 'white',
+      //   fontSize: 16,
+      //   fontWeight: 'bold',
+      // },
+      // promotionDiscount: {
+      //   color: 'white',
+      //   fontSize: 24,
+      //   fontWeight: 'bold',
+      // },
+      // ... existing styles ...
+// promotionContainer: {
+//   alignItems: 'center',
+//   marginVertical: 20,
+// },
+// promotionSlide: {
+//   width: 350,
+//   height: 180,
+//   borderRadius: 20,
+//   overflow: 'hidden',
+// },
+// promotionContent: {
+//   flexDirection: 'row',
+//   backgroundColor: '#E95322',
+//   padding: 20,
+//   height: '100%',
+// },
+// promotionTextContainer: {
+//   flex: 1,
+//   justifyContent: 'center',
+// },
+// promotionText: {
+//   color: 'white',
+//   fontSize: 24,
+//   fontWeight: 'bold',
+//   marginBottom: 10,
+// },
+// promotionDiscount: {
+//   color: 'white',
+//   fontSize: 32,
+//   fontWeight: 'bold',
+// },
+// promotionImage: {
+//   width: 150,
+//   height: 150,
+//   resizeMode: 'cover',
+//   borderRadius: 10,
+// },
+// pagination: {
+//   flexDirection: 'row',
+//   position: 'absolute',
+//   bottom: 10,
+//   alignSelf: 'center',
+// },
+// paginationDot: {
+//   width: 8,
+//   height: 8,
+//   borderRadius: 4,
+//   marginHorizontal: 4,
+// },
+// // ... existing styles ...
+
+// ... existing styles ...
+// ... existing styles ...
+promotionContainer: {
+  alignItems: 'center',
+  marginVertical: 20,
+  marginHorizontal: 20,
+},
+promotionSlide: {
+  width: 350,
+  height: 160,
+  borderRadius: 15,
+  overflow: 'hidden',
+  backgroundColor: '#E95322',
+},
+promotionContent: {
+  flexDirection: 'row',
+  height: '100%',
+},
+promotionTextContainer: {
+  width: '50%',  // chia đều 50-50
+  justifyContent: 'center',
+  paddingLeft: 20,
+},
+promotionText: {
+  color: 'white',
+  fontSize: 24,
+  fontWeight: '600',
+  marginBottom: 10,
+  lineHeight: 30,
+},
+promotionDiscount: {
+  color: 'white',
+  fontSize: 36,
+  fontWeight: 'bold',
+},
+promotionImage: {
+  width: '50%',  // chia đều 50-50
+  height: '100%',
+  resizeMode: 'cover',
+},
+pagination: {
+  flexDirection: 'row',
+  marginTop: 15,  // tách pagination ra khỏi slide
+  gap: 5,
+},
+paginationDot: {
+  width: 8,
+  height: 8,
+  borderRadius: 4,
+},
 });
