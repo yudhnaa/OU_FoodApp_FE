@@ -34,7 +34,9 @@ export default function TabBarLayout() {
           ),
           headerShown: true,
           headerStyle: { backgroundColor: '#F5CB58' },
+          headerShadowVisible: false,
           headerTitle: () => <SearchHeader showBackButton={false} />
+
         }}
       />
       {/* <Tabs.Screen

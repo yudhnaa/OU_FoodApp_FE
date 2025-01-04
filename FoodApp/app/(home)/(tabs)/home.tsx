@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, Pressable, StyleSheet } from 'react-native';
-import { router, Link } from "expo-router";
+
 import { router, Link } from "expo-router";
 import colors from "@/styles/colors";
 import { styles } from "@/components/home/Styles";
@@ -67,7 +67,7 @@ export default function HomePage() {
                             <View className='ml-4 flex-col justify-center items-center'>
                                 <View className='h-20 rounded-full' style={{ backgroundColor: '#F3E9B5', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                     <Pressable
-                                        onPress={() => router.navigate(`/(tabs)/category/${category.name}`)} // chuyển đến trang food với category.name
+                                        onPress={() => router.navigate(`/category/${category.name}`)} // chuyển đến trang food với category.name
                                         style={styles.categoryItem}
                                     >
                                         <Image source={category.icon}
@@ -171,8 +171,6 @@ export default function HomePage() {
 
     return (
         <FlatList
-    return (
-        <FlatList
             data={data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
@@ -185,17 +183,8 @@ export default function HomePage() {
                     borderTopRightRadius: 30,
                     paddingVertical: 20,
                 }// Đảm bảo chiều cao FlatList
-                {
-                    paddingBottom: 50, // Thêm khoảng trống để cuộn mượt
-                    flexGrow: 1,
-                    backgroundColor: colors.Font_2,
-                    borderTopLeftRadius: 30,
-                    borderTopRightRadius: 30,
-                    paddingVertical: 20,
-                }// Đảm bảo chiều cao FlatList
             ]}
             style={{ flex: 1, backgroundColor: colors.Yellow_Base }}
         />
-    );
     );
 }
