@@ -32,14 +32,14 @@ export const styles = StyleSheet.create({
   categoryText: {
     marginTop: 5,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:'Spartan_700Bold',
   },
   section: {
     marginVertical: 10,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'Spartan_700Bold',
     marginBottom: 5,
     marginLeft: 10,
   },
@@ -47,11 +47,18 @@ export const styles = StyleSheet.create({
     flex: 1,
     margin: 5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   productImage: {
     width: 150,
     height: 150,
     borderRadius: 10,
+    resizeMode: 'cover',
+    // width: '95%',
+    // height: 200,
+    // borderRadius: 10,
+    // resizeMode: 'cover',
+    alignSelf: 'center'
   },
   productPrice: {
     marginTop: 5,
@@ -59,6 +66,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     padding: 5,
     borderRadius: 5,
+    fontFamily:'Spartan_300Light',
   },
   promotionContainer: {
     alignItems: 'center',
@@ -83,8 +91,8 @@ export const styles = StyleSheet.create({
   },
   promotionText: {
     color: 'white',
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: 20,
+    fontFamily:'Spartan_600SemiBold',
     marginBottom: 10,
     lineHeight: 30,
   },
@@ -168,7 +176,7 @@ export const styles = StyleSheet.create({
   menuPrice: {
       fontSize: 16,
       color: '#E95322',
-      fontFamily:'Spartan_500Light',
+      fontFamily:'Spartan_400Regular',
   },
   menuDescription: {
       color: '#666666',

@@ -67,6 +67,7 @@ export default function TabBarLayout() {
           title: "My favorite",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
+          headerShadowVisible: false,
           headerLeft: () => (<BackButton />)
         }}
       />

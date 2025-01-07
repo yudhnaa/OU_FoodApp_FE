@@ -35,7 +35,6 @@ function FoodDetailHeader() {
 
 export default function StackLayout() {
   return (
-    <FoodProvider>
       <Stack screenOptions={{
         headerStyle: { backgroundColor: '#F5CB58' },
         headerShown: true,
@@ -50,10 +49,9 @@ export default function StackLayout() {
           headerShown: true,
           headerTitle: () => (
             <FoodDetailHeader />
-          ),
+          )
         }} />
       </Stack>
-    </FoodProvider>
   );
 }
 
@@ -69,7 +67,7 @@ const styles1 = StyleSheet.create({
     flex: 1,
   },
   nameText:{
-    fontWeight:'bold',
     fontFamily:'Spartan_700Bold',
+    fontSize:17,
   }
 });

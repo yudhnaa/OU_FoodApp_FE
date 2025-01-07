@@ -16,7 +16,7 @@ const data = [
             { id: '1', name: 'Snacks', icon: require('@/assets/images/logo/Snacks.png') },
             { id: '2', name: 'Meal', icon: require('@/assets/images/logo/Meals.png') },
             { id: '3', name: 'Vegan', icon: require('@/assets/images/logo/Vegan.png') },
-            { id: '4', name: 'Dessert', icon: require('@/assets/images/logo/Desserts.png') },
+            { id: '4', name: 'Desserts', icon: require('@/assets/images/logo/Desserts.png') },
             { id: '5', name: 'Drinks', icon: require('@/assets/images/logo/Drinks.png') },
             { id: '6', name: 'More...', icon: require('@/assets/images/logo/Snacks.png') },
         ],

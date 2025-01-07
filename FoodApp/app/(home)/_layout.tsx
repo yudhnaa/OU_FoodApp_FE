@@ -3,9 +3,11 @@ import { router, Stack, useRouter } from 'expo-router'
 import { View, Text, Pressable, TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Icon } from 'react-native-paper'
+import FoodProvider from './category/FoodContext'
 
 export default function HomeLayout() {
     return (
+        <FoodProvider>
         <Stack screenOptions={{
             headerShown: true,
             headerStyle: { backgroundColor: '#F5CB58' },
@@ -15,6 +17,7 @@ export default function HomeLayout() {
             <Stack.Screen name="category" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ headerShown: false }} />
         </Stack>
+        </FoodProvider>
     )
 }
 

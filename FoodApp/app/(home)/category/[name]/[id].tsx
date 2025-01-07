@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 25,
+        fontFamily:'Spartan_700Bold',
     },
     rating: {
         color: colors.Orange_Base,
@@ -212,8 +212,9 @@ const styles = StyleSheet.create({
     },
     price: {
         fontSize: 28,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         color: colors.Orange_Base,
+        fontFamily:'Spartan_700Bold',
     },
     quantityControl: {
         flexDirection: 'row',
@@ -234,16 +235,18 @@ const styles = StyleSheet.create({
     quantityText: {
         fontSize: 18,
         fontWeight: '600',
+        fontFamily:'Spartan_700Bold',
     },
     description: {
         fontSize: 16,
         color: '#666',
         lineHeight: 24,
+        fontFamily:'Spartan_400Regular',
     },
     toppingsTitle: {
         fontSize: 20,
-        fontWeight: 'bold',
         marginTop: 10,
+        fontFamily:'Spartan_700Bold',
     },
     toppingItem: {
         flexDirection: 'row',
@@ -258,10 +261,12 @@ const styles = StyleSheet.create({
     },
     toppingName: {
         fontSize: 16,
+        fontFamily:'Spartan_400Regular',
     },
     toppingPrice: {
         fontSize: 16,
         color: colors.Orange_Base,
+        fontFamily:'Spartan_400Regular',
     },
     addButtonContainer:{
         alignItems:'center',

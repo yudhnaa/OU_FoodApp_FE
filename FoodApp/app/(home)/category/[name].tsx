@@ -110,7 +110,7 @@ const menuData = {
         },
         // Thêm các món ăn khác
     ],
-    Dessert: [
+    Desserts: [
         {
             id: '1',
             name: 'Pork Skewer',
