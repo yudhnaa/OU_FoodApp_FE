@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { Text,View } from "react-native";
 import { styles } from "@/components/home/Styles";
 import FoodFlatList from "@/components/home/foodFlatList";
 
@@ -6,105 +6,103 @@ import FoodFlatList from "@/components/home/foodFlatList";
 const data = [
     {
         id: 1,
-        name: "Favorite Dish 1",
+        name: "Best Seller Dish 1",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        description: "This is the description of the favorite dish 1",
+        description: "This is the description of the Best Seller Dish 1",
         category: "Snacks",
     },
     {
         id: 2,
-        name: "Favorite Dish 2",
+        name: "Best Seller Dish 2",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        description: "This is the description of the favorite dish 2",
+        description: "This is the description of the Best Seller Dish 2",
         category: "Meal"
     },
     {
         id: 3,
-        name: "Favorite Dish 3",
+        name: "Best Seller Dish 3",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        description: "This is the description of the favorite dish 3",
+        description: "This is the description of the Best Seller Dish 3",
         category: "Vegan"
     },
     {
         id: 4,
-        name: "Favorite Dish 4",
+        name: "Best Seller Dish 4",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_4.png'),
-        description: "This is the description of the favorite dish 4",
+        description: "This is the description of the Best Seller Dish 4",
         category: "Desserts"
     },
     {
         id: 5,
-        name: "Favorite Dish 5",
+        name: "Best Seller Dish 5",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        description: "This is the description of the favorite dish 5",
+        description: "This is the description of the Best Seller Dish 5",
         category: "Drinks"
     },
     {
         id: 6,
-        name: "Favorite Dish 6",
+        name: "Best Seller Dish 6",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        description: "This is the description of the favorite dish 6",
+        description: "This is the description of the Best Seller Dish 6",
         category: "Snacks"
     },
     {
         id: 7,
-        name: "Favorite Dish 7",
+        name: "Best Seller Dish 7",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        description: "This is the description of the favorite dish 7",
+        description: "This is the description of the Best Seller Dish 7",
         category: "Meal"
     },
     {
         id: 8,
-        name: "Favorite Dish 8",
+        name: "Best Seller Dish 8",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_4.png'),
-        description: "This is the description of the favorite dish 8",
+        description: "This is the description of the Best Seller Dish 8",
         category: "Vegan"
     },
     {
         id: 9,
-        name: "Favorite Dish 9",
+        name: "Best Seller Dish 9",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        description: "This is the description of the favorite dish 9",
+        description: "This is the description of the Best Seller Dish 9",
         category: "Desserts"
     },
     {
         id: 10,
-        name: "Favorite Dish 10",
+        name: "Best Seller Dish 10",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        description: "This is the description of the favorite dish 10",
+        description: "This is the description of the Best Seller Dish 10",
         category: "Drinks"
     },
     {
         id: 11,
-        name: "Favorite Dish 11",
+        name: "Best Seller Dish 11",
         price: 10.0,
         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        description: "This is the description of the favorite dish 11",
+        description: "This is the description of the Best Seller Dish 11",
         category: "Snacks"
     },
 ]
 
-export default function FavoritePage() {
+export default function BestSeller() {
     return (
         <View style={styles.backGround}>
             <View style={styles.bodyPage}>
                 <View style={styles.txtContainer}>
-                    <Text style={styles.txt}>It's time to buy your favorite dish.</Text>
+                    <Text style={styles.txt}>Discover our most popular dishes!</Text>
                 </View>
                 <FoodFlatList data={data} />
             </View>
         </View>
     );
 }
-
-

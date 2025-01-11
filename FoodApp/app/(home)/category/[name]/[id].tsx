@@ -1,67 +1,3 @@
-// import { useLocalSearchParams } from "expo-router";
-// import { View, Text, Image, ScrollView, Pressable, StyleSheet } from "react-native";
-// import colors from "@/styles/colors";
-// import { useFoodContext } from "../FoodContext";
-// import LoadingComponent from "@/components/home/LoadingComponents";
-
-// export default function FoodDetailPage() {
-
-//     const { selectedFood } = useFoodContext();
-//     const { id } = useLocalSearchParams();
-
-//     if (!selectedFood) {
-//         return <LoadingComponent />;
-//     }
-
-//     return (
-//         <ScrollView style={styles.container}>
-//             <View style={styles.imageContainer}>
-//                 <Image source={selectedFood.image} style={styles.image} />
-//             </View>
-//             <View style={styles.content}>
-//                 <Text style={styles.name}>{selectedFood.name}</Text>
-//                 <Text style={styles.description}>{selectedFood.description}</Text>
-//             </View>
-//         </ScrollView>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         paddingTop:15,
-//     },
-//     image: {
-//         width: '90%',
-//         height: 300,
-//         resizeMode: 'cover',
-//         borderRadius: 30,
-//         paddingVertical: 20,
-//     },
-//     content: {
-//         padding: 16,
-//         gap: 12,
-//     },
-//     name: {
-//         fontSize: 24,
-//         fontWeight: 'bold',
-//     },
-//     description: {
-//         fontSize: 16,
-//         color: '#666',
-//         lineHeight: 24,
-//     },
-//     price: {
-//         fontSize: 20,
-//         fontWeight: 'bold',
-//         color: colors.Orange_Base,
-//     },
-//     imageContainer:{
-//         alignItems:'center',
-//     },
-//     // Thêm các styles khác
-// });
-
-
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, Image, ScrollView, Pressable,StyleSheet,TouchableOpacity } from "react-native";
 import colors from "@/styles/colors";
@@ -69,11 +5,9 @@ import { useFoodContext } from "../FoodContext";
 import LoadingComponent from "@/components/home/LoadingComponents";
 import { Icon } from "react-native-paper";
 import { useState } from "react";
-import fontStyles from "@/styles/fontStyles";
 
 export default function FoodDetailPage() {
     const { selectedFood } = useFoodContext();
-    const { id } = useLocalSearchParams();
     const [selectedTopping, setSelectedTopping] = useState('');
 
     const [quantity, setQuantity] = useState(1);

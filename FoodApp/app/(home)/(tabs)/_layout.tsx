@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: "Spartan_700Bold",
     fontSize: 28,
-    fontWeight: "700",
     color: "#f8f8f8",
   },
   searchInput: {

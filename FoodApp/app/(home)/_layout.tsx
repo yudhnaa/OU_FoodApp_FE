@@ -4,6 +4,7 @@ import { View, Text, Pressable, TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Icon } from 'react-native-paper'
 import FoodProvider from './category/FoodContext'
+import BackButton from '@/components/home/backButton'
 
 export default function HomeLayout() {
     return (
@@ -16,6 +17,14 @@ export default function HomeLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="category" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ headerShown: false }} />
+            <Stack.Screen name="best_seller" options={{ 
+                headerShown: true,
+                headerStyle: { backgroundColor: '#F5CB58' },
+                headerTitle: "Best Seller",
+                headerTitleStyle: styles.headerTitle,
+                headerTitleAlign: "center",
+                headerLeft: () => (<BackButton />)
+            }} />
         </Stack>
         </FoodProvider>
     )
@@ -44,4 +53,9 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: "Spartan_700Bold"
     },
+    headerTitle: {
+        fontFamily: "Spartan_700Bold",
+        fontSize: 26,
+        color: "#f8f8f8",
+      }
 })

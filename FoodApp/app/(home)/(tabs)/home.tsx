@@ -89,8 +89,8 @@ export default function HomePage() {
                     <View style={styles.section}>
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
-                            <Pressable style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ color: '#E95322' }}>View all</Text>
+                            <Pressable onPress={() => router.push('/best_seller')} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: '#E95322',fontFamily:'Spartan_600SemiBold' }}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
