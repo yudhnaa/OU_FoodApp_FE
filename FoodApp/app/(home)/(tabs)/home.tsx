@@ -123,7 +123,7 @@ export default function HomePage() {
                             height={160}
                             autoPlay={true}
                             data={[1, 2, 3, 4]}
-                            scrollAnimationDuration={1000}
+                            scrollAnimationDuration={500}
                             onSnapToItem={(index) => {
                                 activeIndex.value = index; // Update shared value
                             }}
