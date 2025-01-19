@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-nativ
 import { Image } from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
+import {router} from "expo-router";
 
 export default function ProfileMenu() {
     return (
@@ -27,14 +28,14 @@ export default function ProfileMenu() {
 
             <View style={styles.menuItem}>
                 <Image source={require("../../assets/images/icons/profile.png")} style={styles.icon} />
-                <TouchableOpacity onPress={() => { }}>
+                <TouchableOpacity onPress={() => { router.push("/myProfile")}}>
                     <Text style={styles.menuText}>My Profile</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
                 <Image source={require("../../assets/images/icons/location.png")} style={styles.icon} />
-                <TouchableOpacity onPress={() => { }}>
+                <TouchableOpacity onPress={() => { router.push("/deliveryAddress")}}>
                     <Text style={styles.menuText}>Delivery Address</Text>
                 </TouchableOpacity>
             </View>

@@ -8,6 +8,7 @@ import PhoneNumberInput from "../../components/welcome/phoneNumberField";
 import { styles as inputFieldStyles } from "@/components/welcome/Styles";
 import colors from "../../styles/colors";
 import fontStyles from "../../styles/fontStyles";
+import names from "ajv/lib/compile/names";
 const items = [
   { label: 'Apple', value: 'apple' },
   { label: 'Banana', value: 'banana' }
@@ -23,7 +24,7 @@ export default function Registration() {
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const onChange = (event, selectedDate) => {
+  const onChange = (event: any, selectedDate: any) => {
     if (selectedDate) {
       setDate(selectedDate);
     }

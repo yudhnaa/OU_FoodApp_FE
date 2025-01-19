@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import colors from "@/styles/colors";
 
 export const styles = StyleSheet.create({
     textInputContainer: {
@@ -12,10 +13,10 @@ export const styles = StyleSheet.create({
         marginBottom: 4,
     },
     textInput: {
-        backgroundColor: "#F3E9B5",
+        backgroundColor: colors.Yellow_2,
         borderRadius: 15,
-        paddingHorizontal: 10,
         height: 50,
+        paddingHorizontal: 10,
     },
     phonePrefix: {
         flex: 1,
