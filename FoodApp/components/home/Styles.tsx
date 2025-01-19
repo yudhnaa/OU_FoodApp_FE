@@ -77,4 +77,13 @@ export const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
       },
+      button: {
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.Orange_Base,
+        padding: 10,
+        paddingHorizontal: 20,
+        margin: 20
+      },
 });

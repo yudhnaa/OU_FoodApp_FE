@@ -42,7 +42,7 @@ export default function ProfileMenu() {
 
             <View style={styles.menuItem}>
                 <Image source={require("../../assets/images/icons/payment.png")} style={styles.icon} />
-                <TouchableOpacity onPress={() => { }}>
+                <TouchableOpacity onPress={() => { router.push('/paymentMethods')}}>
                     <Text style={styles.menuText}>Payment Methods</Text>
                 </TouchableOpacity>
             </View>

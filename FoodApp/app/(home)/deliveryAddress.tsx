@@ -7,7 +7,6 @@ import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import {router} from "expo-router";
 import Button from "@/components/home/button";
-import {PressableEvent} from "react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps";
 
 const addresses = [
     {
