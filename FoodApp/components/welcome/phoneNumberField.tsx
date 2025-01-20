@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native'
 import { styles } from './Styles'
 import fontStyles from '../../styles/fontStyles'
 
-const PhoneNumberInput = ({ value, onChange }) => (
+const PhoneNumberInput = ({ value, onChange }: {value: any, onChange: any}) => (
     <View style={styles.textInputContainer}>
         <Text style={styles.text}>Phone Number</Text>
         <View style={[styles.textInput, { flexDirection: "row" }]}>

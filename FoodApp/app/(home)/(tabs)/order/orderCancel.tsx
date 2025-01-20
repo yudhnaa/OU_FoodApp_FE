@@ -8,7 +8,7 @@ import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
 import {styles as homeStyles} from "@/components/home/Styles";
 import {router} from "expo-router";
-import { TextInputUser } from "@/components/home/textInput";
+import TextInputUser from "@/components/home/textInput";
 
 const reasons = [
     "Lorem ipsum dolor sit amet1",

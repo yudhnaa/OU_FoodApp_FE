@@ -4,7 +4,7 @@ import React, {useCallback} from 'react';
 import {useState} from 'react';
 import { Rating } from '@kolking/react-native-rating';
 
-import {TextInputUser} from "@/components/home/textInput";
+import TextInputUser from "@/components/home/textInput";
 import {styles as homeStyles} from "@/components/home/Styles";
 import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";

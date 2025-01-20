@@ -24,4 +24,4 @@ const TextInputUser = ({placeholder, value, onChangeText}: {placeholder:string, 
     />)
 }
 
-export {TextInputUser}
+export default TextInputUser

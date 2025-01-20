@@ -3,9 +3,10 @@ import {Pressable, Text} from "react-native";
 import fontStyles from "@/styles/fontStyles";
 import React from "react";
 
-const Button = ({text, onPress, buttonColor=colors.Orange_Base, textColor=colors.Font_2}:{text: string, onPress: () => void, buttonColor?: string, textColor?: string}) => {
+const Button = ({text, onPress, buttonColor=colors.Orange_Base, textColor=colors.Font_2, textClassName="", buttonClassName=""}:{text: string, onPress: () => void, buttonColor?: string, textColor?: string, buttonClassName?: string, textClassName?: string}) => {
     return (
         <Pressable
+            className={buttonClassName}
             style={{
                 borderRadius: 30,
                 alignItems: "center",
@@ -17,6 +18,7 @@ const Button = ({text, onPress, buttonColor=colors.Orange_Base, textColor=colors
             }}
             onPress={onPress}>
             <Text
+                className={textClassName}
                 style={{
                     ...fontStyles.titulo_screen,
                     fontSize: 15,

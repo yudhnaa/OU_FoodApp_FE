@@ -8,33 +8,34 @@ import fontStyles from "@/styles/fontStyles";
 import {router} from "expo-router";
 import Button from "@/components/home/button";
 
+
 const paymentMethods = [
     {
         id: 1,
-        methodName: "Credit card: *** *** *** 43",
+        methodName: "Credit card",
         icon: require("@/assets/images/icons/ico_card.svg"),
         isDefault: true
     },
     {
         id: 2,
-        methodName: "Apple Pay: *** *** *** 43",
+        methodName: "Apple Pay",
         icon: require("@/assets/images/icons/ico_apple.svg"),
         isDefault: false
     },
     {
         id: 3,
-        methodName: "Paypal: *** *** *** 43",
+        methodName: "Paypal",
         icon: require("@/assets/images/icons/ico_paypal.svg"),
         isDefault: false
     },
     {
         id: 4,
-        methodName: "Google Pay: *** *** *** 43",
+        methodName: "Google Pay",
         icon: require("@/assets/images/icons/ico_ggpay.svg"),
         isDefault: false
     }]
 
-const PaymentMethods = () => {
+function AddPaymentMethod() {
 
     const [defaultMethod, setDefaultMethod] = useState();
 
@@ -60,7 +61,6 @@ const PaymentMethods = () => {
     }, [])
 
     const removeMethod = (method, index) => {
-        console.log("removeMethod", method, index);
     }
 
 
@@ -70,7 +70,7 @@ const PaymentMethods = () => {
                 {paymentMethods.map((method, index) => {
                     return (
                         <View key={index} className={"w-full flex-col justify-between p-3 m-2"}>
-                            <View className={"flex-row items-center flex"}>
+                            <View className={"flex-row items-center justify-between"}>
                                 <Image
                                     source={method.icon}
                                     style={{
@@ -78,25 +78,20 @@ const PaymentMethods = () => {
                                         height: 30,
                                     }}
                                     contentFit="contain"></Image>
-                                <View className={"pl-5 flex-row justify-between items-center"}>
-                                    <Text style={styles.text}>{method.methodName}</Text>
-                                    <View style={{width: 30, height: 30}}>
-                                        {(method == defaultMethod || method.isDefault) &&
-                                            <IconButton className={""} icon={"check"} iconColor={"green"}></IconButton>}
-                                    </View>
-                                </View>
-                            </View>
-                            <View className={"flex-row"}>
-                                <Button text={"Set as default"} onPress={() => setDefault(method)}></Button>
-                                <Button buttonColor={Colors.Orange_2} textColor={Colors.Orange_Base} text={"Remove"}
-                                        onPress={() => removeMethod(method, index)}></Button>
+                                <Text className={"justify-self-start"} style={styles.text}>{method.methodName}</Text>
+                                {(method.methodName == "Credit card") &&
+                                    <Button text={"Add"}
+                                            onPress={() => router.push("/(payment)/addCreditCard")}></Button>}
+
+                                {(method.methodName != "Credit card") &&
+                                    <Button text={"Add"} onPress={() => router.push({
+                                        pathname: "/(home)/(payment)/[addOtherMethod]",
+                                        params: {method: JSON.stringify(method)}
+                                    })}></Button>}
                             </View>
                         </View>
                     )
                 })}
-                <Button buttonColor={Colors.Orange_2} textColor={Colors.Orange_Base} text={"Add new payment method"} onPress={() => router.push("/addPaymentMethod")}></Button>
-
-
             </View>
         </View>
     );
@@ -109,4 +104,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PaymentMethods;
+export default AddPaymentMethod;
