@@ -92,6 +92,7 @@ export default function TabBarLayout() {
             <MaterialCommunityIcons name="headset" color={focused ? "white" : "black"} size={24} />
           ),
           headerShown: true,
+          headerShadowVisible: false,
           headerStyle: { backgroundColor: '#F5CB58' },
           title: "Help",
           headerTitleAlign: "center",
@@ -124,9 +125,9 @@ const styles = StyleSheet.create({
     fontFamily: "Spartan_700Bold"
   },
   header: {
-    backgroundColor: '#F8C471', // Màu nền của header
+    backgroundColor: '#F8C471',
     padding: 10,
-    paddingTop: 40, // Để tạo khoảng cách cho status bar
+    paddingTop: 40,
   },
   headerTitle: {
     fontFamily: "Spartan_700Bold",

@@ -9,23 +9,48 @@ import BackButton from '@/components/home/backButton'
 export default function HomeLayout() {
     return (
         <FoodProvider>
-        <Stack screenOptions={{
-            headerShown: true,
-            headerStyle: { backgroundColor: '#F5CB58' },
-            headerShadowVisible: false,
-        }}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="category" options={{ headerShown: false }} />
-            <Stack.Screen name="profile" options={{ headerShown: false }} />
-            <Stack.Screen name="best_seller" options={{ 
+            <Stack screenOptions={{
                 headerShown: true,
                 headerStyle: { backgroundColor: '#F5CB58' },
-                headerTitle: "Best Seller",
-                headerTitleStyle: styles.headerTitle,
-                headerTitleAlign: "center",
-                headerLeft: () => (<BackButton />)
-            }} />
-        </Stack>
+                headerShadowVisible: false,
+            }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="category" options={{ headerShown: false }} />
+                <Stack.Screen name="profile" options={{ headerShown: false }} />
+                <Stack.Screen name="best_seller" options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: '#F5CB58' },
+                    headerTitle: "Best Seller",
+                    headerTitleStyle: styles.headerTitle,
+                    headerTitleAlign: "center",
+                    headerLeft: () => (<BackButton />)
+                }} />
+                <Stack.Screen name="help_with_order" options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: '#F5CB58' },
+                    headerTitleStyle: styles.headerTitle,
+                    headerTitle: "Support",
+                    headerTitleAlign: "center",
+                    headerLeft: () => (<BackButton />)
+                }} />
+
+                <Stack.Screen name="help_center" options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: '#F5CB58' },
+                    headerTitleStyle: styles.headerTitle,
+                    headerTitle: () => {
+                        return (
+                            <View className='flex-col items-center pt-4'>
+                                <Text style = {styles.headerTitle}>Help Center</Text>
+                                <Text style = {styles.helpCenterDescription}>How can we help you?</Text>
+                            </View> 
+                        )
+                    } ,
+                    headerTitleAlign: "center",
+                    headerLeft: () => (<BackButton />)
+                }} />
+
+            </Stack>
         </FoodProvider>
     )
 }
@@ -57,5 +82,12 @@ const styles = StyleSheet.create({
         fontFamily: "Spartan_700Bold",
         fontSize: 26,
         color: "#f8f8f8",
-      }
+    },
+    helpCenterDescription : {
+        fontSize : 14,
+        fontFamily : "Spartan_500Medium",
+        textAlign : "justify",
+        paddingBottom : 15,
+        color : "#E95322"
+    }
 })
