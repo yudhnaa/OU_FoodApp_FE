@@ -1,13 +1,13 @@
 import { View, Text, FlatList, Image, Pressable, StyleSheet } from 'react-native';
-
 import { router, Link } from "expo-router";
 import colors from "@/styles/colors";
 import { styles } from "@/components/home/Styles";
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-paper'
 import Carousel from 'react-native-reanimated-carousel';
-import { useState } from 'react';
 import { useSharedValue, useDerivedValue } from 'react-native-reanimated';
+import { useFoodContext } from "@/app/(home)/category/FoodContext";
+import FoodFlatList from '@/components/home/foodFlatList';
 
 const data = [
     {
@@ -25,10 +25,10 @@ const data = [
         type: 'bestSeller',
         title: 'Best Seller',
         items: [
-            { id: '1', name: 'Food 1', price: '$103.0', image: require('@/assets/images/bestSeller_pic/pic_1.png') },
-            { id: '2', name: 'Food 2', price: '$50.0', image: require('@/assets/images/bestSeller_pic/pic_2.png') },
-            { id: '3', name: 'Food 3', price: '$12.99', image: require('@/assets/images/bestSeller_pic/pic_3.png') },
-            { id: '4', name: 'Food 4', price: '$8.20', image: require('@/assets/images/bestSeller_pic/pic_4.png') },
+            { id: '1', name: 'Food 1', price: '$103.0', image: require('@/assets/images/bestSeller_pic/pic_1.png'),description : "This is the description of the Best Seller Dish 1",category: "Snacks", },
+            { id: '2', name: 'Food 2', price: '$50.0', image: require('@/assets/images/bestSeller_pic/pic_2.png'),description : "This is the description of the Best Seller Dish 2",category: "Meal", },
+            { id: '3', name: 'Food 3', price: '$12.99', image: require('@/assets/images/bestSeller_pic/pic_3.png'),description : "This is the description of the Best Seller Dish 3",category: "Vegan", },
+            { id: '4', name: 'Food 4', price: '$8.20', image: require('@/assets/images/bestSeller_pic/pic_4.png'),description : "This is the description of the Best Seller Dish 4",category: "Desserts", },
         ],
     },
     {
@@ -40,12 +40,12 @@ const data = [
         type: 'recommend',
         title: 'Recommend',
         items: [
-            { id: '1', name: 'Food 1', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_1.png') },
-            { id: '2', name: 'Food 2', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_2.png') },
-            { id: '3', name: 'Food 3', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_3.png') },
-            { id: '4', name: 'Food 4', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_4.png') },
-            { id: '5', name: 'Food 5', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_1.png') },
-            { id: '6', name: 'Food 6', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_2.png') },
+            { id: '1', name: 'Food 1', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_1.png'),description : "This is the description of the Favorite Dish 1",category: "Snacks", },
+            { id: '2', name: 'Food 2', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_2.png'),description : "This is the description of the Favorite Dish 2",category: "Meal", },
+            { id: '3', name: 'Food 3', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_3.png'),description : "This is the description of the Favorite Dish 3",category: "Vegan", },
+            { id: '4', name: 'Food 4', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_4.png'),description : "This is the description of the Favorite Dish 4",category: "Desserts", },
+            { id: '5', name: 'Food 5', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_1.png'),description : "This is the description of the Favorite Dish 5",category: "Drinks", },
+            { id: '6', name: 'Food 6', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_2.png'),description : "This is the description of the Favorite Dish 6",category: "Snacks", },
         ],
     },
 ];
@@ -55,6 +55,7 @@ export default function HomePage() {
     // const [activeIndex, setActiveIndex] = useState(0);
     const activeIndex = useSharedValue(0);
     const derivedActiveIndex = useDerivedValue(() => activeIndex.value);
+    const { setSelectedFood } = useFoodContext();
     const renderItem = ({ item }) => {
         switch (item.type) {
             case 'categories':
@@ -103,11 +104,17 @@ export default function HomePage() {
                             horizontal
                             keyExtractor={(product) => product.id}
                             renderItem={({ item: product }) => (
-                                <View style={styles.productItem}>
+                                <Pressable
+                                    style={styles.productItem}
+                                    onPress={() => {
+                                        setSelectedFood(product);
+                                        router.push(`/category/${product.category}/${product.id}`);
+                                    }}
+                                >
                                     <Image source={product.image} style={styles.productImage} />
                                     <Text style={styles.categoryText}>{product.name}</Text>
                                     <Text style={styles.productPrice}>{product.price}</Text>
-                                </View>
+                                </Pressable>
                             )}
                             showsHorizontalScrollIndicator={false}
                             nestedScrollEnabled={true}
@@ -147,21 +154,20 @@ export default function HomePage() {
             case 'recommend':
                 return (
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>{item.title}</Text>
-                        <FlatList
-                            data={item.items}
-                            numColumns={2} // Set number of columns to 2 for vertical scrolling
-                            keyExtractor={(product) => product.id}
-                            renderItem={({ item: product }) => (
-                                <View style={styles.productItem}>
-                                    <Image source={product.image} style={styles.productImage} />
-                                    <Text style={styles.categoryText}>{product.name}</Text>
-                                    <Text style={styles.productPrice}>{product.price}</Text>
-                                </View>
-                            )}
-                            showsVerticalScrollIndicator={false}
-                            nestedScrollEnabled={true}
-                        />
+                        <View className='flex-row justify-between items-center ml-4 mr-4'>
+                            <Text style={styles.sectionTitle}>{item.title}</Text>
+                            <Pressable onPress={() => router.push('/recommend_page')} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: '#E95322',fontFamily:'Spartan_600SemiBold' }}>View all</Text>
+                                <Icon
+                                    source="chevron-right"
+                                    color={"#E95322"}
+                                    size={28}
+                                />
+                            </Pressable>
+                        </View>
+
+                        <FoodFlatList data={item.items} />
+                        
                     </View>
                 );
             default:
