@@ -14,7 +14,7 @@ export default function Logout({ visible, onConfirm, onCancel }: LogoutModalProp
         <Modal
             visible={visible}
             transparent
-            animationType="slide"
+            animationType="fade"
             onRequestClose={onCancel}
         >
             <Pressable style={styles.overlay} onPress={onCancel}>

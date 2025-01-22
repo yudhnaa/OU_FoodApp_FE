@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TextInput, Pressable, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import Cart from "@/app/(home)/(cart)/cart";
 
 
 /**
@@ -14,6 +15,8 @@ type SearchHeaderProps = {
 
 export default function SearchHeader({ showBackButton = false }: SearchHeaderProps) {
     const router = useRouter();
+    const [showCart, setShowCart] = React.useState(false);
+
     return (
         <View className="flex-1 flex-row items-center mt-2">
             {showBackButton && (
@@ -41,16 +44,22 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                 style={{ fontSize: 12 }}
             />
             <View className="ml-2 flex-row items-center justify-center w-10 h-10" style={styles.iconStyle}>
-                <Pressable>
+                <Pressable onPress={()=>setShowCart(true)}>
                     <Icon
                         source="cart-outline"
                         color={"#E95322"}
                         size={28}
                     />
                 </Pressable>
+
+                {showCart && (
+                    <Cart visible={showCart} onCheckout={()=>{}} onCancel={()=>setShowCart(false)}/>
+
+                ) }
+
             </View>
             <View className="ml-2 flex-row items-center justify-center w-10 h-10" style={styles.iconStyle}>
-                <Pressable>
+                <Pressable onPress={()=>router.push('/notifications')}>
                     <Icon
                         source="bell-outline"
                         color={"#E95322"}

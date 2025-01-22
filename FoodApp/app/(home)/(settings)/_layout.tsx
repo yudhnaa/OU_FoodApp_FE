@@ -23,7 +23,7 @@ function settingLayout() {
                 }}
             />
             <Stack.Screen
-                name="notification"
+                name="notificationSetting"
                 options={{
                     headerShown: true,
                     headerStyle: {backgroundColor: '#F5CB58'},

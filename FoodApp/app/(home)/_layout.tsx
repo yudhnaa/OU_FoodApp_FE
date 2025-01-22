@@ -89,6 +89,18 @@ export default function HomeLayout() {
                 }}
             />
 
+            <Stack.Screen
+                name="notifications"
+                options={{
+                    headerShown: true,
+                    headerStyle: {backgroundColor: '#F5CB58'},
+                    title: "Notifications",
+                    headerTitleAlign: "center",
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (<BackButton />)
+                }}
+            />
+
         </Stack>
     )
 }

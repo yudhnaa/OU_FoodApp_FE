@@ -7,7 +7,7 @@ import {Switch} from "react-native-paper";
 import Colors from "../../../styles/colors";
 import fontStyles from "../../../styles/fontStyles";
 
-function Notification(props) {
+function NotificationSetting() {
 
     const data = {
         general: true,
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Notification;
+export default NotificationSetting;
