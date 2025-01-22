@@ -5,7 +5,7 @@ import colors from "@/styles/colors";
 
 
 // InputField.tsx
-function InputField({label, placeholder, value, onChange, height = 40, multiline = false, paddingTop=0, textClassName="", textBoxClassName="", containerClassName=""}: {
+function InputField({label, placeholder, value, onChange, height = 40, multiline = false, paddingTop=0, textClassName="", textBoxClassName="", containerClassName="", isSecure=false}: {
     label: any,
     placeholder?: string,
     value: any,
@@ -15,13 +15,14 @@ function InputField({label, placeholder, value, onChange, height = 40, multiline
     paddingTop?: number,
     textClassName?: string,
     textBoxClassName?: string,
-    containerClassName?: string
+    containerClassName?: string,
+    isSecure?: boolean
 }) {
     return (
         <View style={styles.textInputContainer} className={containerClassName}>
             <Text style={[styles.text, fontStyles.TextInputField]} className={textClassName}>{label}</Text>
             <TextInput
-                secureTextEntry={label === "Password"}
+                secureTextEntry={isSecure}
                 style={[styles.textInput, fontStyles.TextInputField, {height: height, paddingTop: paddingTop}]}
                 placeholder={placeholder}
                 value={value}

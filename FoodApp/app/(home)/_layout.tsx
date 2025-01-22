@@ -61,12 +61,21 @@ export default function HomeLayout() {
                     headerLeft: () => (<BackButton />)
                 }}
             />
+
+
             <Stack.Screen
-                name="addPaymentMethod"
+                name="(payment)"
+                options={{
+                    headerShown: false,
+                }}
+            />
+
+            <Stack.Screen
+                name="FaqAndContactUs"
                 options={{
                     headerShown: true,
                     headerStyle: {backgroundColor: '#F5CB58'},
-                    title: "Add Payment Method",
+                    title: "Contact Us",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
                     headerLeft: () => (<BackButton />)
@@ -74,14 +83,9 @@ export default function HomeLayout() {
             />
 
             <Stack.Screen
-                name="(payment)"
+                name="(settings)"
                 options={{
                     headerShown: false,
-                    // headerStyle: {backgroundColor: '#F5CB58'},
-                    // title: "Add New Payment Method",
-                    // headerTitleAlign: "center",
-                    // headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton />)
                 }}
             />
 

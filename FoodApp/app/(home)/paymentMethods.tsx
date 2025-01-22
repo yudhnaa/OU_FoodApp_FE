@@ -94,7 +94,7 @@ const PaymentMethods = () => {
                         </View>
                     )
                 })}
-                <Button buttonColor={Colors.Orange_2} textColor={Colors.Orange_Base} text={"Add new payment method"} onPress={() => router.push("/addPaymentMethod")}></Button>
+                <Button buttonColor={Colors.Orange_2} textColor={Colors.Orange_Base} text={"Add new payment method"} onPress={() => router.push("/(payment)/addPaymentMethod")}></Button>
 
 
             </View>

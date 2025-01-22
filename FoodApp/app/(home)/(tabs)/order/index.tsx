@@ -7,7 +7,6 @@ import {styles} from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
 import {useState} from "react";
 import {Tabs} from "expo-router";
-import {handlePress} from "react-native-paper/lib/typescript/components/RadioButton/utils";
 
 const orders = [
     {
@@ -106,7 +105,7 @@ export default function OrderPage() {
                         data={orders.filter(order => order.status === filteredOrders)}
                         renderItem={({item}) => (
                             <View className="m-5" style={styles1.orderContainer}>
-                                <Image source={item.image} style={styles1.orderImage}/>
+                                <Image source={item.image} style={styles1.image}/>
                                 <View className="ml-5 flex-1">
                                     <Text style={styles1.orderTitle}>{item.name}</Text>
                                     <Text style={styles1.orderPrice}>${item.price}</Text>
@@ -198,7 +197,7 @@ const styles1 = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 5,
     },
-    orderImage: {
+    image: {
         width: 100,
         height: 100,
         borderRadius: 10,

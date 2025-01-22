@@ -1,12 +1,10 @@
-import {transformFileAsync} from '@babel/core'
-import {router, Stack, useRouter} from 'expo-router'
-import {View, Text, Pressable, TextInput} from 'react-native'
-import {StyleSheet} from 'react-native'
-import {Icon} from 'react-native-paper'
+import React from 'react';
+import {StyleSheet, View} from "react-native";
+import {Stack} from "expo-router";
 
 import BackButton from '@/components/home/backButton'
 
-export default function paymentLayout() {
+function settingLayout() {
     return (
         <Stack screenOptions={{
             headerShown: true,
@@ -14,41 +12,51 @@ export default function paymentLayout() {
             headerShadowVisible: false,
         }}>
             <Stack.Screen
-                name="addCreditCard"
+                name="setting"
                 options={{
                     headerShown: true,
                     headerStyle: {backgroundColor: '#F5CB58'},
-                    title: "Add Credit Card",
+                    title: "Settings",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton/>)
+                    headerLeft: () => (<BackButton />)
                 }}
             />
             <Stack.Screen
-                name="[addOtherMethod]"
+                name="notification"
                 options={{
                     headerShown: true,
                     headerStyle: {backgroundColor: '#F5CB58'},
-                    title: "Add Other Method",
+                    title: "Notification",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton/>)
+                    headerLeft: () => (<BackButton />)
                 }}
             />
             <Stack.Screen
-                name="addPaymentMethod"
+                name="changePassword"
                 options={{
                     headerShown: true,
                     headerStyle: {backgroundColor: '#F5CB58'},
-                    title: "Add Payment Method",
+                    title: "Change Password",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton/>)
+                    headerLeft: () => (<BackButton />)
                 }}
             />
-
+            <Stack.Screen
+                name="deleteAccount"
+                options={{
+                    headerShown: true,
+                    headerStyle: {backgroundColor: '#F5CB58'},
+                    title: "Delete Account",
+                    headerTitleAlign: "center",
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (<BackButton />)
+                }}
+            />
         </Stack>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -81,3 +89,5 @@ const styles = StyleSheet.create({
         color: "#f8f8f8",
     },
 })
+
+export default settingLayout;

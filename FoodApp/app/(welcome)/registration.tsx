@@ -46,7 +46,7 @@ export default function Registration() {
         </View>
 
         {/* Password */}
-        <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword} />
+        <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword} isSecure={true} />
 
         {/* Email */}
         <InputField label="Email" placeholder="Enter email ..." value={email} onChange={setEmail} />
