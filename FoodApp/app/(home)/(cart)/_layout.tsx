@@ -32,6 +32,18 @@ function CartLayout() {
                     headerLeft: () => (<BackButton/>)
                 }}
             />
+
+            <Stack.Screen
+                name="orderConfirmed"
+                options={{
+                    headerShown: true,
+                    headerStyle: {backgroundColor: '#F5CB58'},
+                    title: "",
+                    headerTitleAlign: "center",
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (<BackButton/>)
+                }}
+            />
         </Stack>
     );
 }

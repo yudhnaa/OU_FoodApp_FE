@@ -237,7 +237,8 @@ const Payment: React.FC = () => {
     const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
 
     const handlePayment = () => {
-        alert("Payment successful");
+        router.dismissAll()
+        router.replace('/(cart)/orderConfirmed')
     };
 
     return (
