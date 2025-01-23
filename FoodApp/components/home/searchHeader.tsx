@@ -53,7 +53,7 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                 </Pressable>
 
                 {showCart && (
-                    <Cart visible={showCart} onCheckout={()=>{}} onCancel={()=>setShowCart(false)}/>
+                    <Cart visible={showCart} onCancel={()=>setShowCart(false)}/>
 
                 ) }
 

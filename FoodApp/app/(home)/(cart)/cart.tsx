@@ -5,10 +5,11 @@ import { Image } from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
 import Button from '@/components/home/button';
+import {router} from "expo-router";
+import {IconButton} from "react-native-paper";
 
 interface CartProps {
     visible: boolean;
-    onCheckout: () => void;
     onCancel: () => void;
 }
 
@@ -97,10 +98,13 @@ const orders = [
 
 const deleveryFee = 10.00;
 
-const Cart: React.FC<CartProps> = ({ visible, onCheckout, onCancel }) => {
+const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
     const [orderData, setOrderData] = useState(orders);
 
-    // Calculate subtotal dynamically using useMemo for better performance
+    const removeItem = (id: number) => {
+        setOrderData((prevData) => prevData.filter((item) => item.id !== id));
+    };
+
     const subtotal = useMemo(
         () => orderData.reduce((total, item) => total + item.price * item.items, 0),
         [orderData]
@@ -109,17 +113,20 @@ const Cart: React.FC<CartProps> = ({ visible, onCheckout, onCancel }) => {
     const handleAdd = (id: number) => {
         setOrderData((prevData) =>
             prevData.map((item) =>
-                item.id === id ? { ...item, items: item.items + 1 } : item
+                item.id === id ? {...item, items: item.items + 1} : item
             )
         );
     };
 
     const handleSubtract = (id: number) => {
-        setOrderData((prevData) =>
-            prevData.map((item) =>
-                item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
-            )
-        );
+        if (orderData.find((item) => item.id === id)?.items === 1)
+            removeItem(id);
+        else
+            setOrderData((prevData) =>
+                prevData.map((item) =>
+                    item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
+                )
+            );
     };
 
     const handleGesture = (event: any) => {
@@ -171,6 +178,8 @@ const Cart: React.FC<CartProps> = ({ visible, onCheckout, onCancel }) => {
                                                 <Pressable style={styles.trackButton} onPress={() => handleAdd(item.id)}>
                                                     <Text style={styles.trackButtonText}>+</Text>
                                                 </Pressable>
+                                                <IconButton className={""} icon={"trash-can"} iconColor={colors.Orange_2} size={20}
+                                                            onPress={()=> removeItem(item.id)}/>
                                             </View>
                                         </View>
                                     </View>
@@ -187,7 +196,14 @@ const Cart: React.FC<CartProps> = ({ visible, onCheckout, onCancel }) => {
                             {/* Checkout Button */}
                             <Button
                                 text="Check out"
-                                onPress={onCheckout}
+                                onPress={()=>{
+                                    if (orderData.length > 0) {
+                                        router.push("/checkout")
+                                        onCancel();
+                                    }
+                                    else
+                                        alert("Your cart is empty")
+                                }}
                                 buttonColor={colors.Yellow_Base}
                                 textColor={colors.Orange_Base}
                             />
@@ -209,7 +225,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderBottomLeftRadius: 30,
         backgroundColor: colors.Orange_Base,
-        width: '70%',
+        width: '80%',
         height: '100%',
         paddingHorizontal: 20,
         paddingVertical: 10,

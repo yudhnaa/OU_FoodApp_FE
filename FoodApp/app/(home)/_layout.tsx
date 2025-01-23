@@ -101,6 +101,18 @@ export default function HomeLayout() {
                 }}
             />
 
+            <Stack.Screen
+                name="(cart)"
+                options={{
+                    headerShown: false,
+                    headerStyle: {backgroundColor: '#F5CB58'},
+                    title: "Notifications",
+                    headerTitleAlign: "center",
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (<BackButton />)
+                }}
+            />
+
         </Stack>
     )
 }
