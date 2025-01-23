@@ -8,6 +8,8 @@ import Carousel from 'react-native-reanimated-carousel';
 import { useSharedValue, useDerivedValue } from 'react-native-reanimated';
 import { useFoodContext } from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
+import APIs,{endpoints} from '@/configs/APIs';
+import { useEffect,useState } from 'react';
 
 const data = [
     {
@@ -56,6 +58,62 @@ export default function HomePage() {
     const activeIndex = useSharedValue(0);
     const derivedActiveIndex = useDerivedValue(() => activeIndex.value);
     const { setSelectedFood } = useFoodContext();
+    const [new_Data,setNewData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try{
+                const dishType = await APIs.get(endpoints['dish_type']);
+                // console.log(dishType.data);
+
+                const dish = await APIs.get(endpoints['dish']);
+                console.log(dish.data);
+                const categories = dishType.data.map((item: any) => ({
+                   id : item.id,
+                   name : item.name,
+                   icon : { uri : item.image } 
+                }));
+
+                const food = dish.data.map((item: any) => ({
+                    id : item.id,
+                    name : item.name,
+                    price: `$${item.price}`,
+                    image : { uri : item.image },
+                    description : item.description,
+                    category : item.food_type
+                }));
+
+                const formattedData = [
+                    {
+                        type: 'categories',
+                        items: categories
+                    },
+                    {
+                        type: 'bestSeller',
+                        title: 'Best Seller',
+                        items: food
+                    },
+                    {
+                        type: 'promotion',
+                        text: 'Experience our delicious new dish',
+                        discount: '30% OFF',
+                    },
+                    {
+                        type: 'recommend',
+                        title: 'Recommend',
+                        items: food
+                    }
+                ];
+
+                setNewData(formattedData);
+            }
+            catch(error){
+                console.log(error);
+            }
+        };
+        fetchData();
+    },[]);
+    
     const renderItem = ({ item }) => {
         switch (item.type) {
             case 'categories':
@@ -177,7 +235,7 @@ export default function HomePage() {
 
     return (
         <FlatList
-            data={data}
+            data={new_Data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             contentContainerStyle={[
