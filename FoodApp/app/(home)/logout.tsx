@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, Modal } from 'react-native';
 import Button from '@/components/home/button';
 import fontStyles from '@/styles/fontStyles';
 
-interface LogoutModalProps {
+type LogoutModalProps = {
     visible: boolean;
     onConfirm: () => void;
     onCancel: () => void;

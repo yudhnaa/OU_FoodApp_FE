@@ -8,7 +8,7 @@ import Button from '@/components/home/button';
 import {router} from "expo-router";
 import {IconButton} from "react-native-paper";
 
-interface CartProps {
+type CartProps = {
     visible: boolean;
     onCancel: () => void;
 }

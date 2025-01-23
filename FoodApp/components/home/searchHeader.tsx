@@ -18,7 +18,7 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
     const [showCart, setShowCart] = React.useState(false);
 
     return (
-        <View className="flex-1 flex-row items-center mt-2">
+        <View className="flex-1 flex-row items-center mt-2 justify-around">
             {showBackButton && (
                 <Pressable
                     onPress={() => {
