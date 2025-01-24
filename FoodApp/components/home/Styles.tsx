@@ -216,4 +216,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 20
   },
+  button: {
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.Orange_Base,
+    padding: 10,
+    paddingHorizontal: 20,
+    margin: 20
+  },
 });

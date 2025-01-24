@@ -5,7 +5,7 @@ const fontStyles = StyleSheet.create({
     Paragraph: {
         fontFamily: 'Spartan_300Light',
         fontSize: 14,
-        lineHeight: 14,
+        lineHeight: 20,
     },
     Title: {
         fontFamily: 'Spartan_700Bold',
