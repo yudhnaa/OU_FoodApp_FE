@@ -83,12 +83,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.Orange_Base,
         padding: 20,
+        paddingTop:0,
         alignItems: 'center',
     },
     profileContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: '10%',
+        // marginVertical: '10%',
     },
     profileImage: {
         width: 70,

@@ -8,14 +8,14 @@ import {router} from "expo-router";
 import fontStyles from "../../../styles/fontStyles";
 
 
-function Setting(props) {
+function Setting() {
     return (
         <View style={bgStyle.backGround}>
             <View style={bgStyle.bodyPage}>
                 <View style={styles.container}>
                     <Image source={require("../../../assets/images/icons/ico_notification.svg")}
                            style={styles.image} contentFit={"contain"}></Image>
-                    <Pressable onPress={()=>{router.push('notification')}}>
+                    <Pressable onPress={()=>{router.push('notificationSetting')}}>
                         <Text style={styles.title}>Notification</Text>
                     </Pressable>
                 </View>
