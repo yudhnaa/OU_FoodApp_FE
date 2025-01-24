@@ -67,7 +67,7 @@ export default function TabBarLayout() {
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
           headerShadowVisible: false,
-          headerLeft: () => (<BackButton />)
+          // headerLeft: () => (<BackButton />)
         }}
       />
       <Tabs.Screen
@@ -91,7 +91,7 @@ export default function TabBarLayout() {
           title: "Help",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton />)
+          // headerLeft: () => (<BackButton />)
         }}
       />
       {/* <Tabs.Screen
