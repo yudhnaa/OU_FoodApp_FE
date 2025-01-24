@@ -11,52 +11,9 @@ import FoodFlatList from '@/components/home/foodFlatList';
 import APIs,{endpoints} from '@/configs/APIs';
 import { useEffect,useState } from 'react';
 
-const data = [
-    {
-        type: 'categories',
-        items: [
-            { id: '1', name: 'Snacks', icon: require('@/assets/images/logo/Snacks.png') },
-            { id: '2', name: 'Meal', icon: require('@/assets/images/logo/Meals.png') },
-            { id: '3', name: 'Vegan', icon: require('@/assets/images/logo/Vegan.png') },
-            { id: '4', name: 'Desserts', icon: require('@/assets/images/logo/Desserts.png') },
-            { id: '5', name: 'Drinks', icon: require('@/assets/images/logo/Drinks.png') },
-            { id: '6', name: 'More...', icon: require('@/assets/images/logo/Snacks.png') },
-        ],
-    },
-    {
-        type: 'bestSeller',
-        title: 'Best Seller',
-        items: [
-            { id: '1', name: 'Food 1', price: '$103.0', image: require('@/assets/images/bestSeller_pic/pic_1.png'),description : "This is the description of the Best Seller Dish 1",category: "Snacks", },
-            { id: '2', name: 'Food 2', price: '$50.0', image: require('@/assets/images/bestSeller_pic/pic_2.png'),description : "This is the description of the Best Seller Dish 2",category: "Meal", },
-            { id: '3', name: 'Food 3', price: '$12.99', image: require('@/assets/images/bestSeller_pic/pic_3.png'),description : "This is the description of the Best Seller Dish 3",category: "Vegan", },
-            { id: '4', name: 'Food 4', price: '$8.20', image: require('@/assets/images/bestSeller_pic/pic_4.png'),description : "This is the description of the Best Seller Dish 4",category: "Desserts", },
-        ],
-    },
-    {
-        type: 'promotion',
-        text: 'Experience our delicious new dish',
-        discount: '30% OFF',
-    },
-    {
-        type: 'recommend',
-        title: 'Recommend',
-        items: [
-            { id: '1', name: 'Food 1', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_1.png'),description : "This is the description of the Favorite Dish 1",category: "Snacks", },
-            { id: '2', name: 'Food 2', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_2.png'),description : "This is the description of the Favorite Dish 2",category: "Meal", },
-            { id: '3', name: 'Food 3', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_3.png'),description : "This is the description of the Favorite Dish 3",category: "Vegan", },
-            { id: '4', name: 'Food 4', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_4.png'),description : "This is the description of the Favorite Dish 4",category: "Desserts", },
-            { id: '5', name: 'Food 5', price: '$10.0', image: require('@/assets/images/bestSeller_pic/pic_1.png'),description : "This is the description of the Favorite Dish 5",category: "Drinks", },
-            { id: '6', name: 'Food 6', price: '$25.0', image: require('@/assets/images/bestSeller_pic/pic_2.png'),description : "This is the description of the Favorite Dish 6",category: "Snacks", },
-        ],
-    },
-];
-
 export default function HomePage() {
     const router = useRouter();
-    // const [activeIndex, setActiveIndex] = useState(0);
     const activeIndex = useSharedValue(0);
-    const derivedActiveIndex = useDerivedValue(() => activeIndex.value);
     const { setSelectedFood } = useFoodContext();
     const [new_Data,setNewData] = useState([]);
 
@@ -64,10 +21,8 @@ export default function HomePage() {
         const fetchData = async () => {
             try{
                 const dishType = await APIs.get(endpoints['dish_type']);
-                // console.log(dishType.data);
-
                 const dish = await APIs.get(endpoints['dish']);
-                console.log(dish.data);
+
                 const categories = dishType.data.map((item: any) => ({
                    id : item.id,
                    name : item.name,
@@ -80,7 +35,8 @@ export default function HomePage() {
                     price: `$${item.price}`,
                     image : { uri : item.image },
                     description : item.description,
-                    category : item.food_type
+                    category : item.food_type,
+                    categoryID : item.food_type_id,
                 }));
 
                 const formattedData = [
@@ -126,7 +82,7 @@ export default function HomePage() {
                             <View className='ml-4 flex-col justify-center items-center'>
                                 <View className='h-20 rounded-full' style={{ backgroundColor: '#F3E9B5', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                     <Pressable
-                                        onPress={() => router.navigate(`/category/${category.name}`)} // chuyển đến trang food với category.name
+                                        onPress={() => router.navigate(`/category/${category.id.toString()}`)}
                                         style={styles.categoryItem}
                                     >
                                         <Image source={category.icon}
@@ -166,7 +122,8 @@ export default function HomePage() {
                                     style={styles.productItem}
                                     onPress={() => {
                                         setSelectedFood(product);
-                                        router.push(`/category/${product.category}/${product.id}`);
+                                        console.log(product);
+                                        router.push(`/category/${product.categoryID.toString()}/${product.id}`);
                                     }}
                                 >
                                     <Image source={product.image} style={styles.productImage} />

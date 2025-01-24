@@ -1,14 +1,28 @@
-import { useLocalSearchParams } from "expo-router";
 import { View, Text, Image, ScrollView, Pressable,StyleSheet,TouchableOpacity } from "react-native";
 import colors from "@/styles/colors";
 import { useFoodContext } from "../FoodContext";
 import LoadingComponent from "@/components/home/LoadingComponents";
 import { Icon } from "react-native-paper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import APIs,{endpoints} from "@/configs/APIs";
 
 export default function FoodDetailPage() {
     const { selectedFood } = useFoodContext();
-    const [selectedTopping, setSelectedTopping] = useState('');
+    const [selectedTopping, setSelectedTopping] = useState([]);
+
+    const loadTopping = async () => {
+        try{
+            let res = await APIs.get(endpoints['dish_topping'](selectedFood.id));
+            setSelectedTopping(res.data);
+        }
+        catch(error){
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        loadTopping();
+    },[selectedFood.id]);
 
     const [quantity, setQuantity] = useState(1);
     const [pressedMinus, setPressedMinus] = useState(false);
@@ -23,13 +37,6 @@ export default function FoodDetailPage() {
     };
 
 
-    const toppings = [
-        { id: 1, name: 'Guacamole', price: 2.99 },
-        { id: 2, name: 'Jalapeños', price: 3.99 },
-        { id: 3, name: 'Ground Beef', price: 3.99 },
-        { id: 4, name: 'Pico de Gallo', price: 2.99 },
-    ];
-
     if (!selectedFood) {
         return <LoadingComponent />;
     }
@@ -42,7 +49,7 @@ export default function FoodDetailPage() {
 
             <View style={styles.content}>
                 <View style={styles.priceQuantityContainer}>
-                    <Text style={styles.price}>${selectedFood.price}</Text>
+                    <Text style={styles.price}>{selectedFood.price}</Text>
                     <View style={styles.quantityControl}>
                         <Pressable 
                             style={[
@@ -81,7 +88,7 @@ export default function FoodDetailPage() {
                 <Text style={styles.description}>{selectedFood.description}</Text>
 
                 <Text style={styles.toppingsTitle}>Toppings</Text>
-                {toppings.map((topping) => (
+                {selectedTopping.map((topping) => (
                 <Pressable 
                     key={topping.id} 
                     style={styles.toppingItem}

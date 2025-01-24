@@ -58,6 +58,15 @@ export default function HomeLayout() {
                     headerTitleAlign: "center",
                     headerLeft: () => (<BackButton />)
                 }} />
+
+                <Stack.Screen name="filter_page" options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: '#F5CB58' },
+                    headerTitle: "Filter",
+                    headerTitleStyle: styles.headerTitle,
+                    headerTitleAlign: "center",
+                    headerLeft: () => (<BackButton />)
+                }} />
             </Stack>
         </FoodProvider>
     )

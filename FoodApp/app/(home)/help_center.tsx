@@ -164,6 +164,7 @@ export default function HelpCenter() {
         <View style={styles.backGround}>
             <View style={styles.bodyPage}>
                 <View style={styles1.tabContainer}>
+                    
                     <Pressable style={[isFAQ === true ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => setFAQ(true)}>
                         <Text style={isFAQ === true ? styles1.tabTextActive : styles1.tabTextInactive}>FAQ</Text>
                     </Pressable>
@@ -174,6 +175,7 @@ export default function HelpCenter() {
                 </View>
 
                 {isFAQ ? <FAQ data={FAQ_type_data} /> : <ContactUs data={data["Contact Us"]} />}
+                
             </View>
         </View>
     );
