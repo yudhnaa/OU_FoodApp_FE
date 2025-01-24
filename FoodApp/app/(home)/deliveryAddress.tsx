@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Pressable, StyleSheet} from "react-native";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {Icon} from "react-native-paper";
+import {Icon, IconButton} from "react-native-paper";
 import {Image} from "expo-image";
 import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import {router} from "expo-router";
 import Button from "@/components/home/button";
 
-const addresses = [
+const address = [
     {
         id: 1,
         addressName: "Home",
@@ -42,12 +42,19 @@ const addresses = [
 
 export default function DeliveryAddress() {
 
-    const editAddress = (address: {id: number, addressName: string, address: string, icon: string}) => {
-        router.push({pathname:"/addAddress", params: address})
+    const [addresses, setAddresses] = useState(address)
+
+    const editAddress = (address: { id: number, addressName: string, address: string, icon: string }) => {
+        router.push({pathname: "/addAddress", params: address})
     }
 
-    const removeAddress = (address: {id: number, addressName: string, address: string, icon: string}, index: number) => {
-        addresses.splice(index, 1)
+    const removeAddress = (address: {
+        id: number,
+        addressName: string,
+        address: string,
+        icon: string
+    }, index: number) => {
+        setAddresses(addresses.filter((item, i) => i !== index))
     }
 
     return (
@@ -69,15 +76,12 @@ export default function DeliveryAddress() {
                                 </View>
                             </View>
 
-                            <View className={"flex-row"}>
-                                <Pressable onPress={()=>editAddress(address)}>
-                                    <Icon source={"pencil"} size={20} color={"black"}/>
-                                </Pressable>
+                            <View className={"flex-row justify-around"}>
+                                <IconButton icon={"pencil"} size={20} iconColor={"black"}
+                                            onPress={() => editAddress(address)}/>
 
-
-                                <Pressable onPress={()=>removeAddress(address, index)}>
-                                    <Icon source={"trash-can"} size={20} color={"red"}/>
-                                </Pressable>
+                                <IconButton icon={"trash-can"} size={20} iconColor={"red"}
+                                            onPress={() => removeAddress(address, index)}></IconButton>
                             </View>
                         </View>
                     )

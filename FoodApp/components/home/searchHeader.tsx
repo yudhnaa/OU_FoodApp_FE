@@ -3,6 +3,7 @@ import { View, TextInput, Pressable, StyleSheet, Image } from 'react-native';
 import { Icon } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import Cart from "@/app/(home)/(cart)/cart";
+import BackButton from '@/components/home/backButton';
 
 
 /**
@@ -25,7 +26,9 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                     className={`bg-white rounded-full h-10 px-3 text-base ${showBackButton ? 'w-[50%]' : 'w-[55%]'}`}
                     placeholder="Search"
                     style={{ fontSize: 13 }}
+
                 />
+
                 <View className="ml-2 mr-2 flex-row items-center rounded-full justify-center" style={styles.iconStyle}>
                     <Pressable onPress={() => router.push("/(home)/filter_page")}>
                         <Image

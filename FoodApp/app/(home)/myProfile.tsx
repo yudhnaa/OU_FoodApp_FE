@@ -27,7 +27,7 @@ function MyProfile() {
     const [dateOfBirth, setDateOfBirth] = useState(new Date(userInfo.dateOfBirth));
     const [phoneNumber, setPhoneNumber] = useState(userInfo.phoneNumber);
 
-    const onChange = (event: any, selectedDate?: Date) => {
+    const onChange = (event: any, selectedDate: any) => {
         if (selectedDate) {
             setDateOfBirth(selectedDate);
         }
@@ -67,8 +67,7 @@ function MyProfile() {
                             testID="dateTimePicker"
                             value={dateOfBirth}
                             mode={"date"}
-
-                            onChange={onChange}></DateTimePicker>
+                            onChange={onChange}/>
                     </View>
                 </View>
 
