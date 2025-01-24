@@ -15,21 +15,21 @@ function Setting() {
                 <View style={styles.container}>
                     <Image source={require("../../../assets/images/icons/ico_notification.svg")}
                            style={styles.image} contentFit={"contain"}></Image>
-                    <Pressable onPress={()=>{router.push('notificationSetting')}}>
+                    <Pressable onPress={()=>{router.push('/notificationSetting')}}>
                         <Text style={styles.title}>Notification</Text>
                     </Pressable>
                 </View>
                 <View style={styles.container}>
                     <Image source={require("../../../assets/images/icons/ico_key.svg")}
                            style={styles.image} contentFit={"contain"}></Image>
-                    <Pressable onPress={()=>{router.push('changePassword')}}>
+                    <Pressable onPress={()=>{router.push('/changePassword')}}>
                         <Text style={styles.title}>Change Password</Text>
                     </Pressable>
                 </View>
                 <View style={styles.container}>
                     <Image source={require("../../../assets/images/icons/ico_user.svg")}
                            style={styles.image} contentFit={"contain"}></Image>
-                    <Pressable onPress={()=>{router.push('deleteAccount')}}>
+                    <Pressable onPress={()=>{router.push('/deleteAccount')}}>
                         <Text style={styles.title}>Delete Account</Text>
                     </Pressable>
                 </View>
