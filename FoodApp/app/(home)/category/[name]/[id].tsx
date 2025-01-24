@@ -8,12 +8,13 @@ import APIs,{endpoints} from "@/configs/APIs";
 
 export default function FoodDetailPage() {
     const { selectedFood } = useFoodContext();
-    const [selectedTopping, setSelectedTopping] = useState([]);
+    const [selectedTopping, setSelectedTopping] = useState('');
+    const [toppings,setTopping] = useState([]);
 
     const loadTopping = async () => {
         try{
             let res = await APIs.get(endpoints['dish_topping'](selectedFood.id));
-            setSelectedTopping(res.data);
+            setTopping(res.data);
         }
         catch(error){
             console.log(error);
@@ -88,7 +89,7 @@ export default function FoodDetailPage() {
                 <Text style={styles.description}>{selectedFood.description}</Text>
 
                 <Text style={styles.toppingsTitle}>Toppings</Text>
-                {selectedTopping.map((topping) => (
+                {toppings.map((topping) => (
                 <Pressable 
                     key={topping.id} 
                     style={styles.toppingItem}

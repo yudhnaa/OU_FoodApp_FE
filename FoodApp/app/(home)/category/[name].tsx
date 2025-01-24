@@ -64,21 +64,23 @@ export default function CategoryPage() {
 
     return (
         <View style={styles.backGround}>
-            <View style={styles.header}>
-                <View style={styles.sortContainer}>
-                    <Text>Sort By</Text>
-                    <Pressable style={styles.sortButton}>
-                        <Text style={styles.sortButtonText}>Popular</Text>
-                        <Icon source="chevron-down" size={20} color="#E95322" />
-                    </Pressable>
+            <View style={styles.bodyPage}>
+                <View style={styles.header}>
+                    <View style={styles.sortContainer}>
+                        <Text>Sort By</Text>
+                        <Pressable style={styles.sortButton}>
+                            <Text style={styles.sortButtonText}>Popular</Text>
+                            <Icon source="chevron-down" size={20} color="#E95322" />
+                        </Pressable>
+                    </View>
                 </View>
+                <FlatList
+                    data={list_dish}
+                    renderItem={renderMenuItem}
+                    keyExtractor={item => item.id}
+                    contentContainerStyle={styles.menuList}
+                />
             </View>
-            <FlatList
-                data={list_dish}
-                renderItem={renderMenuItem}
-                keyExtractor={item => item.id}
-                contentContainerStyle={styles.menuList}
-            />
         </View>
     );
 }
