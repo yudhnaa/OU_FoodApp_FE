@@ -4,10 +4,34 @@ import { router } from "expo-router";
 import InputField from "@/components/welcome/inputField";
 import colors from "../../styles/colors";
 import { useState } from "react";
+import APIs, {endpoints} from "@/configs/APIs";
 
 export default function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+
+  const login = async () => {
+
+    let data = {
+      "grant_type": "password",
+      "username": userName,
+      "password": password,
+      "client_id": process.env.EXPO_PUBLIC_CLIENT_ID,
+      "client_secret": process.env.EXPO_PUBLIC_CLIENT_SECRET
+    }
+
+    try {
+      let res = await APIs.post(endpoints.login, data)
+
+      if (res.status === 200) {
+        alert("Login successfully")
+        router.navigate("/home")
+      }
+    } catch (ex) {
+      alert(`Error logging in ${ex}`)
+    }
+  }
+
   return (
     <View style={styles.backGround}>
       <View style={styles.signIn}>
@@ -15,11 +39,11 @@ export default function Login() {
         {/* Email */}
         <InputField label="Email or phone number" placeholder="Enter email or phone number ..." value={userName} onChange={setUserName} />
 
-        {/* ChangePassword */}
-        <InputField label="ChangePassword" placeholder="Enter password ..." value={password} onChange={setPassword} />
+        {/* Password */}
+        <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword} isSecure={true} />
 
         <View style={[styles.buttonContainer, {}]}>
-          <Pressable style={[styles.button, { paddingHorizontal: 30 }]} onPress={() => router.push("/registration")}>
+          <Pressable style={[styles.button, { paddingHorizontal: 30 }]} onPress={login}>
             <Text style={[styles.loginText, {}]}>Sign In</Text>
           </Pressable>
           <Text style={{ paddingHorizontal: 30 }}>Or</Text>
