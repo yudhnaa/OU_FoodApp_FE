@@ -36,7 +36,6 @@ export default function TabBarLayout() {
           headerStyle: { backgroundColor: '#F5CB58' },
           headerShadowVisible: false,
           headerTitle: () => <SearchHeader showBackButton={false} />
-
         }}
       />
       {/* <Tabs.Screen
@@ -68,7 +67,7 @@ export default function TabBarLayout() {
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
           headerShadowVisible: false,
-          headerLeft: () => (<BackButton />)
+          // headerLeft: () => (<BackButton />)
         }}
       />
       <Tabs.Screen
@@ -77,12 +76,7 @@ export default function TabBarLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialCommunityIcons name="clipboard-outline" color={focused ? "white" : "black"} size={24} />
           ),
-          headerShown: true,
-          headerStyle: { backgroundColor: '#F5CB58' },
-          title: "My orders",
-          headerTitleAlign: "center",
-          headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton />)
+          headerShown: false
         }}
       />
       <Tabs.Screen
@@ -97,7 +91,7 @@ export default function TabBarLayout() {
           title: "Help",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
-          headerLeft: () => (<BackButton />)
+          // headerLeft: () => (<BackButton />)
         }}
       />
       {/* <Tabs.Screen
@@ -125,9 +119,9 @@ const styles = StyleSheet.create({
     fontFamily: "Spartan_700Bold"
   },
   header: {
-    backgroundColor: '#F8C471',
+    backgroundColor: '#F8C471', // Màu nền của header
     padding: 10,
-    paddingTop: 40,
+    paddingTop: 40, // Để tạo khoảng cách cho status bar
   },
   headerTitle: {
     fontFamily: "Spartan_700Bold",

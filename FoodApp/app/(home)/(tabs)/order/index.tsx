@@ -1,11 +1,12 @@
-import { View, Text, Pressable, FlatList } from "react-native";
-import { Image } from "expo-image";
-import { router, Link } from "expo-router";
-import { StyleSheet } from "react-native";
+import {View, Text, Pressable, FlatList} from "react-native";
+import {Image} from "expo-image";
+import {router, Link} from "expo-router";
+import {StyleSheet} from "react-native";
 import colors from "@/styles/colors";
-import { styles } from "@/components/home/Styles";
+import {styles} from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
-import { useState } from "react";
+import {useState} from "react";
+import {Tabs} from "expo-router";
 
 const orders = [
     {
@@ -57,27 +58,54 @@ const orders = [
 export default function OrderPage() {
 
     const [filteredOrders, setFilteredOrders] = useState<string>("active");
+    const handlePress = (item: { status: string }) => {
+        switch (item.status) {
+            case "active":
+                return router.push('/order/orderCancel');
+            case "completed":
+                return router.push('/order/reviewOrder');
+            case "cancelled":
+                return console.log(item.status)
+        }
+    }
+
     const hasOrders = orders.filter(order => order.status === filteredOrders).length > 0;
+
     return (
         <View style={styles.backGround}>
             <View style={styles.bodyPage}>
                 <View style={styles1.tabContainer}>
-                    <Pressable style={[filteredOrders === "active" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => { setFilteredOrders("active") }}>
-                        <Text style={filteredOrders === "active" ? styles1.tabTextActive : styles1.tabTextInactive}>Active</Text>
+                    <Pressable
+                        style={[filteredOrders === "active" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
+                        onPress={() => {
+                            setFilteredOrders("active")
+                        }}>
+                        <Text
+                            style={filteredOrders === "active" ? styles1.tabTextActive : styles1.tabTextInactive}>Active</Text>
                     </Pressable>
-                    <Pressable style={[filteredOrders === "completed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => { setFilteredOrders("completed") }}>
-                        <Text style={filteredOrders === "completed" ? styles1.tabTextActive : styles1.tabTextInactive}>Completed</Text>
+                    <Pressable
+                        style={[filteredOrders === "completed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
+                        onPress={() => {
+                            setFilteredOrders("completed")
+                        }}>
+                        <Text
+                            style={filteredOrders === "completed" ? styles1.tabTextActive : styles1.tabTextInactive}>Completed</Text>
                     </Pressable>
-                    <Pressable style={[filteredOrders === "cancelled" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => { setFilteredOrders("cancelled") }}>
-                        <Text style={filteredOrders === "cancelled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
+                    <Pressable
+                        style={[filteredOrders === "cancelled" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
+                        onPress={() => {
+                            setFilteredOrders("cancelled")
+                        }}>
+                        <Text
+                            style={filteredOrders === "cancelled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
                     </Pressable>
                 </View>
                 {hasOrders ? (
                     <FlatList
                         data={orders.filter(order => order.status === filteredOrders)}
-                        renderItem={({ item }) => (
+                        renderItem={({item}) => (
                             <View className="m-5" style={styles1.orderContainer}>
-                                <Image source={item.image} style={styles1.orderImage} />
+                                <Image source={item.image} style={styles1.image}/>
                                 <View className="ml-5 flex-1">
                                     <Text style={styles1.orderTitle}>{item.name}</Text>
                                     <Text style={styles1.orderPrice}>${item.price}</Text>
@@ -85,14 +113,38 @@ export default function OrderPage() {
                                         <Text style={styles1.orderDetails}>{item.date}</Text>
                                         <Text style={styles1.orderDetails}>{item.items} items</Text>
                                     </View>
-                                    <View className="flex-row justify-between">
-                                        <Pressable style={styles1.cancelButton}>
-                                            <Text style={{ color: colors.Font_2, ...fontsStyles.subtitulo, fontSize: 13 }}>Cancel Order</Text>
-                                        </Pressable>
-                                        <Pressable style={styles1.trackButton}>
-                                            <Text style={{ color: colors.Orange_Base, ...fontsStyles.subtitulo, fontSize: 13 }}>Track Driver</Text>
-                                        </Pressable>
-                                    </View>
+                                    {(item.status === "completed" || item.status === "active") && (
+                                        <View className="flex-row justify-between">
+                                            <Pressable style={styles1.cancelButton}
+                                                       onPress={() => handlePress(item)}>
+                                                <Text style={{
+                                                    color: colors.Font_2, ...fontsStyles.subtitulo,
+                                                    fontSize: 13
+                                                }}>
+                                                    {item.status === "completed" ? "Leave a review" : "Cancel Order"}
+                                                </Text>
+                                            </Pressable>
+                                            <Pressable style={styles1.trackButton}>
+                                                <Text style={{
+                                                    color: colors.Orange_Base, ...fontsStyles.subtitulo,
+                                                    fontSize: 13
+                                                }}>
+                                                    {item.status === "completed" ? "Order again" : "Track Driver"}
+                                                </Text>
+                                            </Pressable>
+                                        </View>
+                                    )}
+                                    {item.status === "cancelled" && (
+                                        <View className={"flex-row items-center justify-start"}>
+                                            <Image source={require('@/assets/images/icons/cancelled.png')}
+                                                   style={{width: 15, height: 15}}/>
+                                            <Text style={{
+                                                color: colors.Orange_Base, ...fontsStyles.subtitulo,
+                                                fontSize: 13,
+                                                paddingLeft: 5,
+                                            }}>Order cancelled</Text>
+                                        </View>
+                                    )}
                                 </View>
                             </View>
                         )}
@@ -100,16 +152,16 @@ export default function OrderPage() {
 
                 ) : (
                     <View style={styles1.emptyState}>
-                        <Image source={require('@/assets/images/icons/empty_order.png')} style={styles1.emptyImage} />
+                        <Image source={require('@/assets/images/icons/empty_order.png')} style={styles1.emptyImage}/>
                         <Text style={styles1.emptyText}>You don't have any active orders at this time</Text>
                     </View>
                 )}
             </View>
-        </View >
+        </View>
     );
 }
 
-// Add your styles here
+
 const styles1 = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
@@ -145,7 +197,7 @@ const styles1 = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 5,
     },
-    orderImage: {
+    image: {
         width: 100,
         height: 100,
         borderRadius: 10,

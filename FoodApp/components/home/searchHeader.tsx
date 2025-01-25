@@ -2,6 +2,8 @@ import React from 'react';
 import { View, TextInput, Pressable, StyleSheet, Image } from 'react-native';
 import { Icon } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import Cart from "@/app/(home)/(cart)/cart";
+import BackButton from '@/components/home/backButton';
 
 
 /**
@@ -14,6 +16,8 @@ type SearchHeaderProps = {
 
 export default function SearchHeader({ showBackButton = false }: SearchHeaderProps) {
     const router = useRouter();
+    const [showCart, setShowCart] = React.useState(false);
+
     return (
         <View className="flex-1 flex-row items-center mt-2">
             <View className='flex-row items-center justify-between w-[65%] h-10 rounded-full bg-white'>
@@ -22,7 +26,9 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                     className={`bg-white rounded-full h-10 px-3 text-base ${showBackButton ? 'w-[50%]' : 'w-[55%]'}`}
                     placeholder="Search"
                     style={{ fontSize: 13 }}
+
                 />
+
                 <View className="ml-2 mr-2 flex-row items-center rounded-full justify-center" style={styles.iconStyle}>
                     <Pressable onPress={() => router.push("/(home)/filter_page")}>
                         <Image
@@ -33,16 +39,22 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                 </View>
             </View>
             <View className="ml-2 flex-row items-center justify-center w-10 h-10" style={styles.iconStyle}>
-                <Pressable>
+                <Pressable onPress={()=>setShowCart(true)}>
                     <Icon
                         source="cart-outline"
                         color={"#E95322"}
                         size={28}
                     />
                 </Pressable>
+
+                {showCart && (
+                    <Cart visible={showCart} onCancel={()=>setShowCart(false)}/>
+
+                ) }
+
             </View>
             <View className="ml-2 flex-row items-center justify-center w-10 h-10" style={styles.iconStyle}>
-                <Pressable>
+                <Pressable onPress={()=>router.push('/notifications')}>
                     <Icon
                         source="bell-outline"
                         color={"#E95322"}

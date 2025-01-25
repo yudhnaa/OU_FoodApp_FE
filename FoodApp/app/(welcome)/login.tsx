@@ -15,8 +15,8 @@ export default function Login() {
         {/* Email */}
         <InputField label="Email or phone number" placeholder="Enter email or phone number ..." value={userName} onChange={setUserName} />
 
-        {/* Password */}
-        <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword} />
+        {/* ChangePassword */}
+        <InputField label="ChangePassword" placeholder="Enter password ..." value={password} onChange={setPassword} />
 
         <View style={[styles.buttonContainer, {}]}>
           <Pressable style={[styles.button, { paddingHorizontal: 30 }]} onPress={() => router.push("/registration")}>

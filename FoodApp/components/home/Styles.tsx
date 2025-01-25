@@ -192,13 +192,16 @@ export const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 12,
     height: 25,
-    width: 45,
+    width: 50,
+    marginLeft: 20
   },
   ratingText: {
     color: 'white',
     fontWeight: '500',
     fontFamily: 'Spartan_500Medium',
     fontSize: 12,
+    textAlign: 'center',
+    paddingLeft: 3
   },
   seperateLine: {
     borderBottomWidth: 0.5,
@@ -215,5 +218,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     marginBottom: 20
+  },
+  button: {
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.Orange_Base,
+    padding: 10,
+    paddingHorizontal: 20,
+    margin: 20
   },
 });
