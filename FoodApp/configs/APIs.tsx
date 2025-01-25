@@ -14,14 +14,14 @@ export const endpoints = {
 
 }
 
-export const authApi = () => {
-    return axios.create({
-        baseURL: BASE_URL,
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
-    });
-}
+// export const authApi = () => {
+//     return axios.create({
+//         baseURL: BASE_URL,
+//         headers: {
+//             'Authorization': 'Bearer ' + localStorage.getItem('token')
+//         }
+//     });
+// }
 
 
 export default axios.create({

@@ -1,106 +1,120 @@
-import React from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { router } from "expo-router";
+import React, {useEffect} from "react";
+import {Text, View, StyleSheet, Pressable} from "react-native";
+import {router} from "expo-router";
 import InputField from "@/components/welcome/inputField";
 import colors from "../../styles/colors";
-import { useState } from "react";
+import {useState} from "react";
 import APIs, {endpoints} from "@/configs/APIs";
 
 export default function Login() {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
 
-  const login = async () => {
+    const login = async () => {
 
-    let data = {
-      "grant_type": "password",
-      "username": userName,
-      "password": password,
-      "client_id": process.env.EXPO_PUBLIC_CLIENT_ID,
-      "client_secret": process.env.EXPO_PUBLIC_CLIENT_SECRET
+        let data = {
+            "grant_type": "password",
+            "username": userName,
+            "password": password,
+            "client_id": process.env.EXPO_PUBLIC_CLIENT_ID,
+            "client_secret": process.env.EXPO_PUBLIC_CLIENT_SECRET
+        }
+
+        try {
+            let res = await APIs.post(endpoints.login, data)
+
+            if (res.status === 200) {
+                alert("Login successfully")
+                router.dismissAll()
+                router.navigate("/home")
+            }
+        } catch (ex) {
+            alert(`Error logging in ${ex}`)
+        }
     }
 
-    try {
-      let res = await APIs.post(endpoints.login, data)
-
-      if (res.status === 200) {
-        alert("Login successfully")
-        router.navigate("/home")
-      }
-    } catch (ex) {
-      alert(`Error logging in ${ex}`)
+    const fillDefaultInfo = () => {
+        setUserName("user1")
+        setPassword("user1")
     }
-  }
 
-  return (
-    <View style={styles.backGround}>
-      <View style={styles.signIn}>
+    useEffect(() => {
+        fillDefaultInfo()
+    }, []);
 
-        {/* Email */}
-        <InputField label="Email or phone number" placeholder="Enter email or phone number ..." value={userName} onChange={setUserName} />
+    return (
+        <View style={styles.backGround}>
+            <View style={styles.signIn}>
 
-        {/* Password */}
-        <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword} isSecure={true} />
+                {/* username */}
+                <InputField label="Email or phone number" placeholder="Enter email or phone number ..." value={userName}
+                            onChange={setUserName}
+                            autoCapitalize={'none'}/>
 
-        <View style={[styles.buttonContainer, {}]}>
-          <Pressable style={[styles.button, { paddingHorizontal: 30 }]} onPress={login}>
-            <Text style={[styles.loginText, {}]}>Sign In</Text>
-          </Pressable>
-          <Text style={{ paddingHorizontal: 30 }}>Or</Text>
-          <Text style={{ paddingHorizontal: 30 }}>Google</Text>
+                {/* Password */}
+                <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword}
+                            isSecure={true}
+                            autoCapitalize={'none'}/>
+
+                <View style={[styles.buttonContainer, {}]}>
+                    <Pressable style={[styles.button, {paddingHorizontal: 30}]} onPress={login}>
+                        <Text style={[styles.loginText, {}]}>Sign In</Text>
+                    </Pressable>
+                    <Text style={{paddingHorizontal: 30}}>Or</Text>
+                    <Text style={{paddingHorizontal: 30}}>Google</Text>
+                </View>
+
+                {/* Terms of Use */}
+                <View style={styles.termsContainer}>
+                    <Text style={styles.termsText}>
+                        By continuing, you agree to Terms of Use and Privacy Policy
+                    </Text>
+                </View>
+            </View>
         </View>
-
-        {/* Terms of Use */}
-        <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>
-            By continuing, you agree to Terms of Use and Privacy Policy
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  backGround: {
-    backgroundColor: colors.Yellow_Base,
-    flex: 1,
-  },
-  signIn: {
-    flex: 1,
-    backgroundColor: colors.Font_2,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingVertical: 20,
-    alignItems: "center",
-  },
-  buttonContainer: {
-    width: "80%",
-    height: "6%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    marginVertical: "3%",
-  },
-  button: {
-    height: "100%",
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.Orange_Base,
-  },
-  loginText: {
-    fontSize: 20,
-    textTransform: "capitalize",
-    fontWeight: "500",
-    color: "white",
-  },
-  termsContainer: {
-    marginTop: "auto",
-    paddingHorizontal: "10%",
-    paddingBottom: 20,
-  },
-  termsText: {
-    textAlign: "center",
-  },
+    backGround: {
+        backgroundColor: colors.Yellow_Base,
+        flex: 1,
+    },
+    signIn: {
+        flex: 1,
+        backgroundColor: colors.Font_2,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingVertical: 20,
+        alignItems: "center",
+    },
+    buttonContainer: {
+        width: "80%",
+        height: "6%",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        marginVertical: "3%",
+    },
+    button: {
+        height: "100%",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.Orange_Base,
+    },
+    loginText: {
+        fontSize: 20,
+        textTransform: "capitalize",
+        fontWeight: "500",
+        color: "white",
+    },
+    termsContainer: {
+        marginTop: "auto",
+        paddingHorizontal: "10%",
+        paddingBottom: 20,
+    },
+    termsText: {
+        textAlign: "center",
+    },
 });
