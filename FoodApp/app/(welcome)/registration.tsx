@@ -55,7 +55,7 @@ export default function Registration() {
             if (res.status === 201) {
                 alert("Register successfully")
                 router.dismissAll()
-                router.navigate("/login")
+                router.replace("/login")
             }
         } catch (ex) {
             alert(`Error registering ${ex}`)

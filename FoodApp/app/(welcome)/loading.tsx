@@ -1,10 +1,11 @@
-import { View, StyleSheet, Alert, Linking } from "react-native";
+import {View, StyleSheet, Alert, Linking} from "react-native";
 import * as Location from "expo-location";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import Constrains from "expo-constants";
-import { Image } from "expo-image";
-import { router } from "expo-router";
+import {Image} from "expo-image";
+import {router} from "expo-router";
 import colors from "../../styles/colors";
+import {getObjectValue} from "@/components/asyncStorage";
 // import { canGoBack } from "expo-router/build/global-state/routing";
 
 
@@ -43,7 +44,7 @@ export default function Loading() {
                         },
                     },
                 ],
-                { cancelable: false }
+                {cancelable: false}
             );
         } else {
             setLocationServices(true);
@@ -51,7 +52,7 @@ export default function Loading() {
     };
 
     const checkLocationPermission = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
+        let {status} = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
             Alert.alert(
@@ -72,7 +73,7 @@ export default function Loading() {
     };
 
     const getCurrentLocation = async () => {
-        let { latitude, longitude } = (await Location.getCurrentPositionAsync())
+        let {latitude, longitude} = (await Location.getCurrentPositionAsync())
             .coords;
 
         let address = await Location.reverseGeocodeAsync({
@@ -83,9 +84,21 @@ export default function Loading() {
     };
 
     useEffect(() => {
-        if (locationServicesEnabled && locationPermission === "granted" && currentAddress) {
-            router.replace("/welcome");
+        const checkAndNavigate = async () => {
+            if (locationServicesEnabled && locationPermission === "granted" && currentAddress) {
+                let oauth2Token = await getObjectValue('oauth2-token');
+                let getTokenDate = new Date(oauth2Token.date)
+                let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
+
+                if (oauth2Token !== null && expireDate > new Date()) {
+                    router.replace("/home");
+                } else
+                    router.replace("/welcome");
+
+            }
         }
+
+        checkAndNavigate()
     }, [locationServicesEnabled, locationPermission, currentAddress]);
 
     return (

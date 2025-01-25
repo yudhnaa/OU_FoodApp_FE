@@ -7,7 +7,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import {useSharedValue} from 'react-native-reanimated';
 import {useFoodContext} from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
-import APIs, {endpoints} from '@/configs/APIs';
+import APIs, {endpoints, authApi} from '@/configs/APIs';
 import {useEffect, useState} from 'react';
 
 export default function HomePage() {
@@ -25,6 +25,13 @@ export default function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                let checkUser = await (await authApi()).get(endpoints.get_user);
+                if (checkUser.status !== 200) {
+                    alert('Please login to continue');
+                    router.dismissAll()
+                    router.replace('/login');
+                }
+
                 const dishType = await APIs.get(endpoints['dish_type']);
                 const dish = await APIs.get(endpoints['dish']);
 

@@ -5,10 +5,12 @@ import InputField from "@/components/welcome/inputField";
 import colors from "../../styles/colors";
 import {useState} from "react";
 import APIs, {endpoints} from "@/configs/APIs";
+import {storeObjectValue} from "@/components/asyncStorage";
 
 export default function Login() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+
 
     const login = async () => {
 
@@ -25,8 +27,14 @@ export default function Login() {
 
             if (res.status === 200) {
                 alert("Login successfully")
+
+                // Save token to local storage
+                storeObjectValue('oauth2-token', {
+                    ...res.data,
+                    date: new Date()
+                })
                 router.dismissAll()
-                router.navigate("/home")
+                router.replace("/home")
             }
         } catch (ex) {
             alert(`Error logging in ${ex}`)
