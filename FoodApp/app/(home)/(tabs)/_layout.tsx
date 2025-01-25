@@ -1,12 +1,9 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-import { Icon } from 'react-native-paper';
-import { router } from 'expo-router';
+import { StyleSheet} from 'react-native';
 import { usePathname } from 'expo-router';
 import SearchHeader from '@/components/home/searchHeader';
-import BackButton from '@/components/home/backButton';
 
 export default function TabBarLayout() {
   const pathname = usePathname();
@@ -29,7 +26,7 @@ export default function TabBarLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="home-outline" color={focused ? "white" : "black"} size={24} />
           ),
           headerShown: true,
@@ -58,7 +55,7 @@ export default function TabBarLayout() {
       <Tabs.Screen
         name="favorite"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="heart-outline" color={focused ? "white" : "black"} size={24} />
           ),
           headerShown: true,
@@ -73,7 +70,7 @@ export default function TabBarLayout() {
       <Tabs.Screen
         name="order"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="clipboard-outline" color={focused ? "white" : "black"} size={24} />
           ),
           headerShown: false
@@ -82,7 +79,7 @@ export default function TabBarLayout() {
       <Tabs.Screen
         name="help"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="headset" color={focused ? "white" : "black"} size={24} />
           ),
           headerShown: true,

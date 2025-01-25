@@ -2,8 +2,6 @@ import React from 'react';
 import {View, Text, FlatList, StyleSheet} from "react-native";
 import {styles as bgStyles} from "@/components/home/Styles";
 import {Image} from "expo-image";
-import colors from "@/styles/colors";
-import fontsStyles from "@/styles/fontStyles";
 
 const notifications = [
     {

@@ -1,10 +1,10 @@
-import { Text, View, Pressable, StyleSheet, TextInput, TouchableOpacity,Image,Linking } from "react-native";
+import { Text, View, Pressable, StyleSheet, TextInput, TouchableOpacity, Linking } from "react-native";
 import { styles } from "@/components/home/Styles";
 import colors from "@/styles/colors";
 import fontsStyles from "@/styles/fontStyles";
 import { useState } from "react";
 import { Icon } from "react-native-paper";
-
+import { Image } from "expo-image";
 type FAQTypeKeys = 'general' | 'account' | 'service';
 
 const data = {
@@ -142,7 +142,7 @@ const ContactUs = ({ data }: { data: { name: string; link: string,image : string
                 <View style = {styles1.contactContainer} key={index}>
                     <Pressable style = {styles1.contact} onPress={() => {Linking.openURL(item.link)}}>
                         <View style = {{flexDirection : 'row', alignItems : 'center',justifyContent : 'center'}}>
-                            <Image className="mr-2" source={item.image} />
+                            <Image className="mr-2" source={item.image}  style={{width: 30, height: 30}}/>
                             <Text className="pt-4" style={[styles1.question]}>{item.name}</Text>
                         </View>
                         <Icon 
@@ -165,12 +165,12 @@ export default function HelpCenter() {
             <View style={styles.bodyPage}>
                 <View style={styles1.tabContainer}>
                     
-                    <Pressable style={[isFAQ === true ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => setFAQ(true)}>
-                        <Text style={isFAQ === true ? styles1.tabTextActive : styles1.tabTextInactive}>FAQ</Text>
+                    <Pressable style={[isFAQ ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => setFAQ(true)}>
+                        <Text style={isFAQ ? styles1.tabTextActive : styles1.tabTextInactive}>FAQ</Text>
                     </Pressable>
 
-                    <Pressable style={[isFAQ === false ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => setFAQ(false)}>
-                        <Text style={isFAQ === false ? styles1.tabTextActive : styles1.tabTextInactive}>Contact Us</Text>
+                    <Pressable style={[!isFAQ ? styles1.activeTab : styles1.inactiveTab, styles1.tab]} onPress={() => setFAQ(false)}>
+                        <Text style={!isFAQ ? styles1.tabTextActive : styles1.tabTextInactive}>Contact Us</Text>
                     </Pressable>
                 </View>
 

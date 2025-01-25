@@ -1,4 +1,4 @@
-import { View, StyleSheet, Alert, Linking, Text } from "react-native";
+import { View, StyleSheet, Alert, Linking } from "react-native";
 import * as Location from "expo-location";
 import { useState, useEffect } from "react";
 import Constrains from "expo-constants";

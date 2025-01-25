@@ -1,42 +1,47 @@
-import { View, Text, FlatList, Image, Pressable, StyleSheet } from 'react-native';
-import { router, Link } from "expo-router";
+import {View, Text, FlatList, Image, Pressable} from 'react-native';
 import colors from "@/styles/colors";
-import { styles } from "@/components/home/Styles";
-import { useRouter } from 'expo-router';
-import { Icon } from 'react-native-paper'
+import {styles} from "@/components/home/Styles";
+import {useRouter} from 'expo-router';
+import {Icon} from 'react-native-paper'
 import Carousel from 'react-native-reanimated-carousel';
-import { useSharedValue, useDerivedValue } from 'react-native-reanimated';
-import { useFoodContext } from "@/app/(home)/category/FoodContext";
+import {useSharedValue} from 'react-native-reanimated';
+import {useFoodContext} from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
-import APIs,{endpoints} from '@/configs/APIs';
-import { useEffect,useState } from 'react';
+import APIs, {endpoints} from '@/configs/APIs';
+import {useEffect, useState} from 'react';
 
 export default function HomePage() {
     const router = useRouter();
     const activeIndex = useSharedValue(0);
-    const { setSelectedFood } = useFoodContext();
-    const [new_Data,setNewData] = useState([]);
+    const {setSelectedFood} = useFoodContext();
+    const [new_Data, setNewData] = useState<Array<{
+        type: string;
+        items?: any;
+        title?: string;
+        text?: string;
+        discount?: string
+    }>>([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            try{
+            try {
                 const dishType = await APIs.get(endpoints['dish_type']);
                 const dish = await APIs.get(endpoints['dish']);
 
                 const categories = dishType.data.map((item: any) => ({
-                   id : item.id,
-                   name : item.name,
-                   icon : { uri : item.image } 
+                    id: item.id,
+                    name: item.name,
+                    icon: {uri: item.image}
                 }));
 
                 const food = dish.data.map((item: any) => ({
-                    id : item.id,
-                    name : item.name,
+                    id: item.id,
+                    name: item.name,
                     price: `$${item.price}`,
-                    image : { uri : item.image },
-                    description : item.description,
-                    category : item.food_type,
-                    categoryID : item.food_type_id,
+                    image: {uri: item.image},
+                    description: item.description,
+                    category: item.food_type,
+                    categoryID: item.food_type_id,
                 }));
 
                 const formattedData = [
@@ -62,15 +67,16 @@ export default function HomePage() {
                 ];
 
                 setNewData(formattedData);
-            }
-            catch(error){
+            } catch (error) {
                 console.log(error);
             }
         };
         fetchData();
-    },[]);
-    
-    const renderItem = ({ item }) => {
+    }, []);
+
+    const renderItem = ({item}: {
+        item: { type: string; items?: any; title?: string; text?: string; discount?: string }
+    }) => {
         switch (item.type) {
             case 'categories':
                 return (
@@ -78,16 +84,21 @@ export default function HomePage() {
                         data={item.items}
                         horizontal // cuộn theo chiều ngang
                         keyExtractor={(category) => category.id}
-                        renderItem={({ item: category }) => (
+                        renderItem={({item: category}) => (
                             <View className='ml-4 flex-col justify-center items-center'>
-                                <View className='h-20 rounded-full' style={{ backgroundColor: '#F3E9B5', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <View className='h-20 rounded-full' style={{
+                                    backgroundColor: '#F3E9B5',
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
                                     <Pressable
                                         onPress={() => router.navigate(`/category/${category.id.toString()}`)}
                                         style={styles.categoryItem}
                                     >
                                         <Image source={category.icon}
-                                            style={styles.categoryIcon}
-                                            resizeMode="contain"
+                                               style={styles.categoryIcon}
+                                               resizeMode="contain"
                                         />
                                     </Pressable>
                                 </View>
@@ -104,8 +115,9 @@ export default function HomePage() {
                     <View style={styles.section}>
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
-                            <Pressable onPress={() => router.push('/best_seller')} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ color: '#E95322',fontFamily:'Spartan_600SemiBold' }}>View all</Text>
+                            <Pressable onPress={() => router.push('/best_seller')}
+                                       style={{flexDirection: 'row', alignItems: 'center'}}>
+                                <Text style={{color: '#E95322', fontFamily: 'Spartan_600SemiBold'}}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
@@ -117,7 +129,7 @@ export default function HomePage() {
                             data={item.items}
                             horizontal
                             keyExtractor={(product) => product.id}
-                            renderItem={({ item: product }) => (
+                            renderItem={({item: product}) => (
                                 <Pressable
                                     style={styles.productItem}
                                     onPress={() => {
@@ -126,7 +138,7 @@ export default function HomePage() {
                                         router.push(`/category/${product.categoryID.toString()}/${product.id}`);
                                     }}
                                 >
-                                    <Image source={product.image} style={styles.productImage} />
+                                    <Image source={product.image} style={styles.productImage}/>
                                     <Text style={styles.categoryText}>{product.name}</Text>
                                     <Text style={styles.productPrice}>{product.price}</Text>
                                 </Pressable>
@@ -149,7 +161,7 @@ export default function HomePage() {
                             onSnapToItem={(index) => {
                                 activeIndex.value = index; // Update shared value
                             }}
-                            renderItem={({ index }) => (
+                            renderItem={({index}) => (
                                 <View style={styles.promotionSlide}>
                                     <View style={styles.promotionContent}>
                                         <View style={styles.promotionTextContainer}>
@@ -171,8 +183,9 @@ export default function HomePage() {
                     <View style={styles.section}>
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
-                            <Pressable onPress={() => router.push('/recommend_page')} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ color: '#E95322',fontFamily:'Spartan_600SemiBold' }}>View all</Text>
+                            <Pressable onPress={() => router.push('/recommend_page')}
+                                       style={{flexDirection: 'row', alignItems: 'center'}}>
+                                <Text style={{color: '#E95322', fontFamily: 'Spartan_600SemiBold'}}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
@@ -181,8 +194,8 @@ export default function HomePage() {
                             </Pressable>
                         </View>
 
-                        <FoodFlatList data={item.items} />
-                        
+                        <FoodFlatList data={item.items}/>
+
                     </View>
                 );
             default:
@@ -205,7 +218,7 @@ export default function HomePage() {
                     paddingVertical: 20,
                 }// Đảm bảo chiều cao FlatList
             ]}
-            style={{ flex: 1, backgroundColor: colors.Yellow_Base }}
+            style={{flex: 1, backgroundColor: colors.Yellow_Base}}
         />
     );
 }

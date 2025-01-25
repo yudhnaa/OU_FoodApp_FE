@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, Text, View} from "react-native";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {Icon} from "react-native-paper";
 import {Image} from "expo-image";
 import InputField from "@/components/welcome/inputField";
 import Button from "@/components/home/button";

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Button, ScrollView, Pressable} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, ScrollView, Pressable} from 'react-native';
 import {RadioButton} from "react-native-paper";
 import {StyleSheet} from 'react-native';
 

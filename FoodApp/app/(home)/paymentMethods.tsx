@@ -1,12 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Pressable, StyleSheet} from "react-native";
+import {View, Text, StyleSheet} from "react-native";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {Icon, IconButton} from "react-native-paper";
+import {IconButton} from "react-native-paper";
 import {Image} from "expo-image";
 import Colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import {router} from "expo-router";
 import Button from "@/components/home/button";
+
+type PaymentMethod = {
+    id: number;
+    methodName: string;
+    icon: any;
+    isDefault: boolean;
+};
 
 const paymentMethods = [
     {
@@ -36,10 +43,9 @@ const paymentMethods = [
 
 const PaymentMethods = () => {
 
-    const [defaultMethod, setDefaultMethod] = useState();
+    const [defaultMethod, setDefaultMethod] = useState<PaymentMethod>();
 
-    const setDefault = (method) => {
-
+    const setDefault = (method: PaymentMethod) => {
         if (method) {
             if (defaultMethod) {
                 defaultMethod.isDefault = false;
@@ -47,8 +53,7 @@ const PaymentMethods = () => {
             method.isDefault = true;
             setDefaultMethod(method);
         }
-
-    }
+    };
 
     useEffect(() => {
         paymentMethods.find((method) => {
@@ -59,9 +64,9 @@ const PaymentMethods = () => {
 
     }, [])
 
-    const removeMethod = (method, index) => {
+    const removeMethod = (method: PaymentMethod, index: number) => {
         console.log("removeMethod", method, index);
-    }
+    };
 
 
     return (

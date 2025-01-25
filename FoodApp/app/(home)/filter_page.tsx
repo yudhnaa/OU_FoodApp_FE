@@ -1,10 +1,7 @@
 import {View, Text, StyleSheet, FlatList, Image, Pressable} from 'react-native';
-import {router} from 'expo-router';
 import {styles} from '@/components/home/Styles';
 import APIs,{endpoints} from '@/configs/APIs';
 import { useEffect,useState,useCallback } from 'react';
-import { Icon } from 'react-native-paper';
-import categoryIcons from '@/components/home/categoryIcons';
 import colors from '@/styles/colors';
 import PriceSlider from '@/components/home/priceSlider';
 
@@ -18,7 +15,7 @@ type Category = {
 
 
 export default function FilterPage() {
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<Array<Category>>([]);
     const [focusedCategory, setFocusedCategory] = useState<string | null>("Snacks");
     const [rating, setRating] = useState(0);
 

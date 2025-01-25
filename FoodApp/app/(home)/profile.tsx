@@ -1,10 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Pressable} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Image} from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
 import {router} from 'expo-router';
-import Button from '@/components/home/button';
 import Logout from './logout';
 
 export default function ProfileMenu() {

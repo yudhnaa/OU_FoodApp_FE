@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {styles as bgStyle} from "@/components/home/Styles";
-import {Image} from "expo-image";
-import {router} from "expo-router";
 import {Switch} from "react-native-paper";
 import Colors from "../../../styles/colors";
 import fontStyles from "../../../styles/fontStyles";

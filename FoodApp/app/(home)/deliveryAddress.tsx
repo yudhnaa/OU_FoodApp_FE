@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, Pressable, StyleSheet} from "react-native";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {Icon, IconButton} from "react-native-paper";
+import {IconButton} from "react-native-paper";
 import {Image} from "expo-image";
-import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import {router} from "expo-router";
 import Button from "@/components/home/button";

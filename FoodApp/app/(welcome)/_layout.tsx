@@ -1,8 +1,7 @@
-import { View, Text, Pressable } from 'react-native'
-import { Button, Icon } from 'react-native-paper';
-import { router, Stack, useRouter } from 'expo-router'
+import { View, Pressable } from 'react-native'
+import { Icon } from 'react-native-paper';
+import { router, Stack} from 'expo-router'
 import { StyleSheet } from 'react-native'
-import { Image } from 'expo-image'
 
 export default function WelcomeLayout() {
   // route = useRouter()

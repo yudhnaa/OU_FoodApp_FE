@@ -1,12 +1,11 @@
 import {View, Text, Pressable, FlatList} from "react-native";
 import {Image} from "expo-image";
-import {router, Link} from "expo-router";
+import {router} from "expo-router";
 import {StyleSheet} from "react-native";
 import colors from "@/styles/colors";
 import {styles} from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
 import {useState} from "react";
-import {Tabs} from "expo-router";
 
 const orders = [
     {

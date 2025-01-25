@@ -1,7 +1,6 @@
-import { Text, View, StyleSheet, Alert, Linking, Platform, Button, Pressable } from "react-native";
-import { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Image } from "expo-image";
-import { router, Link } from "expo-router";
+import { router } from "expo-router";
 import colors from "../../styles/colors";
 import fontStyles from "../../styles/fontStyles";
 

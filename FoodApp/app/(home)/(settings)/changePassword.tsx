@@ -4,7 +4,7 @@ import {styles as bgStyle} from "@/components/home/Styles";
 import InputField from "../../../components/welcome/inputField";
 import Button from "../../../components/home/button";
 
-function ChangePassword(props) {
+function ChangePassword() {
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");

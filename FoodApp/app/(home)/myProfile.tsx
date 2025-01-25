@@ -1,7 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
 import {Pressable, Text, View} from "react-native";
-import {Stack} from "expo-router";
 import {Image} from "expo-image"
 import {Button} from "react-native-paper";
 

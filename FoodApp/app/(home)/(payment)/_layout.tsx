@@ -1,8 +1,5 @@
-import {transformFileAsync} from '@babel/core'
-import {router, Stack, useRouter} from 'expo-router'
-import {View, Text, Pressable, TextInput} from 'react-native'
+import { Stack} from 'expo-router'
 import {StyleSheet} from 'react-native'
-import {Icon} from 'react-native-paper'
 
 import BackButton from '@/components/home/backButton'
 
