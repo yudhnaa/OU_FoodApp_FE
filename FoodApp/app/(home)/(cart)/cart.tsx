@@ -6,114 +6,182 @@ import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
 import Button from '@/components/home/button';
 import {router} from "expo-router";
-import {IconButton} from "react-native-paper";
+import {IconButton,Icon} from "react-native-paper";
+import APIs,{endpoints} from '@/configs/APIs';
+
 
 type CartProps = {
     visible: boolean;
     onCancel: () => void;
 }
 
-const orders = [
-    {
-        id: 1,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 2,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 3,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 4,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 5,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 6,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 7,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 8,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 9,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 10,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-];
+// const orders = [
+//     {
+//         id: 1,
+//         name: "Strawberry shake",
+//         price: 20.00,
+//         date: "29 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
+//         items: 2,
+//     },
+//     {
+//         id: 2,
+//         name: "Blackberry shake",
+//         price: 23.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
+//         items: 3,
+//     },
+//     {
+//         id: 3,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 4,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 5,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 6,
+//         name: "Strawberry shake",
+//         price: 20.00,
+//         date: "29 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
+//         items: 2,
+//     },
+//     {
+//         id: 7,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 8,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 9,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 10,
+//         name: "Blackberry shake",
+//         price: 23.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
+//         items: 3,
+//     },
+// ];
 
-const deleveryFee = 10.00;
+// const deleveryFee = 10.00;
 
 const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
-    const [orderData, setOrderData] = useState(orders);
+
+    const [orderData, setOrderData] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [subtotal, setSubtotal] = useState(0);
+    const deleveryFee = selectedItems.length > 0 ? 10.00 : 0;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try{
+                const response = await APIs.get(endpoints['cart_items']);
+                setOrderData(response.data);
+
+                const formattedData = response.data.map((item: any) => ({
+                        id: item.id,
+                        name: item.dish_name,
+                        price: item.total_price,
+                        date: new Date(item.date).toLocaleString("en-US", {
+                            day: "2-digit",
+                            month: "short", // Nov
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                        }),
+                        image: { uri: item.image },
+                        items: item.quantity,
+                        selected: false,
+                }));
+                setOrderData(formattedData);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    },[]);
+
 
     const removeItem = (id: number) => {
         setOrderData((prevData) => prevData.filter((item) => item.id !== id));
     };
 
-    const subtotal = useMemo(
-        () => orderData.reduce((total, item) => total + item.price * item.items, 0),
-        [orderData]
-    );
+    const toggleSelectItem = (id: number) => {
+        setOrderData((prevData : any) =>
+          prevData.map((item) =>
+            item.id === id ? { ...item, selected: !item.selected } : item
+          )
+        );
+    
+        setSelectedItems((prevSelected: any) => {
+          const isSelected = prevSelected.find((item: any) => item.id === id);
+    
+          if (isSelected) {
+            return prevSelected.filter((item: any) => item.id !== id);
+          } else {
+            const selectedItem = orderData.find((item) => item.id === id);
+            return [...prevSelected, selectedItem];
+          }
+        });
+      };
+
+    // Tính lại tổng tiền
+    useEffect(() => {
+        const newSubtotal = selectedItems.reduce((total, item) => total + item.price * item.items, 0);
+        setSubtotal(newSubtotal);
+    }, [selectedItems]);
+
+    // const subtotal = useMemo(
+    //     () => orderData.reduce((total, item) => total + item.price * item.items, 0),
+    //     [orderData]
+    // );
 
     const handleAdd = (id: number) => {
-        setOrderData((prevData) =>
-            prevData.map((item) =>
-                item.id === id ? {...item, items: item.items + 1} : item
+        setOrderData((prevData: any) =>
+            prevData.map((item: any) =>
+                item.id === id ? { ...item, items: item.items + 1 } : item
+            )
+        );
+    
+        setSelectedItems((prevSelected: any) =>
+            prevSelected.map((item: any) =>
+                item.id === id ? { ...item, items: item.items + 1 } : item
             )
         );
     };
@@ -122,11 +190,17 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
         if (orderData.find((item) => item.id === id)?.items === 1)
             removeItem(id);
         else
-            setOrderData((prevData) =>
-                prevData.map((item) =>
-                    item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
-                )
-            );
+        setOrderData((prevData: any) =>
+            prevData.map((item: any) =>
+                item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
+            )
+        );
+
+        setSelectedItems((prevSelected: any) =>
+            prevSelected.map((item: any) =>
+                item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
+            )
+        );
     };
 
     const handleGesture = (event: any) => {
@@ -165,6 +239,12 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item }) => (
                                     <View style={styles.orderContainer}>
+                                        <IconButton
+                                            icon={item.selected ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
+                                            size={23}
+                                            iconColor={colors.Font_2}
+                                            onPress={() => toggleSelectItem(item.id)}
+                                        />
                                         <Image source={item.image} style={styles.image} />
                                         <View style={styles.orderDetailsContainer}>
                                             <Text style={styles.orderTitle}>{item.name}</Text>
@@ -255,6 +335,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: colors.Orange_2,
         paddingBottom: 10,
+        alignItems: 'center',
     },
     image: {
         width: 100,
@@ -262,7 +343,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     orderDetailsContainer: {
-        marginLeft: 10,
+        marginLeft: 6,
         flex: 1,
     },
     orderTitle: {
