@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Text, View, StyleSheet, TextInput, Pressable, ActivityIndicator} from "react-native";
+import {Text, View, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {router} from "expo-router";
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -10,10 +10,12 @@ import colors from "../../styles/colors";
 import fontStyles from "../../styles/fontStyles";
 import axios from "axios";
 import APIs, {endpoints} from "@/configs/APIs";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
 
 export default function Registration() {
     const [open, setOpen] = useState(false);
     const [roles, setRoles] = useState<{ label: string; value: string }[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const [role, setRole] = useState("guest");
     const [date, setDate] = useState(new Date());
@@ -46,21 +48,22 @@ export default function Registration() {
             "first_name": firstName,
             "last_name": lastName,
             "email": email,
-            "role" : role,
+            "role": role,
             "date_of_birth": date.toISOString()
         }
 
-        try {
-            let res = await APIs.post(endpoints.register, data)
+        setLoading(true)
+        let res = await APIs.post(endpoints.register, data).then(res => {
             if (res.status === 201) {
                 alert("Register successfully")
                 router.dismissAll()
-                router.replace("/login")
+                router.replace("/welcome")
             }
-        } catch (ex) {
-            alert(`Error registering ${ex}`)
-            console.log(`Error registering ${ex}`)
-        }
+        }).catch(ex => {
+            alert(ex.response.data?.error_description || "Registration failed\nStatus code"+ex.status)
+        }).then(() => {
+            setLoading(false)
+        })
     }
 
 
@@ -68,15 +71,26 @@ export default function Registration() {
         fillDefaultInfo()
 
         const fetchRoles = async () => {
+            setLoading(true)
             try {
                 let res = await APIs.get(endpoints.roles)
-                setRoles(res.data.roles.map((role:any) => ({
+
+                setRoles(res.data.roles.map((role: any) => ({
                     label: role[1],
                     value: role[0]
                 })))
-            } catch (ex) {
-                alert(`Error fetching roles ${ex}`)
-                console.log(`Error fetching roles ${ex}`)
+            } catch (error: any) {
+                if (axios.isAxiosError(error)) {
+                    // Xem chi tiết lỗi từ phía server
+                    console.log('Error Response:', error.response?.data);
+                    console.log('Error Status:', error.response?.status);
+                    console.log('Error Headers:', error.response?.headers);
+                } else {
+                    // Lỗi không phải từ Axios (có thể là do network hoặc vấn đề khác)
+                    console.log('General Error:', error.message);
+                }
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -86,7 +100,10 @@ export default function Registration() {
 
     return (
         <View style={styles.backGround}>
-            <View style={styles.signUp}>
+            {loading && (
+                <LoadingOverlay></LoadingOverlay>
+            )}
+            <View style={[styles.signUp]} pointerEvents={loading ? "none" : "auto"}>
                 {/* First and Last Name */}
                 <View style={styles.nameFieldContainer}>
                     <View style={styles.nameFieldItem}>
@@ -142,10 +159,11 @@ export default function Registration() {
 
 
                 <View style={[styles.buttonContainer, {}]}>
-                    <Pressable style={[styles.button, {paddingHorizontal: 30}]}
-                               onPress={register}>
+                    <TouchableOpacity style={[styles.button, {paddingHorizontal: 30}]}
+                                      disabled={loading}
+                                      onPress={register}>
                         <Text style={[styles.loginText, {}]}>Sign Up</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                     <Text style={[{paddingHorizontal: 30}]}>Or</Text>
                     <Text style={[{paddingHorizontal: 30}]}>Google</Text>
                 </View>

@@ -1,16 +1,18 @@
 import React, {useEffect} from "react";
-import {Text, View, StyleSheet, Pressable} from "react-native";
+import {Text, View, StyleSheet, TouchableOpacity} from "react-native";
 import {router} from "expo-router";
 import InputField from "@/components/welcome/inputField";
 import colors from "../../styles/colors";
 import {useState} from "react";
 import APIs, {endpoints} from "@/configs/APIs";
 import {storeObjectValue} from "@/components/asyncStorage";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
+
 
 export default function Login() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-
+    const [loading, setLoading] = useState(false);
 
     const login = async () => {
 
@@ -22,9 +24,8 @@ export default function Login() {
             "client_secret": process.env.EXPO_PUBLIC_CLIENT_SECRET
         }
 
-        try {
-            let res = await APIs.post(endpoints.login, data)
-
+        setLoading(true)
+        await APIs.post(endpoints.login, data).then(res => {
             if (res.status === 200) {
                 alert("Login successfully")
 
@@ -33,12 +34,15 @@ export default function Login() {
                     ...res.data,
                     date: new Date()
                 })
-                router.dismissAll()
+                if (router.canGoBack())
+                    router.dismissAll()
                 router.replace("/home")
             }
-        } catch (ex) {
-            alert(`Error logging in ${ex}`)
-        }
+        }).catch(ex => {
+            alert(ex.response.data?.error_description || "Login failed\nStatus code"+ex.status)
+        }).then(() => {
+            setLoading(false)
+        })
     }
 
     const fillDefaultInfo = () => {
@@ -52,8 +56,9 @@ export default function Login() {
 
     return (
         <View style={styles.backGround}>
-            <View style={styles.signIn}>
+            {loading && (<LoadingOverlay></LoadingOverlay>)}
 
+            <View style={styles.signIn}>
                 {/* username */}
                 <InputField label="Email or phone number" placeholder="Enter email or phone number ..." value={userName}
                             onChange={setUserName}
@@ -65,9 +70,9 @@ export default function Login() {
                             autoCapitalize={'none'}/>
 
                 <View style={[styles.buttonContainer, {}]}>
-                    <Pressable style={[styles.button, {paddingHorizontal: 30}]} onPress={login}>
+                    <TouchableOpacity style={[styles.button, {paddingHorizontal: 30}]} onPress={login}>
                         <Text style={[styles.loginText, {}]}>Sign In</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                     <Text style={{paddingHorizontal: 30}}>Or</Text>
                     <Text style={{paddingHorizontal: 30}}>Google</Text>
                 </View>

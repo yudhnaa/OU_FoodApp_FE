@@ -10,6 +10,7 @@
       "ios": {
         "credentialsSource": "local"
       }
+
     },
     "preview": {
       "distribution": "internal"

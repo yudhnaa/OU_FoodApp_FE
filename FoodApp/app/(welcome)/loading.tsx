@@ -84,22 +84,30 @@ export default function Loading() {
     };
 
     useEffect(() => {
-        const checkAndNavigate = async () => {
-            if (locationServicesEnabled && locationPermission === "granted" && currentAddress) {
-                let oauth2Token = await getObjectValue('oauth2-token');
-                let getTokenDate = new Date(oauth2Token.date)
-                let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
+            const checkAndNavigate = async () => {
+                if (locationServicesEnabled && locationPermission === "granted" && currentAddress) {
 
-                if (oauth2Token !== null && expireDate > new Date()) {
-                    router.replace("/home");
-                } else
-                    router.replace("/welcome");
+                    await getObjectValue('oauth2-token').then(res => {
+                        console.log('OAuth2 Token:', res);
+                        let getTokenDate = new Date(res.date)
+                        let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
 
+                        if (res !== null && expireDate > new Date()) {
+                            router.replace("/home");
+                        } else
+                            throw new Error("Token is expired");
+                    }).catch(error => {
+                        router.replace("/welcome");
+                    })
+                }
             }
-        }
 
-        checkAndNavigate()
-    }, [locationServicesEnabled, locationPermission, currentAddress]);
+            checkAndNavigate()
+        }
+        ,
+        [locationServicesEnabled, locationPermission, currentAddress]
+    )
+    ;
 
     return (
         <View style={styles.firstScreen}>
