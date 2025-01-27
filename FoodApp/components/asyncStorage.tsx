@@ -40,3 +40,12 @@ export const getObjectValue = async (key: any) => {
 }
 
 
+export const removeValue = async (key: string) => {
+    try {
+        await AsyncStorage.removeItem(key)
+    } catch (e) {
+        console.log(e)
+        alert(`Error removing value ${e}`)
+    }
+}
+

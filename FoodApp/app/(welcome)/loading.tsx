@@ -5,8 +5,9 @@ import Constrains from "expo-constants";
 import {Image} from "expo-image";
 import {router} from "expo-router";
 import colors from "../../styles/colors";
-import {getObjectValue} from "@/components/asyncStorage";
+// import {getObjectValue} from "@/components/asyncStorage";
 // import { canGoBack } from "expo-router/build/global-state/routing";
+import {useAuth} from "@/components/AuthContext";
 
 
 export default function Loading() {
@@ -18,6 +19,8 @@ export default function Loading() {
 
     // Dia chi hien tai
     const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress | null>(null);
+
+    const {oauth2Token, loading} = useAuth();
 
     useEffect(() => {
         const checkAndGetLocation = async () => {
@@ -85,20 +88,18 @@ export default function Loading() {
 
     useEffect(() => {
             const checkAndNavigate = async () => {
-                if (locationServicesEnabled && locationPermission === "granted" && currentAddress) {
-
-                    await getObjectValue('oauth2-token').then(res => {
-                        console.log('OAuth2 Token:', res);
-                        let getTokenDate = new Date(res.date)
+                if (locationServicesEnabled && locationPermission === "granted" && currentAddress && !loading) {
+                    try{
+                        let getTokenDate = new Date(oauth2Token.date)
                         let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
 
-                        if (res !== null && expireDate > new Date()) {
+                        if (oauth2Token !== null && expireDate > new Date()) {
                             router.replace("/home");
                         } else
                             throw new Error("Token is expired");
-                    }).catch(error => {
+                    } catch(error) {
                         router.replace("/welcome");
-                    })
+                    }
                 }
             }
 

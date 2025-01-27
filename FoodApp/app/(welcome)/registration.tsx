@@ -60,7 +60,16 @@ export default function Registration() {
                 router.replace("/welcome")
             }
         }).catch(ex => {
-            alert(ex.response.data?.error_description || "Registration failed\nStatus code"+ex.status)
+            switch (ex.status) {
+                case 400:
+                    alert("Invalid input data")
+                    break;
+                case 409:
+                    alert("Username or email existed")
+                    break;
+                default:
+                    alert(ex.response.data?.error_description || "Registration failed\nStatus code" + ex.status)
+            }
         }).then(() => {
             setLoading(false)
         })
@@ -81,12 +90,10 @@ export default function Registration() {
                 })))
             } catch (error: any) {
                 if (axios.isAxiosError(error)) {
-                    // Xem chi tiết lỗi từ phía server
                     console.log('Error Response:', error.response?.data);
                     console.log('Error Status:', error.response?.status);
                     console.log('Error Headers:', error.response?.headers);
                 } else {
-                    // Lỗi không phải từ Axios (có thể là do network hoặc vấn đề khác)
                     console.log('General Error:', error.message);
                 }
             } finally {

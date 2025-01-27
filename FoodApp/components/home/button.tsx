@@ -1,5 +1,5 @@
 import colors from "@/styles/colors";
-import {Pressable, Text} from "react-native";
+import {TouchableOpacity, Text} from "react-native";
 import fontStyles from "@/styles/fontStyles";
 import React from "react";
 
@@ -19,7 +19,7 @@ const Button = ({
     textClassName?: string
 }) => {
     return (
-        <Pressable
+        <TouchableOpacity
             style={{
                 borderRadius: 30,
                 alignItems: "center",
@@ -39,7 +39,7 @@ const Button = ({
                 }}
                 className={textClassName}
             >{text}</Text>
-        </Pressable>
+        </TouchableOpacity>
     );
 }
 

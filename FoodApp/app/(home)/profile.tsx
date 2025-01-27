@@ -1,21 +1,44 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Image} from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
 import {router} from 'expo-router';
 import Logout from './logout';
+import APIS, {endpoints} from '@/configs/APIs';
+import {useAuth} from "@/components/AuthContext";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
 
 export default function ProfileMenu() {
     const [showLogout, setShowLogout] = React.useState(false);
+    const {access_token, clearToken, resetAuthContext} = useAuth()
+    const [loading, setLoading] = useState(false);
 
-    const handleLogout = () => {
-        alert('Logged out');
-        setShowLogout(false);
+
+    const handleLogout = async () => {
+        setLoading(true)
+        setShowLogout(false)
+        await APIS.post(endpoints.logout, {
+            "token": access_token,
+            "client_id": process.env.EXPO_PUBLIC_CLIENT_ID,
+            "client_secret": process.env.EXPO_PUBLIC_CLIENT_SECRET
+        }).then(res => {
+            clearToken()
+            resetAuthContext()
+        }).catch(ex => {
+            alert(ex.response.data?.error_description || "Logout failed\nStatus code" + ex.status)
+        }).then(() => {
+            setLoading(false)
+
+            if (router.canGoBack())
+                router.dismissAll()
+            router.replace("/loading")
+        })
     };
 
     return (
         <View style={styles.container}>
+            {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={styles.profileContainer}>
                 <Image
                     source={require('../../assets/images/avt.png')}
@@ -82,7 +105,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.Orange_Base,
         padding: 20,
-        paddingTop:0,
+        paddingTop: 0,
         alignItems: 'center',
     },
     profileContainer: {

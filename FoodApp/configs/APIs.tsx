@@ -8,6 +8,7 @@ export const endpoints = {
     'login': '/o/token/',
     'roles': '/users/roles/',
     'get_user': '/users/current-user/',
+    'logout': '/o/revoke_token/',
 
     'dish': '/dish/',
     'dish_type': '/dish_type/',
@@ -25,7 +26,7 @@ export const authApi = async () => {
 
     const oauth2Token = await getOauth2Token().then((res) => res.access_token);
 
-    console.log(oauth2Token);
+    // console.log(oauth2Token);
 
     return axios.create({
         baseURL: BASE_URL,
