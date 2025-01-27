@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hoanganhduy.FoodApp"
+      "bundleIdentifier": "com.Mrdochien2025.FoodApp"
     },
     "android": {
       "adaptiveIcon": {
@@ -38,6 +38,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9ff97309-a234-4e13-b8a5-c5349bd6edf7"
+      }
+    },
+    "owner": "hoanganhduy"
   }
 }
