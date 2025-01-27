@@ -12,6 +12,9 @@ import InputField from "@/components/welcome/inputField";
 import {styles as inputFieldStyles} from "@/components/welcome/Styles";
 import DropDownPicker from "react-native-dropdown-picker";
 
+import APIs,{endpoints} from "@/configs/APIs";
+
+
 const deleveryFee = 10.00;
 const orders = [
     {

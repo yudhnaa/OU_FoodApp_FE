@@ -41,9 +41,9 @@ export default function StackLayout() {
         }}>
             <Stack.Screen name="[name]"
                           options={{
+                              headerShown : true,
                               headerTitle: () => <SearchHeader showBackButton={true}/>,
                               headerLeft: () => <BackButton/>
-
                           }}
             />
             <Stack.Screen name="[name]/[id]" options={{

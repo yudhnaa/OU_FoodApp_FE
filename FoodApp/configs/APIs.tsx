@@ -7,6 +7,7 @@ export const endpoints = {
     'dish_type' : '/dish_type/',
     'list_dish' : typeId => `/dish_type/${typeId}/dishes/`,
     'dish_topping' : dishId => `/dish/${dishId}/topping/`,
+    'add-to-cart' : '/add-to-cart/',
 }
 
 export default axios.create({
