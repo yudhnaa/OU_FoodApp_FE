@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {getObjectValue} from "@/components/asyncStorage";
 
-const BASE_URL = 'https://yudhna.dynamic-dns.net/foodappou/';
+const BASE_URL = 'http://192.168.1.10:8000/';
 
 export const endpoints = {
     'register': '/users/',

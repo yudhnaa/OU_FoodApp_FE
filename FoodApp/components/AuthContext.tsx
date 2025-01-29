@@ -19,10 +19,16 @@ type OAuth2Token = {
     date: Date;
 }
 
+type location = {
+    longitude: number;
+    latitude: number;
+}
+
 // Tạo Provider
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [oauth2Token, setOauth2Token] = useState<OAuth2Token | null>(null);
     const [access_token, setAccess_token] = useState<string | null>(null);
+    const [location, setLocation] = useState<location>({longitude: 0, latitude: 0});
     const [loading, setLoading] = useState<boolean>(true);
 
     // Lấy oauth2-token từ AsyncStorage khi app khởi chạy
@@ -81,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }
 
     return (
-        <AuthContext.Provider value={{access_token, oauth2Token, saveOauth2Token, clearToken, loading, resetAuthContext}}>
+        <AuthContext.Provider value={{access_token, oauth2Token, saveOauth2Token, clearToken, loading, resetAuthContext, location, setLocation}}>
             {children}
         </AuthContext.Provider>
     );

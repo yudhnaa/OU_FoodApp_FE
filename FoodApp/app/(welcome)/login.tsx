@@ -43,8 +43,8 @@ export default function Login() {
     }
 
     const fillDefaultInfo = () => {
-        setUserName("user1")
-        setPassword("user1")
+        setUserName("user9999")
+        setPassword("user9999")
     }
 
     useEffect(() => {

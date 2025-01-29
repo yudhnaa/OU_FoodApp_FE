@@ -11,19 +11,22 @@ import fontStyles from "../../styles/fontStyles";
 import axios from "axios";
 import APIs, {endpoints} from "@/configs/APIs";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import {useAuth} from "@/components/AuthContext";
 
 export default function Registration() {
     const [open, setOpen] = useState(false);
     const [roles, setRoles] = useState<{ label: string; value: string }[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const [role, setRole] = useState("guest");
-    const [date, setDate] = useState(new Date());
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [role, setRole] = useState("guest");
+    const [date, setDate] = useState(new Date());
+    const {location} = useAuth();
 
     const onChange = (event: any, selectedDate: any) => {
         if (selectedDate) {
@@ -36,20 +39,23 @@ export default function Registration() {
         setLastName("user9999");
         setEmail("user9999@gmail.com");
         setPassword("user9999");
-        setPhoneNumber("1234567890");
+        setPhoneNumber("344778045");
         setRole("guest");
         setDate(new Date());
+        setUsername("user9999");
     }
 
     const register = async () => {
         let data = {
-            "username": phoneNumber,
-            "password": password,
             "first_name": firstName,
             "last_name": lastName,
+            "username": username,
+            "password": password,
+            "phone_number": phoneNumber,
             "email": email,
             "role": role,
-            "date_of_birth": date.toISOString()
+            "date_of_birth": date.toISOString(),
+            "location": location.longitude + ";" + location.latitude
         }
 
         setLoading(true)
@@ -62,10 +68,7 @@ export default function Registration() {
         }).catch(ex => {
             switch (ex.status) {
                 case 400:
-                    alert("Invalid input data")
-                    break;
-                case 409:
-                    alert("Username or email existed")
+                    alert("Invalid input\n" + JSON.stringify(ex.response.data?.username[0] || ex.response.data))
                     break;
                 default:
                     alert(ex.response.data?.error_description || "Registration failed\nStatus code" + ex.status)
@@ -124,6 +127,10 @@ export default function Registration() {
                                    placeholder="Enter last name ..." value={lastName} onChangeText={setLastName}/>
                     </View>
                 </View>
+
+                {/* Password */}
+                <InputField label="Username" placeholder="Enter username ..." value={username} onChange={setUsername}
+                            isSecure={false}/>
 
                 {/* Password */}
                 <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword}

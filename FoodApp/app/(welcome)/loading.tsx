@@ -17,10 +17,10 @@ export default function Loading() {
     // Trang thai cua quyen truy cap vi tri
     const [locationPermission, setLocationPermission] = useState<string>("denied");
 
-    // Dia chi hien tai
-    const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress | null>(null);
+    // // Dia chi hien tai
+    // const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress | null>(null);
 
-    const {oauth2Token, loading} = useAuth();
+    const {oauth2Token, loading, setLocation} = useAuth();
 
     useEffect(() => {
         const checkAndGetLocation = async () => {
@@ -83,12 +83,16 @@ export default function Loading() {
             latitude: latitude,
             longitude: longitude,
         });
-        setCurrentAddress(address[0]);
+        // setCurrentAddress(address[0]);
+        setLocation({latitude, longitude});
+        console.info("V tri hien tai:", latitude, longitude);
+        console.info("Dia chi hien tai:", address[0]);
     };
 
     useEffect(() => {
             const checkAndNavigate = async () => {
-                if (locationServicesEnabled && locationPermission === "granted" && currentAddress && !loading) {
+                // if (locationServicesEnabled && locationPermission === "granted" && currentAddress && !loading) {
+                if (locationServicesEnabled && locationPermission === "granted" && !loading) {
                     try{
                         let getTokenDate = new Date(oauth2Token.date)
                         let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
@@ -106,7 +110,7 @@ export default function Loading() {
             checkAndNavigate()
         }
         ,
-        [locationServicesEnabled, locationPermission, currentAddress]
+        [locationServicesEnabled, locationPermission]
     )
     ;
 
