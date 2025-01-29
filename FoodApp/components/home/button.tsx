@@ -9,14 +9,16 @@ const Button = ({
                     buttonColor = colors.Orange_Base,
                     textColor = colors.Font_2,
                     textClassName = "",
-                    buttonClassName = ""
+                    buttonClassName = "",
+                    disabled = false
                 }: {
     text: string,
     onPress: () => void,
     buttonColor?: string,
     textColor?: string,
     buttonClassName?: string,
-    textClassName?: string
+    textClassName?: string,
+    disabled?: boolean
 }) => {
     return (
         <TouchableOpacity
@@ -30,7 +32,8 @@ const Button = ({
                 margin: 20
             }}
             className={buttonClassName}
-            onPress={onPress}>
+            onPress={onPress}
+            disabled={disabled}>
             <Text
                 style={{
                     ...fontStyles.titulo_screen,

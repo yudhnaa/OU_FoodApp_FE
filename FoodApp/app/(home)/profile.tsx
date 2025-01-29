@@ -31,7 +31,7 @@ export default function ProfileMenu() {
         }).then(() => {
             setLoading(false)
 
-            if (router.canGoBack())
+            if (router.canDismiss())
                 router.dismissAll()
             router.replace("/loading")
         })
@@ -94,7 +94,7 @@ export default function ProfileMenu() {
 
             <View style={styles.logoutButton}>
                 <TouchableOpacity onPress={() => {
-                    if (router.canGoBack())
+                    if (router.canDismiss())
                         router.dismissAll()
                     router.replace("/loading")
                 }}>

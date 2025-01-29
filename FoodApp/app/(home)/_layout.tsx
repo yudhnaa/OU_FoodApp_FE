@@ -117,17 +117,6 @@ export default function HomeLayout() {
                         headerLeft: () => (<BackButton/>)
                     }}
                 />
-                <Stack.Screen
-                    name="paymentMethods"
-                    options={{
-                        headerShown: true,
-                        headerStyle: {backgroundColor: '#F5CB58'},
-                        title: "Payment Methods",
-                        headerTitleAlign: "center",
-                        headerTitleStyle: styles.headerTitle,
-                        headerLeft: () => (<BackButton/>)
-                    }}
-                />
 
 
                 <Stack.Screen

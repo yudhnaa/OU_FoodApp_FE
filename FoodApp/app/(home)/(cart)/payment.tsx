@@ -311,7 +311,7 @@ const Payment: React.FC = () => {
                                 icon="pencil"
                                 iconColor={colors.Orange_Base}
                                 size={20}
-                                onPress={() => router.push('/(home)/paymentMethods')}
+                                onPress={() => router.push('/paymentMethods')}
                             />
                         </View>
                     </View>

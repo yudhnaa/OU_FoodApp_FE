@@ -9,11 +9,15 @@ import {useFoodContext} from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
 import APIs, {endpoints, authApi} from '@/configs/APIs';
 import {useEffect, useState} from 'react';
+import {useAuth} from "@/components/AuthContext";
 
 export default function HomePage() {
     const router = useRouter();
     const activeIndex = useSharedValue(0);
     const {setSelectedFood} = useFoodContext();
+    const {access_token, userInfo, setUserInfo} = useAuth()
+    const [loading, setLoading] = useState(false);
+
     const [new_Data, setNewData] = useState<Array<{
         type: string;
         items?: any;
@@ -25,12 +29,18 @@ export default function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let checkUser = await (await authApi()).get(endpoints.get_user);
-                if (checkUser.status !== 200) {
+                setLoading(true);
+                await authApi(access_token).get(endpoints.get_user).then(
+                    (res) => {
+                        setUserInfo(res.data);
+                    }
+                ).catch((ex) => {
                     alert('Please login to continue');
-                    router.dismissAll()
+                    if (router.canDismiss())
+                        router.dismissAll()
                     router.replace('/login');
-                }
+
+                });
 
                 const dishType = await APIs.get(endpoints['dish_type']);
                 const dish = await APIs.get(endpoints['dish']);
@@ -72,7 +82,6 @@ export default function HomePage() {
                         items: food
                     }
                 ];
-
                 setNewData(formattedData);
             } catch (error) {
                 console.log(error);

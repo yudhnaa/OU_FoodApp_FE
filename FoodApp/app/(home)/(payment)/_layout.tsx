@@ -1,4 +1,4 @@
-import { Stack} from 'expo-router'
+import {Stack} from 'expo-router'
 import {StyleSheet} from 'react-native'
 
 import BackButton from '@/components/home/backButton'
@@ -10,6 +10,17 @@ export default function paymentLayout() {
             headerStyle: {backgroundColor: '#F5CB58'},
             headerShadowVisible: false,
         }}>
+            <Stack.Screen
+                name="paymentMethods"
+                options={{
+                    headerShown: true,
+                    headerStyle: {backgroundColor: '#F5CB58'},
+                    title: "Payment Methods",
+                    headerTitleAlign: "center",
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (<BackButton/>)
+                }}
+            />
             <Stack.Screen
                 name="addCreditCard"
                 options={{

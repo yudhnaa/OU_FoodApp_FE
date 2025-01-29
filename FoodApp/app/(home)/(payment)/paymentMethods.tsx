@@ -10,6 +10,7 @@ import Button from "@/components/home/button";
 import {authApi, endpoints} from "@/configs/APIs";
 import {useAuth} from "@/components/AuthContext";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import colors from "@/styles/colors";
 
 
 const PaymentMethods = () => {
@@ -24,7 +25,7 @@ const PaymentMethods = () => {
     type PaymentMethods = {
         "id": number,
         "user": number,
-        "payment_type": string,
+        "payment_type_name": string,
         "created_at": string,
         "isActive": boolean,
         "isDefault": boolean,
@@ -41,14 +42,13 @@ const PaymentMethods = () => {
         authApi(access_token).post(endpoints.set_default_payment_method, {
             "user_payment_id": method.id
         }).then((res) => {
-            if (method.payment_type === res.data.payment_type) {
+            if (method.payment_type_name === res.data.payment_type_name) {
                 if (defaultMethod) {
                     defaultMethod.isDefault = false;
                 }
                 method.isDefault = true;
                 setDefaultMethod(method);
             }
-
         }).catch(ex => {
             alert(ex.response.data?.error_description || "Loading failed\nStatus code" + ex.status)
         }).finally(() => {
@@ -60,8 +60,9 @@ const PaymentMethods = () => {
         const getPaymentMethods = async () => {
             setLoading(true);
             authApi(access_token).get(endpoints.payment_methods).then((res) => {
-                const methods = res.data.payment_methods.map((method: PaymentMethods) => {
-                    const iconKey = method.payment_type.toLowerCase().replace(" ", "_");
+                // console.log(res.data)
+                const methods = res.data.map((method: PaymentMethods) => {
+                    const iconKey = method.payment_type_name.toLowerCase().replace(" ", "_");
                     method.icon = iconMap[iconKey] || null;
                     return method;
                 });
@@ -84,11 +85,8 @@ const PaymentMethods = () => {
     }, [paymentMethods]);
 
     const removeMethod = (method: PaymentMethods, index: number) => {
-        console.log("removeMethod", method, index);
         setLoading(true);
-        authApi(access_token).post(endpoints.remove_payment_method, {
-            "method_id": method.id
-        }).then((res) => {
+        authApi(access_token).delete(endpoints.remove_payment_method+`${method.id}/`).then((res) => {
             paymentMethods.splice(index, 1);
             setPaymentMethods([...paymentMethods]);
         }).catch(ex => {
@@ -115,7 +113,7 @@ const PaymentMethods = () => {
                                     }}
                                     contentFit="contain"></Image>
                                 <View className={"pl-5 flex-row justify-between items-center"}>
-                                    <Text style={styles.text}>{method.payment_type}</Text>
+                                    <Text style={styles.text}>{method.payment_type_name}</Text>
                                     <View style={{width: 30, height: 30}}>
                                         {(method == defaultMethod || method.isDefault) &&
                                             <IconButton className={""} icon={"check"} iconColor={"green"}></IconButton>}
@@ -123,7 +121,7 @@ const PaymentMethods = () => {
                                 </View>
                             </View>
                             <View className={"flex-row"}>
-                                <Button text={"Set as default"} onPress={() => setDefault(method)}></Button>
+                                <Button text={"Set as default"} onPress={() => setDefault(method)} disabled={method.isDefault} buttonColor={method.isDefault ? colors.Orange_2 : colors.Orange_Base}></Button>
                                 <Button buttonColor={Colors.Orange_2} textColor={Colors.Orange_Base} text={"Remove"}
                                         onPress={() => removeMethod(method, index)}></Button>
                             </View>
@@ -131,7 +129,13 @@ const PaymentMethods = () => {
                     )
                 })}
                 <Button buttonColor={Colors.Orange_2} textColor={Colors.Orange_Base} text={"Add new payment method"}
-                        onPress={() => router.push("/(payment)/addPaymentMethod")}></Button>
+                        onPress={() => router.push({
+                            pathname: "/addPaymentMethod",
+                            params: {
+                                methods: paymentMethods.map((method) => method.payment_type_name)
+                            }
+
+                        })}></Button>
 
 
             </View>

@@ -94,6 +94,7 @@ export default function Loading() {
                 // if (locationServicesEnabled && locationPermission === "granted" && currentAddress && !loading) {
                 if (locationServicesEnabled && locationPermission === "granted" && !loading) {
                     try{
+                        console.info("Token:", oauth2Token)
                         let getTokenDate = new Date(oauth2Token.date)
                         let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
 

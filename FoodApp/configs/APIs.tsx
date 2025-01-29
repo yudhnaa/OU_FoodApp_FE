@@ -11,8 +11,9 @@ export const endpoints = {
     'logout': '/o/revoke_token/',
 
     "payment_methods": '/users/payment_methods/',
-    "set_default_payment_method": "/users/set_default_payment_method/",
-    "remove_payment_method": "/users/remove_payment_method/",
+    "set_default_payment_method": "/users/payment_methods/set_default_payment_method/",
+    "remove_payment_method": "/users/payment_methods/",
+    "get_payment_type": "/payment_methods/",
 
     'dish': '/dish/',
     'dish_type': '/dish_type/',

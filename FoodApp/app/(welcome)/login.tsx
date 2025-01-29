@@ -31,7 +31,7 @@ export default function Login() {
             if (res.status === 200) {
                 // Save token to local storage
                 saveOauth2Token(res.data)
-                if (router.canGoBack())
+                if (router.canDismiss())
                     router.dismissAll()
                 router.replace("/home")
             }
