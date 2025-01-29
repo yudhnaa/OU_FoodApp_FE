@@ -34,6 +34,11 @@ export default function Registration() {
         }
     };
 
+    const validatePhoneNumber = (phoneNumber:string) => {
+        const phoneRegex = /(?:\+84|0084|0)(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9])[0-9]{7}(?:[^\d]+|$)/g;
+        return phoneRegex.test(phoneNumber);
+    };
+
     const fillDefaultInfo = () => {
         setFirstName("user9999");
         setLastName("user9999");
@@ -46,12 +51,18 @@ export default function Registration() {
     }
 
     const register = async () => {
+
+        if (!validatePhoneNumber("0"+phoneNumber)) {
+            alert("Invalid phone number")
+            return;
+        }
+
         let data = {
             "first_name": firstName,
             "last_name": lastName,
             "username": username,
             "password": password,
-            "phone_number": phoneNumber,
+            "phone_number": "0"+phoneNumber,
             "email": email,
             "role": role,
             "date_of_birth": date.toISOString(),
