@@ -85,8 +85,8 @@ export default function Loading() {
         });
         // setCurrentAddress(address[0]);
         setLocation({latitude, longitude});
-        console.info("V tri hien tai:", latitude, longitude);
-        console.info("Dia chi hien tai:", address[0]);
+        // console.info("V tri hien tai:", latitude, longitude);
+        // console.info("Dia chi hien tai:", address[0]);
     };
 
     useEffect(() => {

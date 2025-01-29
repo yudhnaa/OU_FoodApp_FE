@@ -18,6 +18,7 @@ export default function ProfileMenu() {
     const handleLogout = async () => {
         setLoading(true)
         setShowLogout(false)
+        // console.info("Access token:", access_token)
         await APIS.post(endpoints.logout, {
             "token": access_token,
             "client_id": process.env.EXPO_PUBLIC_CLIENT_ID,
@@ -88,6 +89,16 @@ export default function ProfileMenu() {
             <View style={styles.logoutButton}>
                 <TouchableOpacity onPress={() => setShowLogout(true)}>
                     <Text style={styles.logoutText}>Log Out</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.logoutButton}>
+                <TouchableOpacity onPress={() => {
+                    if (router.canGoBack())
+                        router.dismissAll()
+                    router.replace("/loading")
+                }}>
+                    <Text style={styles.logoutText}>restart app</Text>
                 </TouchableOpacity>
             </View>
 

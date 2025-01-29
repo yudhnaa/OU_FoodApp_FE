@@ -60,11 +60,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     // Hàm lưu oauth2-token vào AsyncStorage
     const saveOauth2Token = async (newOauth2Token: OAuth2Token) => {
         try {
+            // console.log('Lưu oauth2-token:', newOauth2Token);
             await storeObjectValue('oauth2-token', newOauth2Token);
             setOauth2Token({
                 ...newOauth2Token,
                 date: new Date()
             });
+
+            setAccess_token(newOauth2Token.access_token);
         } catch (error) {
             console.error('Không lưu được oauth2-token:', error);
         }

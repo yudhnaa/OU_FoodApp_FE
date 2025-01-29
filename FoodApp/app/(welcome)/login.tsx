@@ -30,7 +30,7 @@ export default function Login() {
         await APIs.post(endpoints.login, data).then(res => {
             if (res.status === 200) {
                 // Save token to local storage
-                saveOauth2Token('oauth2-token',res.data)
+                saveOauth2Token(res.data)
                 if (router.canGoBack())
                     router.dismissAll()
                 router.replace("/home")
