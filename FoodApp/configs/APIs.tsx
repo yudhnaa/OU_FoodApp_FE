@@ -10,9 +10,9 @@ export const endpoints = {
     'get_user': '/users/current_user/',
     'logout': '/o/revoke_token/',
 
-    "payment_methods": '/users/payment_methods/',
-    "set_default_payment_method": "/users/payment_methods/set_default_payment_method/",
-    "remove_payment_method": "/users/payment_methods/",
+    "payment_methods": '/user/payment_methods/',
+    "set_default_payment_method": "/user/payment_methods/set_default_payment_method/",
+    "remove_payment_method": "/user/payment_methods/",
     "get_payment_type": "/payment_methods/",
 
     'dish': '/dish/',
