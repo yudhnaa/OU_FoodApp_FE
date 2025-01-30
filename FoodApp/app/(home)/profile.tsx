@@ -13,6 +13,7 @@ export default function ProfileMenu() {
     const [showLogout, setShowLogout] = React.useState(false);
     const {access_token, clearToken, resetAuthContext} = useAuth()
     const [loading, setLoading] = useState(false);
+    const {userInfo} = useAuth()
 
 
     const handleLogout = async () => {
@@ -46,8 +47,8 @@ export default function ProfileMenu() {
                     style={styles.profileImage}
                 />
                 <View>
-                    <Text style={styles.name}>John Smith</Text>
-                    <Text style={styles.email}>Loremipsum@email.com</Text>
+                    <Text style={styles.name}>{`${userInfo.first_name} ${userInfo.last_name}`}</Text>
+                    <Text style={styles.email}>{userInfo.email}</Text>
                 </View>
             </View>
 

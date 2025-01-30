@@ -24,13 +24,29 @@ type location = {
     latitude: number;
 }
 
+type userInfo = {
+    id: number;
+    last_login: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    date_joined: string;
+    store_name: string;
+    role: string;
+    avatar: string;
+    phone_number: string;
+    birthday: string;
+}
+
 // Tạo Provider
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [oauth2Token, setOauth2Token] = useState<OAuth2Token | null>(null);
     const [access_token, setAccess_token] = useState<string | null>(null);
     const [location, setLocation] = useState<location>({longitude: 0, latitude: 0});
     const [loading, setLoading] = useState<boolean>(true);
-    const [userInfo, setUserInfo] = useState<object>({});
+    const [userInfo, setUserInfo] = useState<userInfo>();
+
 
     // Lấy oauth2-token từ AsyncStorage khi app khởi chạy
     useEffect(() => {
@@ -108,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             location,
             setLocation,
             setUserInfo,
-            userInfo
+            userInfo,
         }}>
             {children}
         </AuthContext.Provider>

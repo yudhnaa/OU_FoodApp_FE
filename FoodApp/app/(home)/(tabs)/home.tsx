@@ -27,6 +27,7 @@ export default function HomePage() {
     }>>([]);
 
     useEffect(() => {
+        console.log("re fetch data")
         const fetchData = async () => {
             try {
                 setLoading(true);

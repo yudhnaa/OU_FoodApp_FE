@@ -11,20 +11,17 @@ import {styles as inputFieldStyles} from "@/components/welcome/Styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
-
-const userInfo = {
-    name: "John Smith",
-    email: "johnsmith@email.com",
-    avatar: "@/assets/images/avt.png",
-    dateOfBirth: "2004-12-11",
-    phoneNumber: "+84 123 456 789"
-}
+import {useAuth} from "@/components/AuthContext";
+import {authApi} from "@/configs/APIs";
+import {router} from "expo-router";
 
 function MyProfile() {
-    const [fullName, setFullName] = useState(userInfo.name);
+    const {userInfo, access_token} = useAuth()
+    const [fullName, setFullName] = useState(`${userInfo.first_name} ${userInfo.last_name}`);
     const [email, setEmail] = useState(userInfo.email);
-    const [dateOfBirth, setDateOfBirth] = useState(new Date(userInfo.dateOfBirth));
-    const [phoneNumber, setPhoneNumber] = useState(userInfo.phoneNumber);
+    const [dateOfBirth, setDateOfBirth] = useState(new Date(userInfo.birthday));
+    const [phoneNumber, setPhoneNumber] = useState(userInfo.phone_number);
+
 
     const onChange = (event: any, selectedDate: any) => {
         if (selectedDate) {
@@ -32,8 +29,22 @@ function MyProfile() {
         }
     };
 
-    const updateProfile = () => {
-        console.log("Update profile");
+    const updateProfile = async () => {
+        await authApi(access_token).patch(`/users/${userInfo.id}/`, {
+            first_name: fullName.split(" ")[0],
+            last_name: fullName.split(" ")[1],
+            email: email,
+            phone_number: phoneNumber,
+            birthday: dateOfBirth.toISOString().split("T")[0]
+        }).then(res => {
+            alert("Update profile successfully")
+            if (router.canDismiss())
+                router.dismissAll()
+            router.replace("/loading");
+        }).catch(ex => {
+            alert("Update profile failed")
+            console.error(ex.response.data)
+        })
     }
 
 

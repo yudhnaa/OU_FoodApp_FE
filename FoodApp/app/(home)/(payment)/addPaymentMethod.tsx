@@ -52,7 +52,7 @@ function AddPaymentMethod() {
         }
         getPaymentMethods()
 
-        console.log(parsedUserMethods)
+        // console.log(parsedUserMethods)
     }, []);
 
 

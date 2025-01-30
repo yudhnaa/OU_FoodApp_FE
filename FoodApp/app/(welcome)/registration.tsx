@@ -65,7 +65,7 @@ export default function Registration() {
             "phone_number": "0"+phoneNumber,
             "email": email,
             "role": role,
-            "date_of_birth": date.toISOString(),
+            "date_of_birth": date.getDate().toString(),
             "location": location.longitude + ";" + location.latitude
         }
 
@@ -139,7 +139,7 @@ export default function Registration() {
                     </View>
                 </View>
 
-                {/* Password */}
+                {/* Username */}
                 <InputField label="Username" placeholder="Enter username ..." value={username} onChange={setUsername}
                             isSecure={false}/>
 
