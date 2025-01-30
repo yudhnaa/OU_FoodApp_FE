@@ -34,7 +34,7 @@ export default function Registration() {
         }
     };
 
-    const validatePhoneNumber = (phoneNumber:string) => {
+    const validatePhoneNumber = (phoneNumber: string) => {
         const phoneRegex = /(?:\+84|0084|0)(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9])[0-9]{7}(?:[^\d]+|$)/g;
         return phoneRegex.test(phoneNumber);
     };
@@ -52,7 +52,7 @@ export default function Registration() {
 
     const register = async () => {
 
-        if (!validatePhoneNumber("0"+phoneNumber)) {
+        if (!validatePhoneNumber("0" + phoneNumber)) {
             alert("Invalid phone number")
             return;
         }
@@ -62,20 +62,19 @@ export default function Registration() {
             "last_name": lastName,
             "username": username,
             "password": password,
-            "phone_number": "0"+phoneNumber,
+            "phone_number": "0" + phoneNumber,
             "email": email,
             "role": role,
-            "date_of_birth": date.getDate().toString(),
+            "birthday": date.toISOString().split("T")[0],
             "location": location.longitude + ";" + location.latitude
         }
 
+
         setLoading(true)
         let res = await APIs.post(endpoints.register, data).then(res => {
-            if (res.status === 201) {
-                alert("Register successfully")
-                router.dismissAll()
-                router.replace("/welcome")
-            }
+            alert("Register successfully")
+            router.dismissAll()
+            router.replace("/welcome")
         }).catch(ex => {
             switch (ex.status) {
                 case 400:

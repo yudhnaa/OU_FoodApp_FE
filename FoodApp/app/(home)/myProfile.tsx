@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
-import {Pressable, Text, View} from "react-native";
+import {Pressable, StyleSheet, Text, TextInput, View} from "react-native";
 import {Image} from "expo-image"
 import {Button} from "react-native-paper";
 
@@ -17,7 +17,8 @@ import {router} from "expo-router";
 
 function MyProfile() {
     const {userInfo, access_token} = useAuth()
-    const [fullName, setFullName] = useState(`${userInfo.first_name} ${userInfo.last_name}`);
+    const [firstName, setFirstName] = useState(userInfo.first_name);
+    const [lastName, setLastName] = useState(userInfo.last_name);
     const [email, setEmail] = useState(userInfo.email);
     const [dateOfBirth, setDateOfBirth] = useState(new Date(userInfo.birthday));
     const [phoneNumber, setPhoneNumber] = useState(userInfo.phone_number);
@@ -31,8 +32,8 @@ function MyProfile() {
 
     const updateProfile = async () => {
         await authApi(access_token).patch(`/users/${userInfo.id}/`, {
-            first_name: fullName.split(" ")[0],
-            last_name: fullName.split(" ")[1],
+            first_name: firstName,
+            last_name: lastName,
             email: email,
             phone_number: phoneNumber,
             birthday: dateOfBirth.toISOString().split("T")[0]
@@ -64,8 +65,19 @@ function MyProfile() {
                     mode={"text"}
                     onPress={() => {
                     }}>Change avatar</Button>
-                <InputField label={"Full name"} value={fullName} onChange={setFullName}/>
-
+                {/*<InputField label={"Full name"} value={fullName} onChange={setFullName}/>*/}
+                <View style={styles.nameFieldContainer}>
+                    <View style={styles.nameFieldItem}>
+                        <Text style={inputFieldStyles.text}>First Name</Text>
+                        <TextInput style={[inputFieldStyles.textInput, fontStyles.TextInputField, {height: 40}]}
+                                   placeholder="Enter first name ..." value={firstName} onChangeText={setFirstName}/>
+                    </View>
+                    <View style={styles.nameFieldItem}>
+                        <Text style={inputFieldStyles.text}>Last Name</Text>
+                        <TextInput style={[inputFieldStyles.textInput, fontStyles.TextInputField, {height: 40}]}
+                                   placeholder="Enter last name ..." value={lastName} onChangeText={setLastName}/>
+                    </View>
+                </View>
 
                 <InputField label={"Email"} value={email} onChange={setEmail}/>
                 <InputField label={"Phone number"} value={phoneNumber} onChange={setPhoneNumber}/>
@@ -102,5 +114,16 @@ function MyProfile() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    nameFieldContainer: {
+        flexDirection: "row",
+        width: "80%",
+        marginBottom: 20,
+    },
+    nameFieldItem: {
+        flex: 1,
+    }
+});
 
 export default MyProfile;
