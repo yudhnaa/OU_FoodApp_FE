@@ -18,9 +18,12 @@ export const endpoints = {
     'address': '/user_addresses/',
 
     'notification': '/user/notifications/',
-    // 'read_notification': '/user/notifications/mark_a s_read/',
 
     'follow': '/users/following_store/',
+
+    'follow_store': '/user/follow/',
+
+    'unfollow_store': '/user/follow/',
 
 
     'dish': '/dish/',

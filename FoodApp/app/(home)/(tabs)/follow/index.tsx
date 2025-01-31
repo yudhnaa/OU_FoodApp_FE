@@ -7,6 +7,7 @@ import {useAuth} from "@/components/AuthContext";
 import {router, useFocusEffect} from "expo-router";
 import {Image} from "expo-image";
 import Button from "@/components/home/button";
+import fontStyles from "@/styles/fontStyles";
 
 type Follow = {
     id: number;
@@ -48,6 +49,15 @@ function Follow() {
 
     const unFollow = async (id: number) => {
         console.log(id);
+        setLoading(true);
+        await authApi(access_token).delete(endpoints.unfollow_store + id + "/").then((res) => {
+            alert("Unfollowed successfully");
+            follows.splice(follows.findIndex((item) => item.id === id), 1);
+        }).catch((ex: any) => {
+          alert(ex.response?.data?.error_description || `Unfollow failed\nStatus code: ${ex.status}`);
+        }).finally(() => {
+          setLoading(false);
+        })
     }
 
 
@@ -61,6 +71,11 @@ function Follow() {
         <View style={bgStyles.backGround}>
             {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={bgStyles.bodyPage}>
+                {follows.length === 0 && (
+                    <View style={{margin: 20, marginTop: "50%"}}>
+                        <Text style={[fontStyles.Title, {textAlign: "center"}]}>You are not following any store</Text>
+                    </View>
+                )}
                 <FlatList
                     data={follows}
                     keyExtractor={item => item.id.toString()}
