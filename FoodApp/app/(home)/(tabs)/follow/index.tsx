@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {FlatList, RefreshControl, Text, View} from "react-native";
 import {styles as bgStyles} from "@/components/home/Styles";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";

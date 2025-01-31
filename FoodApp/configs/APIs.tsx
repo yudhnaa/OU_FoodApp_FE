@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {getObjectValue} from "@/components/asyncStorage";
 
-const BASE_URL = 'http://192.168.1.10:8000/';
+const BASE_URL = 'http://192.168.1.9:8000/';
 
 export const endpoints = {
     'register': '/users/',
@@ -19,11 +19,12 @@ export const endpoints = {
 
     'notification': '/user/notifications/',
 
-    'follow': '/users/following_store/',
-
+    'follow': '/users/following_store/', //list of stores that user is following
     'follow_store': '/user/follow/',
-
     'unfollow_store': '/user/follow/',
+
+    'questionAnswer': '/question_and_answer/',
+    'contact': '/contact/',
 
 
     'dish': '/dish/',

@@ -4,79 +4,70 @@ import {StyleSheet} from "react-native";
 import colors from "@/styles/colors";
 import {styles as bgStyles} from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
-import {useState} from "react";
-
-const contacts = [
-    {
-        id: 1,
-        name: "Phone number",
-        value: "123-456-7890",
-        icon: require("../../assets/images/icons/ico_phone.svg"),
-    },
-    {
-        id: 2,
-        name: "Email",
-        value: "example.com",
-        icon: require("../../assets/images/icons/ico_email.svg"),
-    },
-    {
-        id: 3,
-        name: "Address",
-        value: "1234 Example St, City, State, 12345",
-        icon: require("../../assets/images/icons/ico_location.svg")
-    },
-    {
-        id: 4,
-        name: "Hours",
-        value: "Monday - Friday: 9am - 5pm",
-        icon: require("../../assets/images/icons/ico_clock.svg")
-    },
-    {
-        id: 5,
-        name: "Facebook",
-        value: "facebook.com",
-        icon: require("../../assets/images/icons/ico_facebook.svg")
-    },
-    {
-        id: 6,
-        name: "Instagram",
-        value: "instagram.com",
-        icon: require("../../assets/images/icons/ico_instagram.svg")
-    }
-]
-
-const faqs = [
-    {
-        id: 1,
-        question: "How to cancel an order?",
-        answer: "You can cancel an order by going to the order details page and clicking on the cancel order button."
-    },
-    {
-        id: 2,
-        question: "How to track an order?",
-        answer: "You can track an order by going to the order details page and clicking on the track order button."
-    },
-    {
-        id: 3,
-        question: "How to leave a review?",
-        answer: "You can leave a review by going to the order details page and clicking on the leave a review button."
-    },
-    {
-        id: 4,
-        question: "How to order again?",
-        answer: "You can order again by going to the order details page and clicking on the order again button."
-    },
-    {
-        id: 5,
-        question: "How to contact us?",
-        answer: "You can contact us by going to the contact us page and filling out the contact form."
-    }
-
-]
+import {useEffect, useState} from "react";
+import APIs, {endpoints} from "@/configs/APIs";
 
 export default function FaqAndContactUs() {
+    type faq = {
+        id: number,
+        question: string,
+        answer: string,
+    }
 
+    type contact = {
+        id: number,
+        name: string,
+        data: string,
+        icon: any,
+    }
+
+    const contactIconMap: { [key: string]: any } = {
+        "Phone number": require("@/assets/images/icons/ico_phone.svg"),
+        "Email": require("@/assets/images/icons/ico_email.svg"),
+        "Address": require("@/assets/images/icons/ico_location.svg"),
+        "Hours": require("@/assets/images/icons/ico_clock.svg"),
+        "Facebook": require("@/assets/images/icons/ico_facebook.svg"),
+        "Instagram": require("@/assets/images/icons/ico_instagram.svg"),
+    };
+
+
+    const [loading, setLoading] = useState(false);
     const [tab, setTab] = useState("faq");
+    const [faqs, setFaqs] = useState<faq[]>([]);
+    const [contacts, setContacts] = useState<contact[]>([]);
+
+    const fetchFAQs = async () => {
+        setLoading(true);
+        APIs.get(endpoints.questionAnswer).then((res) => {
+            setFaqs(res.data)
+        }).catch(ex => {
+            alert(ex.response.data?.error_description || "Logout failed\nStatus code" + ex.status)
+        }).finally(() => {
+            setLoading(false)
+        })
+    }
+
+    const fetchContacts = async () => {
+        setLoading(true);
+        APIs.get(endpoints.contact).then((res) => {
+            let contactsWithIcons = contacts.map((contact) => {
+                const iconKey = contact.name; // Use the name as the key
+                contact.icon = contactIconMap[iconKey] || null; // Assign icon or null if not found
+                return contact;
+            });
+
+            setContacts(contactsWithIcons)
+        }).catch(ex => {
+            alert(ex.response.data?.error_description || "Logout failed\nStatus code" + ex.status)
+        }).finally(() => {
+            setLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        fetchFAQs();
+        fetchContacts();
+    }, []);
 
     return (
         <View style={bgStyles.backGround}>
@@ -120,7 +111,7 @@ export default function FaqAndContactUs() {
                                 <Image source={item.icon} style={styles.image} contentFit={"contain"}></Image>
                                 <View className="ml-5 flex-1">
                                     <Text style={styles.title}>{item.name}</Text>
-                                    <Text style={styles.details}>{item.value}</Text>
+                                    <Text style={styles.details}>{item.data}</Text>
                                 </View>
                             </View>
                         )}
