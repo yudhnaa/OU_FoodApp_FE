@@ -41,7 +41,7 @@ function MyProfile() {
             alert("Update profile successfully")
             if (router.canDismiss())
                 router.dismissAll()
-            router.replace("/loading");
+            router.replace("/home");
         }).catch(ex => {
             alert("Update profile failed")
             console.error(ex.response.data)

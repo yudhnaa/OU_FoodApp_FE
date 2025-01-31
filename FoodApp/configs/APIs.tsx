@@ -15,6 +15,9 @@ export const endpoints = {
     "remove_payment_method": "/user/payment_methods/",
     "get_payment_type": "/payment_methods/",
 
+    'address': '/user_addresses/',
+
+
     'dish': '/dish/',
     'dish_type': '/dish_type/',
     'list_dish': (typeId: any) => `/dish_type/${typeId}/dishes/`,

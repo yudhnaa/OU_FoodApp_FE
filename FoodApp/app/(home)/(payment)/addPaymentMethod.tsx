@@ -44,10 +44,6 @@ function AddPaymentMethod() {
                     return method;
                 });
                 setPaymentMethods(methodWithIcon);
-            }).catch(ex => {
-                alert(ex.response.data?.error_description || "Loading failed\nStatus code" + ex.status)
-            }).finally(() => {
-                setLoading(false);
             })
         }
         getPaymentMethods()

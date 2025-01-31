@@ -1,14 +1,14 @@
 import {View, Text, FlatList, Image, Pressable} from 'react-native';
 import colors from "@/styles/colors";
 import {styles} from "@/components/home/Styles";
-import {useRouter} from 'expo-router';
+import {useFocusEffect, useRouter} from 'expo-router';
 import {Icon} from 'react-native-paper'
 import Carousel from 'react-native-reanimated-carousel';
 import {useSharedValue} from 'react-native-reanimated';
 import {useFoodContext} from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
 import APIs, {endpoints, authApi} from '@/configs/APIs';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useAuth} from "@/components/AuthContext";
 
 export default function HomePage() {
@@ -26,70 +26,76 @@ export default function HomePage() {
         discount?: string
     }>>([]);
 
-    useEffect(() => {
-        console.log("re fetch data")
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                await authApi(access_token).get(endpoints.get_user).then(
-                    (res) => {
-                        setUserInfo(res.data);
-                    }
-                ).catch((ex) => {
-                    alert('Please login to continue');
-                    if (router.canDismiss())
-                        router.dismissAll()
-                    router.replace('/login');
+    const fetchData = async () => {
+        try {
+            const dishType = await APIs.get(endpoints['dish_type']);
+            const dish = await APIs.get(endpoints['dish']);
 
-                });
+            const categories = dishType.data.map((item: any) => ({
+                id: item.id,
+                name: item.name,
+                icon: {uri: item.image}
+            }));
 
-                const dishType = await APIs.get(endpoints['dish_type']);
-                const dish = await APIs.get(endpoints['dish']);
+            const food = dish.data.map((item: any) => ({
+                id: item.id,
+                name: item.name,
+                price: `$${item.price}`,
+                image: {uri: item.image},
+                description: item.description,
+                category: item.food_type,
+                categoryID: item.food_type_id,
+            }));
 
-                const categories = dishType.data.map((item: any) => ({
-                    id: item.id,
-                    name: item.name,
-                    icon: {uri: item.image}
-                }));
+            const formattedData = [
+                {
+                    type: 'categories',
+                    items: categories
+                },
+                {
+                    type: 'bestSeller',
+                    title: 'Best Seller',
+                    items: food
+                },
+                {
+                    type: 'promotion',
+                    text: 'Experience our delicious new dish',
+                    discount: '30% OFF',
+                },
+                {
+                    type: 'recommend',
+                    title: 'Recommend',
+                    items: food
+                }
+            ];
+            setNewData(formattedData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-                const food = dish.data.map((item: any) => ({
-                    id: item.id,
-                    name: item.name,
-                    price: `$${item.price}`,
-                    image: {uri: item.image},
-                    description: item.description,
-                    category: item.food_type,
-                    categoryID: item.food_type_id,
-                }));
-
-                const formattedData = [
-                    {
-                        type: 'categories',
-                        items: categories
-                    },
-                    {
-                        type: 'bestSeller',
-                        title: 'Best Seller',
-                        items: food
-                    },
-                    {
-                        type: 'promotion',
-                        text: 'Experience our delicious new dish',
-                        discount: '30% OFF',
-                    },
-                    {
-                        type: 'recommend',
-                        title: 'Recommend',
-                        items: food
-                    }
-                ];
-                setNewData(formattedData);
-            } catch (error) {
-                console.log(error);
+    const fetchUserInfo = async () => {
+        setLoading(true);
+        try {
+            const res = await authApi(access_token).get(endpoints.get_user);
+            setUserInfo(res.data);
+        } catch (ex) {
+            alert('Please login to continue');
+            if (router.canDismiss()) {
+                router.dismissAll();
             }
-        };
-        fetchData();
-    }, []);
+            router.replace('/login');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+// Correct usage of useFocusEffect
+    useFocusEffect(
+        useCallback(() => {
+            fetchUserInfo();
+        }, []) // Empty dependency array ensures this runs every time the screen is focused
+    );
 
     const renderItem = ({item}: {
         item: { type: string; items?: any; title?: string; text?: string; discount?: string }
