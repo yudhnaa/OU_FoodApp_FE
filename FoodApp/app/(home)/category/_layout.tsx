@@ -64,7 +64,6 @@ const styles1 = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
-        // padding: 10,
     },
     nameContainer: {
         flex: 1,

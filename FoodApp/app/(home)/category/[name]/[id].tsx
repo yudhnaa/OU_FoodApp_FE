@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import APIs, { endpoints } from "@/configs/APIs";
 import Toast , {BaseToast} from "react-native-toast-message";
 
+
 export default function FoodDetailPage() {
     const { selectedFood } = useFoodContext();
     const [quantity, setQuantity] = useState(1);

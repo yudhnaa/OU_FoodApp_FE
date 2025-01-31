@@ -6,10 +6,13 @@ import {Icon} from 'react-native-paper'
 import FoodProvider from './category/FoodContext'
 import BackButton from '@/components/home/backButton'
 import colors from "@/styles/colors";
+import { CartProvider } from '@/components/home/cartContext'
+
 
 export default function HomeLayout() {
     return (
         <FoodProvider>
+            <CartProvider>
             <Stack screenOptions={{
                 headerShown: true,
                 headerStyle: {backgroundColor: '#F5CB58'},
@@ -183,6 +186,7 @@ export default function HomeLayout() {
 
 
             </Stack>
+            </CartProvider>
         </FoodProvider>
     )
 }

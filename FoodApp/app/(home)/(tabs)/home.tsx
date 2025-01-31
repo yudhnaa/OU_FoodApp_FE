@@ -15,7 +15,7 @@ export default function HomePage() {
     const router = useRouter();
     const activeIndex = useSharedValue(0);
     const { setSelectedFood } = useFoodContext();
-    const [new_Data,setNewData] = useState([]);
+    const [new_Data,setNewData] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,7 +70,7 @@ export default function HomePage() {
         fetchData();
     },[]);
     
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item  } : any) => {
         switch (item.type) {
             case 'categories':
                 return (
