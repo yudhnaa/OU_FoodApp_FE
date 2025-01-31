@@ -17,6 +17,9 @@ export const endpoints = {
 
     'address': '/user_addresses/',
 
+    'notification': '/user/notifications/',
+    // 'read_notification': '/user/notifications/mark_as_read/',
+
 
     'dish': '/dish/',
     'dish_type': '/dish_type/',
