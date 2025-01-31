@@ -27,7 +27,7 @@ const PaymentMethods = () => {
         "user": number,
         "payment_type_name": string,
         "created_at": string,
-        "isActive": boolean,
+        "is_active": boolean,
         "isDefault": boolean,
         "icon": string
     };

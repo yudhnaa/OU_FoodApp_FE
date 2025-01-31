@@ -13,7 +13,7 @@ import {LoadingOverlay} from "@/components/home/LoadingComponents";
 type Address = {
     id: number;
     created_at: string;
-    isActive: boolean;
+    is_active: boolean;
     address: string;
     name: string;
     user: number;

@@ -23,7 +23,7 @@ function AddOtherMethod() {
         const getPaymentMethods = async () => {
             await authApi(access_token).post(endpoints.payment_methods, {
                 "payment_type": parseMethod.id,
-                "isActive": false,
+                "is_active": false,
                 "isDefault": false,
                 "user": userInfo.id
             }).then((res) => {
