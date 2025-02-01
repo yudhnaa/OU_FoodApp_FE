@@ -63,8 +63,8 @@ export default function CategoryPage() {
     );
 
     return (
-        <View>
-            <View>
+        <View style={styles.backGround}>
+            <View style={[styles.bodyPage,{paddingBottom : 30}]}>
                 <View style={styles.header}>
                     <View style={styles.sortContainer}>
                         <Text>Sort By</Text>

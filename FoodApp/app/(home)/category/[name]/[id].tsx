@@ -181,7 +181,7 @@ export default function FoodDetailPage() {
 
                 <Text style={styles.toppingsTitle}>Toppings</Text>
                 {toppings.map((topping) => (
-                    <View key={topping.id} style={styles.toppingItem}>
+                    <View key={topping.id.toString()} style={styles.toppingItem}>
                         <Pressable onPress={() => handleToppingSelection(topping.id)}>
                             <Icon
                                 source={topping.selected ? "checkbox-marked-circle" : "checkbox-marked-circle-outline"}

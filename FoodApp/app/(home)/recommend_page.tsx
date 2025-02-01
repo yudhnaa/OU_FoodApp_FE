@@ -96,61 +96,109 @@ import APIs,{endpoints} from "@/configs/APIs";
 // ]
 
 export default function RecommendPage() {
-    const [data,setData] = useState([]);
+    // const [data,setData] = useState([]);
+
+    const [data, setData] = useState<any[]>([]);
+        const [currentPage, setCurrentPage] = useState(1);
+        const [loading, setLoading] = useState(false);
+        const [hasMore, setHasMore] = useState(true);
+    
+        const fetchData = async (page = 1) => {
+            if (loading || !hasMore) return;
+    
+            setLoading(true);
+            try {
+                const dish = await APIs.get(`${endpoints['dish']}?page=${page}`);
+    
+                if (!dish.data || !Array.isArray(dish.data.results)) {
+                    console.error("Invalid food data format:", dish.data);
+                    setHasMore(false);
+                    return;
+                }
+    
+                const food = dish.data.results.map((item: any) => ({
+                    id: item.id,
+                    name: item.name,
+                    price: `$${item.price}`,
+                    image: { uri: item.image },
+                    description: item.description,
+                    category: item.food_type,
+                    categoryID: item.food_type_id,
+                }));
+    
+                setData(prevData => (page === 1 ? food : [...prevData, ...food]));
+                setHasMore(dish.data.next !== null);
+                setCurrentPage(page);
+            } catch (error) {
+                console.error("Error fetching food data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
     
         useEffect(() => {
-                const fetchData = async () => {
-                    try{
-                        // const dishType = await APIs.get(endpoints['dish_type']);
-                        const dish = await APIs.get(endpoints['dish']);
+            fetchData(1); // Tải trang đầu tiên
+        }, []);
+    
+        const handleLoadMore = () => {
+            if (!loading && hasMore) {
+                fetchData(currentPage + 1);
+            }
+        };
+    
+        // useEffect(() => {
+        //         const fetchData = async () => {
+        //             try{
+        //                 // const dishType = await APIs.get(endpoints['dish_type']);
+        //                 const dish = await APIs.get(endpoints['dish']);
         
-                        // const categories = dishType.data.map((item: any) => ({
-                        //    id : item.id,
-                        //    name : item.name,
-                        //    icon : { uri : item.image } 
-                        // }));
+        //                 // const categories = dishType.data.map((item: any) => ({
+        //                 //    id : item.id,
+        //                 //    name : item.name,
+        //                 //    icon : { uri : item.image } 
+        //                 // }));
         
-                        const food = dish.data.map((item: any) => ({
-                            id : item.id,
-                            name : item.name,
-                            price: `$${item.price}`,
-                            image : { uri : item.image },
-                            description : item.description,
-                            category : item.food_type,
-                            categoryID : item.food_type_id,
-                        }));
+        //                 const food = dish.data.map((item: any) => ({
+        //                     id : item.id,
+        //                     name : item.name,
+        //                     price: `$${item.price}`,
+        //                     image : { uri : item.image },
+        //                     description : item.description,
+        //                     category : item.food_type,
+        //                     categoryID : item.food_type_id,
+        //                 }));
         
-                        // const formattedData = [
-                        //     {
-                        //         type: 'categories',
-                        //         items: categories
-                        //     },
-                        //     {
-                        //         type: 'bestSeller',
-                        //         title: 'Best Seller',
-                        //         items: food
-                        //     },
-                        //     {
-                        //         type: 'promotion',
-                        //         text: 'Experience our delicious new dish',
-                        //         discount: '30% OFF',
-                        //     },
-                        //     {
-                        //         type: 'recommend',
-                        //         title: 'Recommend',
-                        //         items: food
-                        //     }
-                        // ];
+        //                 // const formattedData = [
+        //                 //     {
+        //                 //         type: 'categories',
+        //                 //         items: categories
+        //                 //     },
+        //                 //     {
+        //                 //         type: 'bestSeller',
+        //                 //         title: 'Best Seller',
+        //                 //         items: food
+        //                 //     },
+        //                 //     {
+        //                 //         type: 'promotion',
+        //                 //         text: 'Experience our delicious new dish',
+        //                 //         discount: '30% OFF',
+        //                 //     },
+        //                 //     {
+        //                 //         type: 'recommend',
+        //                 //         title: 'Recommend',
+        //                 //         items: food
+        //                 //     }
+        //                 // ];
         
-                        // setNewData(formattedData);
-                        setData(food);
-                    }
-                    catch(error){
-                        console.log(error);
-                    }
-                };
-                fetchData();
-            },[]);
+        //                 // setNewData(formattedData);
+        //                 setData(food);
+        //             }
+        //             catch(error){
+        //                 console.log(error);
+        //             }
+        //         };
+        //         fetchData();
+        //     },[]);
     
     return (
         <View style={styles.backGround}>
@@ -158,7 +206,12 @@ export default function RecommendPage() {
                 <View style={styles.txtContainer}>
                     <Text style={styles.txt}>Discover the dishes recommended by the chef.</Text>
                 </View>
-                <FoodFlatList data={data} />
+                <FoodFlatList
+                    data={data}
+                    loading={loading}
+                    hasMore={hasMore}
+                    loadMore={handleLoadMore}
+                />
             </View>
         </View>
     )
