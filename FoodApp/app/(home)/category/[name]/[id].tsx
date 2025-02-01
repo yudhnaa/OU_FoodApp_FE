@@ -11,14 +11,14 @@ import Toast , {BaseToast} from "react-native-toast-message";
 export default function FoodDetailPage() {
     const { selectedFood } = useFoodContext();
     const [quantity, setQuantity] = useState(1);
-    const [toppings, setToppings] = useState([]);
+    const [toppings, setToppings] = useState<any[]>([]);
     const [pressedMinus, setPressedMinus] = useState(false);
     const [pressedPlus, setPressedPlus] = useState(false);
 
     const loadTopping = async () => {
         try {
             let res = await APIs.get(endpoints["dish_topping"](selectedFood.id));
-            const toppingsWithCheckbox = res.data.map((topping) => ({
+            const toppingsWithCheckbox = res.data.map((topping : any) => ({
                 ...topping,
                 quantity: 0,
                 selected: false,
@@ -33,7 +33,7 @@ export default function FoodDetailPage() {
         loadTopping();
     }, [selectedFood.id]);
 
-    const handleQuantityChange = (type) => {
+    const handleQuantityChange = (type : any) => {
         if (type === "increase") {
             setQuantity((prev) => prev + 1);
         } else if (type === "decrease" && quantity > 1) {
@@ -41,7 +41,7 @@ export default function FoodDetailPage() {
         }
     };
 
-    const handleToppingSelection = (toppingId) => {
+    const handleToppingSelection = (toppingId : any) => {
         const updatedToppings = toppings.map((topping) =>
             topping.id === toppingId
                 ? {
@@ -54,7 +54,7 @@ export default function FoodDetailPage() {
         setToppings(updatedToppings);
     };
 
-    const handleToppingQuantityChange = (toppingId, type) => {
+    const handleToppingQuantityChange = (toppingId : any, type : any) => {
         const updatedToppings = toppings.map((topping) =>
             topping.id === toppingId && topping.selected
                 ? {
@@ -67,7 +67,7 @@ export default function FoodDetailPage() {
     };
 
     const toastConfig = {
-        success: (props) => (
+        success: (props : any) => (
             <BaseToast
                 {...props}
                 style={styles.successToast}
@@ -75,7 +75,7 @@ export default function FoodDetailPage() {
                 text2Style={styles.toastText2}
             />
         ),
-        error: (props) => (
+        error: (props : any) => (
             <BaseToast
                 {...props}
                 style={styles.errorToast}

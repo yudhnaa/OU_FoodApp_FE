@@ -1,6 +1,9 @@
 import {View} from "react-native";
 import {useEffect} from "react";
 import {router} from "expo-router";
+
+
+
 import {
     useFonts,
     Spartan_100Thin,
