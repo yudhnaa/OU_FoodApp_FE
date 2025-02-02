@@ -18,7 +18,7 @@ export const endpoints = {
     "remove_payment_method": "/user/payment_methods/",
     "get_payment_type": "/payment_methods/",
 
-    'address': '/user_addresses/',
+    'address': '/user/addresses/',
 
     'notification': '/user/notifications/',
 
