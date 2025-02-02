@@ -10,6 +10,9 @@ export const endpoints = {
     'get_user': '/users/current_user/',
     'logout': '/o/revoke_token/',
 
+    'google_signin' : '/firebase/auth/google/authenticate/',
+    'update_google_user_info': '/firebase/auth/google/',
+
     "payment_methods": '/user/payment_methods/',
     "set_default_payment_method": "/user/payment_methods/set_default_payment_method/",
     "remove_payment_method": "/user/payment_methods/",
@@ -25,6 +28,8 @@ export const endpoints = {
 
     'questionAnswer': '/question_and_answer/',
     'contact': '/contact/',
+
+
 
 
     'dish': '/dish/',

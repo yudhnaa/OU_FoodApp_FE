@@ -40,3 +40,9 @@ app-example
 ios/
 android/
 certs/
+
+
+GoogleService-Info.plist
+*.ipa
+*.ipa.zip
+firebaseConfig.js

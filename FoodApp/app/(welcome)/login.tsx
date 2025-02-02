@@ -7,6 +7,7 @@ import {useState} from "react";
 import APIs, {endpoints} from "@/configs/APIs";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
 import {useAuth} from "@/components/AuthContext";
+import {GoogleSignInAuth} from "@/components/GoogleSignInAuth";
 
 
 export default function Login() {
@@ -36,7 +37,7 @@ export default function Login() {
                 router.replace("/home")
             }
         }).catch(ex => {
-            alert(ex.response.data?.error_description || "Login failed\nStatus code"+ex.status)
+            alert(ex.response.data?.error_description || "Login failed\nStatus code" + ex.status)
         }).then(() => {
             setLoading(false)
         })
@@ -66,12 +67,14 @@ export default function Login() {
                             isSecure={true}
                             autoCapitalize={'none'}/>
 
-                <View style={[styles.buttonContainer, {}]}>
+                <View style={styles.buttonContainer}>
                     <TouchableOpacity style={[styles.button, {paddingHorizontal: 30}]} onPress={login}>
                         <Text style={[styles.loginText, {}]}>Sign In</Text>
                     </TouchableOpacity>
+
                     <Text style={{paddingHorizontal: 30}}>Or</Text>
-                    <Text style={{paddingHorizontal: 30}}>Google</Text>
+
+                    <GoogleSignInAuth setLoading={setLoading}></GoogleSignInAuth>
                 </View>
 
                 {/* Terms of Use */}
@@ -99,15 +102,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonContainer: {
-        width: "80%",
-        height: "6%",
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
         marginVertical: "3%",
     },
     button: {
-        height: "100%",
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
         textTransform: "capitalize",
         fontWeight: "500",
         color: "white",
+        paddingVertical: 10,
     },
     termsContainer: {
         marginTop: "auto",

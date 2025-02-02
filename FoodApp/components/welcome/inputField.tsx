@@ -5,7 +5,7 @@ import colors from "@/styles/colors";
 
 
 // InputField.tsx
-function InputField({label, placeholder, value, onChange, height = 40, multiline = false, paddingTop=0, textClassName="", textBoxClassName="", containerClassName="", isSecure=false, autoCapitalize='sentences'}: {
+function InputField({label, placeholder, value, onChange, height = 40, multiline = false, paddingTop=0, textClassName="", textBoxClassName="", containerClassName="", isSecure=false, autoCapitalize='sentences', inputDisabled = false}: {
     label: any,
     placeholder?: string,
     value: any,
@@ -17,7 +17,8 @@ function InputField({label, placeholder, value, onChange, height = 40, multiline
     textBoxClassName?: string,
     containerClassName?: string,
     isSecure?: boolean,
-    autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
+    autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
+    inputDisabled?: boolean
 }) {
     return (
         <View style={styles.textInputContainer} className={containerClassName}>
@@ -30,7 +31,8 @@ function InputField({label, placeholder, value, onChange, height = 40, multiline
                 onChangeText={onChange}
                 multiline={multiline}
                 autoCapitalize={autoCapitalize}
-                className={textBoxClassName}/>
+                className={textBoxClassName}
+                aria-disabled={inputDisabled}/>
         </View>
     );
 }

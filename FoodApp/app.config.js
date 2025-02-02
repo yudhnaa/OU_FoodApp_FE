@@ -1,6 +1,6 @@
-{
+export default {
   "expo": {
-    "name": "FoodApp",
+    "name": "FoodAppOu",
     "slug": "FoodApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,41 +8,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.Mrdochien2025.FoodApp",
-      "infoPlist": {
-        "UIBackgroundModes": [
-          "location",
-          "fetch",
-          "remote-notification"
-        ],
-        "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
-        "NSLocationAlwaysUsageDescription": "This app requires access to your location when open.",
-        "deploymentTarget": "15"
-      },
-      "appleTeamId": "U8H6FJX25X"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "permissions": [
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_BACKGROUND_LOCATION",
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.FOREGROUND_SERVICE_LOCATION"
-      ],
-      "package": "com.Mrdochien2025.FoodApp"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
     "plugins": [
       "expo-router",
       [
@@ -64,8 +29,45 @@
           "isIosBackgroundLocationEnabled": true,
           "isAndroidBackgroundLocationEnabled": true
         }
-      ]
+      ],
+      "@react-native-google-signin/google-signin"
     ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.Mrdochien2025.FoodApp",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ],
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
+        "NSLocationAlwaysUsageDescription": "This app requires access to your location when open.",
+        "deploymentTarget": "15"
+      },
+      "appleTeamId": "U8H6FJX25X",
+      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON ?? "./GoogleService-Info.plist"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION"
+      ],
+      "package": "com.Mrdochien2025.FoodApp"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
     "experiments": {
       "typedRoutes": true
     },

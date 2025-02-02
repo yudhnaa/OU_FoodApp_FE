@@ -100,6 +100,13 @@ Join our community of developers creating universal apps.
   - run expo run:ios --device again and select device to build.
   - wait and it will install on your device
 
+### for build apk, ipa locally
+- Run the following command: We need to set the path to the google-services.json file because EAS does not support .env file.
+   ```bash
+  export GOOGLE_SERVICES_JSON="/Users/yudhna_/FrontEnd_DiaDiemAnUong/FoodApp/GoogleService-Info.plist" && eas build --profile development --platform ios --local
+   ```
+
+
 ### Reference
 - https://docs.expo.dev/
    

@@ -1,124 +1,128 @@
-import React, {useEffect, useState} from "react";
-import {Text, View, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity} from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {router} from "expo-router";
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, {useEffect} from 'react';
+import {useState} from 'react';
+import {ActivityIndicator, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Image} from "expo-image"
+import {Button} from "react-native-paper";
+
+
+import {styles as homeStyles} from "@/components/home/Styles";
 import InputField from "@/components/welcome/inputField";
-import PhoneNumberInput from "../../components/welcome/phoneNumberField";
 import {styles as inputFieldStyles} from "@/components/welcome/Styles";
-import colors from "../../styles/colors";
-import fontStyles from "../../styles/fontStyles";
-import axios from "axios";
-import APIs, {endpoints} from "@/configs/APIs";
-import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import colors from "@/styles/colors";
+import fontStyles from "@/styles/fontStyles";
 import {useAuth} from "@/components/AuthContext";
+import APIs, {authApi, endpoints} from "@/configs/APIs";
+import {router} from "expo-router";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import PhoneNumberInput from "@/components/welcome/phoneNumberField";
+import DropDownPicker from "react-native-dropdown-picker";
+import axios from "axios";
 
+type UserInf = {
+    id: number;
+    last_login: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    date_joined: string;
+    store_name: string;
+    role: string;
+    avatar: string | null;
+    phone_number: string;
+    birthday: string;
+};
 
+function UpdateUserInfo() {
+    const {access_token} = useAuth();
 
-export default function Registration() {
     const [open, setOpen] = useState(false);
     const [roles, setRoles] = useState<{ label: string; value: string }[]>([]);
     const [loading, setLoading] = useState(false);
+    const [userInf, setUserInf] = useState<UserInf | null>(null);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [role, setRole] = useState("guest");
     const [date, setDate] = useState(new Date());
-    const {location} = useAuth();
 
     const onChange = (event: any, selectedDate: any) => {
-        if (selectedDate) {
-            setDate(selectedDate);
+        if (selectedDate) setDate(selectedDate);
+    };
+
+    const fetchUserInfo = async () => {
+        setLoading(true);
+        try {
+            const res = await authApi(access_token).get(endpoints.get_user);
+            setUserInf(res.data);
+        } catch (ex) {
+            alert("Failed to fetch user info");
+            if (router.canDismiss()) router.dismissAll();
+            router.replace('/login');
+        } finally {
+            setLoading(false);
         }
     };
 
-    const validatePhoneNumber = (phoneNumber: string) => {
-        const phoneRegex = /(?:\+84|0084|0)(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9])[0-9]{7}(?:[^\d]+|$)/g;
-        return phoneRegex.test(phoneNumber);
-    };
-
-    const fillDefaultInfo = () => {
-        setFirstName("user9999");
-        setLastName("user9999");
-        setEmail("user9999@gmail.com");
-        setPassword("user9999");
-        setPhoneNumber("344778045");
-        setRole("guest");
-        setDate(new Date());
-        setUsername("user9999");
-    }
-
-    const register = async () => {
-
-        if (!validatePhoneNumber("0" + phoneNumber)) {
-            alert("Invalid phone number")
-            return;
-        }
-
-        let data = {
-            "first_name": firstName,
-            "last_name": lastName,
-            "username": username,
-            "password": password,
-            "phone_number": "0" + phoneNumber,
-            "email": email,
-            "role": role,
-            "birthday": date.toISOString().split("T")[0],
-            "location": location.longitude + ";" + location.latitude
-        }
-
-
-        setLoading(true)
-        let res = await APIs.post(endpoints.register, data).then(res => {
-            alert("Register successfully")
-            router.dismissAll()
-            router.replace("/welcome")
-        }).catch(ex => {
-            switch (ex.status) {
-                case 400:
-                    alert("Invalid input\n" + JSON.stringify(ex.response.data?.username[0] || ex.response.data))
-                    break;
-                default:
-                    alert(ex.response.data?.error_description || "Registration failed\nStatus code" + ex.status)
+    const fetchRoles = async () => {
+        setLoading(true);
+        try {
+            let res = await APIs.get(endpoints.roles);
+            setRoles(res.data.roles.map((role: any) => ({
+                label: role[1],
+                value: role[0]
+            })));
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                console.log('Error Response:', error.response?.data);
+            } else {
+                console.log('General Error:', error.message);
             }
-        }).then(() => {
-            setLoading(false)
-        })
-    }
-
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        fillDefaultInfo()
-
-        const fetchRoles = async () => {
-            setLoading(true)
-            try {
-                let res = await APIs.get(endpoints.roles)
-
-                setRoles(res.data.roles.map((role: any) => ({
-                    label: role[1],
-                    value: role[0]
-                })))
-            } catch (error: any) {
-                if (axios.isAxiosError(error)) {
-                    console.log('Error Response:', error.response?.data);
-                    console.log('Error Status:', error.response?.status);
-                    console.log('Error Headers:', error.response?.headers);
-                } else {
-                    console.log('General Error:', error.message);
-                }
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchRoles()
-
+        fetchRoles().then(fetchUserInfo);
     }, []);
+
+    useEffect(() => {
+        if (userInf) {
+            setUsername(userInf.username);
+            setFirstName(userInf.first_name);
+            setLastName(userInf.last_name);
+            setEmail(userInf.email);
+            setPhoneNumber(userInf.phone_number);
+            setRole(userInf.role);
+            setDate(new Date(userInf.birthday));
+        }
+    }, [userInf]);
+
+    const updateProfile = async () => {
+        if (!userInf) return;
+
+        try {
+            await authApi(access_token).patch(`${endpoints.update_google_user_info}${userInf.id}/`, {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                phone_number: phoneNumber,
+                birthday: date.toISOString().split("T")[0]
+            });
+            alert("Update profile successfully");
+            if (router.canDismiss()) router.dismissAll();
+            router.replace("/home");
+        } catch (ex: any) {
+            alert("Update profile failed");
+            console.error(ex.response?.data);
+        }
+    };
+
 
     return (
         <View style={styles.backGround}>
@@ -142,14 +146,11 @@ export default function Registration() {
 
                 {/* Username */}
                 <InputField label="Username" placeholder="Enter username ..." value={username} onChange={setUsername}
-                            isSecure={false}/>
-
-                {/* Password */}
-                <InputField label="Password" placeholder="Enter password ..." value={password} onChange={setPassword}
-                            isSecure={true}/>
+                            isSecure={false} inputDisabled={true}/>
 
                 {/* Email */}
-                <InputField label="Email" placeholder="Enter email ..." value={email} onChange={setEmail}/>
+                <InputField label="Email" placeholder="Enter email ..." value={email} onChange={setEmail}
+                            inputDisabled={true}/>
 
                 {/* Phone Number */}
                 <PhoneNumberInput value={phoneNumber} onChange={setPhoneNumber}/>
@@ -187,11 +188,9 @@ export default function Registration() {
                 <View style={[styles.buttonContainer, {}]}>
                     <TouchableOpacity style={[styles.button, {paddingHorizontal: 30}]}
                                       disabled={loading}
-                                      onPress={register}>
-                        <Text style={[styles.loginText, {}]}>Sign Up</Text>
+                                      onPress={updateProfile}>
+                        <Text style={[styles.loginText, {}]}>Update</Text>
                     </TouchableOpacity>
-                    <Text style={[{paddingHorizontal: 30}]}>Or</Text>
-                    <Text style={[{paddingHorizontal: 30}]}>Google</Text>
                 </View>
 
                 {/* Terms of Use */}
@@ -271,3 +270,5 @@ const styles = StyleSheet.create({
         width: "80%",
     },
 });
+
+export default UpdateUserInfo;
