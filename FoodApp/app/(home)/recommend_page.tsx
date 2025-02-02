@@ -145,60 +145,11 @@ export default function RecommendPage() {
                 fetchData(currentPage + 1);
             }
         };
+
+        const handleRefresh = async () => {
+            await fetchData(1); // Gọi lại dữ liệu khi refresh
+        };
     
-        // useEffect(() => {
-        //         const fetchData = async () => {
-        //             try{
-        //                 // const dishType = await APIs.get(endpoints['dish_type']);
-        //                 const dish = await APIs.get(endpoints['dish']);
-        
-        //                 // const categories = dishType.data.map((item: any) => ({
-        //                 //    id : item.id,
-        //                 //    name : item.name,
-        //                 //    icon : { uri : item.image } 
-        //                 // }));
-        
-        //                 const food = dish.data.map((item: any) => ({
-        //                     id : item.id,
-        //                     name : item.name,
-        //                     price: `$${item.price}`,
-        //                     image : { uri : item.image },
-        //                     description : item.description,
-        //                     category : item.food_type,
-        //                     categoryID : item.food_type_id,
-        //                 }));
-        
-        //                 // const formattedData = [
-        //                 //     {
-        //                 //         type: 'categories',
-        //                 //         items: categories
-        //                 //     },
-        //                 //     {
-        //                 //         type: 'bestSeller',
-        //                 //         title: 'Best Seller',
-        //                 //         items: food
-        //                 //     },
-        //                 //     {
-        //                 //         type: 'promotion',
-        //                 //         text: 'Experience our delicious new dish',
-        //                 //         discount: '30% OFF',
-        //                 //     },
-        //                 //     {
-        //                 //         type: 'recommend',
-        //                 //         title: 'Recommend',
-        //                 //         items: food
-        //                 //     }
-        //                 // ];
-        
-        //                 // setNewData(formattedData);
-        //                 setData(food);
-        //             }
-        //             catch(error){
-        //                 console.log(error);
-        //             }
-        //         };
-        //         fetchData();
-        //     },[]);
     
     return (
         <View style={styles.backGround}>
@@ -211,6 +162,7 @@ export default function RecommendPage() {
                     loading={loading}
                     hasMore={hasMore}
                     loadMore={handleLoadMore}
+                    onRefresh={handleRefresh}
                 />
             </View>
         </View>

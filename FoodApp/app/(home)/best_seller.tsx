@@ -226,6 +226,10 @@ export default function BestSeller() {
         }
     };
 
+    const handleRefresh = async () => {
+        await fetchData(1); // Gọi lại dữ liệu khi refresh
+    };
+
     return (
         <View style={styles.backGround}>
             <View style={styles.bodyPage}>
@@ -237,6 +241,7 @@ export default function BestSeller() {
                     loading={loading}
                     hasMore={hasMore}
                     loadMore={handleLoadMore}
+                    onRefresh={handleRefresh}
                 />
             </View>
         </View>

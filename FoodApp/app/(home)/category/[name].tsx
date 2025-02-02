@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { View, Text, Image, FlatList, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, FlatList, RefreshControl, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { styles } from "@/components/home/Styles";
 import colors from "@/styles/colors";
 import fontsStyles from "@/styles/fontStyles";
@@ -12,32 +12,62 @@ import APIs,{ endpoints } from "@/configs/APIs";
 export default function CategoryPage() {
     const { name } = useLocalSearchParams();
     const { setSelectedFood } = useFoodContext();
-
-    const [list_dish, setList_dish] = useState([]);
+    const [list_dish, setList_dish] = useState<any[]>([]);
+    const [page,setPage] = useState(1);
+    const [loading,setLoading] = useState(false);
 
     const load_dish = async () => {
-        try{
-            let res = await APIs.get(endpoints['list_dish'](name));
-            const mappedData = res.data.map((item: any) => ({
-                id : item.id,
-                name : item.name,
-                price: `$${item.price.toFixed(2)}`,
-                image : { uri : item.image },
-                description : item.description,
-                category : item.food_type,
-                categoryID : item.food_type_id,
-            }));
-            setList_dish(mappedData);
-            // console.log(typeof res.data[0]['id']);
-        }
-        catch(error){
-            console.log(error);
+        if(page > 0){
+            setLoading(true);
+
+            try{
+                let url = `${endpoints['list_dish'](name)}?page=${page}`
+                let res = await APIs.get(url);
+                const mappedData = res.data.results.map((item: any) => ({
+                    id : item.id,
+                    name : item.name,
+                    price: `$${item.price.toFixed(2)}`,
+                    image : { uri : item.image },
+                    description : item.description,
+                    category : item.food_type,
+                    categoryID : item.food_type_id,
+                }));
+
+                if(page > 1){
+                    setList_dish(current => [...current,...mappedData]);
+                }
+                else{
+                    setList_dish(mappedData);
+                }
+
+                if(res.data.next === null){
+                    setPage(0);
+                }
+                // console.log(typeof res.data[0]['id']);
+            }
+            catch(error){
+                console.log(error);
+            }
+            finally{
+                setLoading(false);
+            }
         }
     }
 
     useEffect(() => {
         load_dish();
-    },[name])
+    },[name,page])
+
+    const loadMore = () => {
+        if(page > 0 && !loading){
+            setPage(page + 1);
+        }
+    }
+
+    const refresh = () => {
+        setPage(1);
+        load_dish();
+    }
 
     const renderMenuItem = ({ item }: { item: any }) => (
         <Pressable
@@ -51,7 +81,7 @@ export default function CategoryPage() {
                 <View style={[styles.menuHeader]}>
                     <Text style={styles.menuName}>{item.name}</Text>
                     <View style={styles.ratingContainer}>
-                        <Text style={styles.ratingText}>{item.rating}</Text>
+                        <Text style={styles.ratingText}>{5}</Text>
                         <Icon source="star" size={16} color="#F3E9B5" />
                     </View>
                     <Text style={styles.menuPrice}>{item.price}</Text>
@@ -74,11 +104,19 @@ export default function CategoryPage() {
                         </Pressable>
                     </View>
                 </View>
+                {/* {loading && <ActivityIndicator />} */}
                 <FlatList
                     data={list_dish}
                     renderItem={renderMenuItem}
                     keyExtractor={item => item.id}
                     contentContainerStyle={styles.menuList}
+                    onEndReached={loadMore}
+                    ListFooterComponent={
+                        loading ? (
+                            <ActivityIndicator size="large" color={colors.Orange_Base} />
+                        ) : null
+                    } // Hiển thị loading indicator khi đang tải
+                    refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh}/>}
                 />
             </View>
         </View>
