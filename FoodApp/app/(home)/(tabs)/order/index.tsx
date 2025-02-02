@@ -1,62 +1,66 @@
 import {View, Text, Pressable, FlatList} from "react-native";
 import {Image} from "expo-image";
-import {router} from "expo-router";
+import {router, Link} from "expo-router";
 import {StyleSheet} from "react-native";
 import colors from "@/styles/colors";
 import {styles} from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {Tabs} from "expo-router";
+import APIs, { endpoints } from "@/configs/APIs";
 
-const orders = [
-    {
-        id: 1,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-        status: "active"
-    },
-    {
-        id: 2,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-        status: "completed"
-    },
-    {
-        id: 3,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-        status: "cancelled"
-    },
-    {
-        id: 4,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-        status: "active"
-    },
-    {
-        id: 5,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-        status: "completed"
-    },
-]
+// const orders = [
+//     {
+//         id: 1,
+//         name: "Strawberry shake",
+//         price: 20.00,
+//         date: "29 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
+//         items: 2,
+//         status: "active"
+//     },
+//     {
+//         id: 2,
+//         name: "Blackberry shake",
+//         price: 23.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
+//         items: 3,
+//         status: "completed"
+//     },
+//     {
+//         id: 3,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//         status: "cancelled"
+//     },
+//     {
+//         id: 4,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//         status: "active"
+//     },
+//     {
+//         id: 5,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//         status: "completed"
+//     },
+// ]
 export default function OrderPage() {
-
+    const [orders,setOrder] = useState<any[]>([]);
     const [filteredOrders, setFilteredOrders] = useState<string>("active");
+
+
     const handlePress = (item: { status: string }) => {
         switch (item.status) {
             case "active":
@@ -67,6 +71,20 @@ export default function OrderPage() {
                 return console.log(item.status)
         }
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try{
+                const order_by_type = await APIs.get(endpoints['order_by_type']);
+                setOrder(order_by_type.data);
+            }
+            catch (error){
+                console.log(error);
+            }
+        }
+        fetchData();
+    }, [orders]);
+
 
     const hasOrders = orders.filter(order => order.status === filteredOrders).length > 0;
 
@@ -91,12 +109,12 @@ export default function OrderPage() {
                             style={filteredOrders === "completed" ? styles1.tabTextActive : styles1.tabTextInactive}>Completed</Text>
                     </Pressable>
                     <Pressable
-                        style={[filteredOrders === "cancelled" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
+                        style={[filteredOrders === "canceled" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
                         onPress={() => {
-                            setFilteredOrders("cancelled")
+                            setFilteredOrders("canceled")
                         }}>
                         <Text
-                            style={filteredOrders === "cancelled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
+                            style={filteredOrders === "canceled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
                     </Pressable>
                 </View>
                 {hasOrders ? (
@@ -133,7 +151,7 @@ export default function OrderPage() {
                                             </Pressable>
                                         </View>
                                     )}
-                                    {item.status === "cancelled" && (
+                                    {item.status === "canceled" && (
                                         <View className={"flex-row items-center justify-start"}>
                                             <Image source={require('@/assets/images/icons/cancelled.png')}
                                                    style={{width: 15, height: 15}}/>

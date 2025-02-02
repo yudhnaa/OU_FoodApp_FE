@@ -8,93 +8,95 @@ import colors from "@/styles/colors";
 import {Image} from "expo-image";
 import fontStyles from "@/styles/fontStyles";
 import {IconButton} from "react-native-paper";
-import InputField from "@/components/welcome/inputField";
-import {styles as inputFieldStyles} from "@/components/welcome/Styles";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useCart } from '@/components/home/cartContext';
+import { useEffect } from 'react';
+
+
 
 const deleveryFee = 10.00;
-const orders = [
-    {
-        id: 1,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 2,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 3,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 4,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 5,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 6,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 7,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 8,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 9,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 10,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-];
+// const orders = [
+//     {
+//         id: 1,
+//         name: "Strawberry shake",
+//         price: 20.00,
+//         date: "29 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
+//         items: 2,
+//     },
+//     {
+//         id: 2,
+//         name: "Blackberry shake",
+//         price: 23.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
+//         items: 3,
+//     },
+//     {
+//         id: 3,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 4,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 5,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 6,
+//         name: "Strawberry shake",
+//         price: 20.00,
+//         date: "29 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
+//         items: 2,
+//     },
+//     {
+//         id: 7,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 8,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 9,
+//         name: "Mango shake",
+//         price: 25.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
+//         items: 4,
+//     },
+//     {
+//         id: 10,
+//         name: "Blackberry shake",
+//         price: 23.00,
+//         date: "30 Nov, 01:20 pm",
+//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
+//         items: 3,
+//     },
+// ];
 
 const addresses = [
     {label: 'Apple', value: 'apple'},
@@ -104,23 +106,43 @@ const addresses = [
 ];
 
 function Checkout() {
-    const [orderData, setOrderData] = useState(orders);
+    const {selectedItems, setSelectedItems,clearSelectedItems} = useCart();
+    const [orderData, setOrderData] = useState(selectedItems);
     const [open, setOpen] = useState(false);
     const [address, setAddress] = useState(null);
+    const [subtotal, setSubtotal] = useState(0);
 
     const removeItem = (id: number) => {
         setOrderData((prevData) => prevData.filter((item) => item.id !== id));
     };
 
-    const subtotal = useMemo(
-        () => orderData.reduce((total, item) => total + item.price * item.items, 0),
-        [orderData]
-    );
+    useEffect(() => {
+        return () => {
+            // Hàm này được gọi khi người dùng rời khỏi trang Checkout
+            clearSelectedItems();
+        };
+    }, []);
+
+    // const subtotal = useMemo(
+    //     () => orderData.reduce((total, item) => total + item.price * item.items, 0),
+    //     [orderData]
+    // );
+
+    useEffect(() => {
+            const newSubtotal = selectedItems.reduce((total, item) => total + item.price * item.items, 0);
+            setSubtotal(newSubtotal);
+        }, [selectedItems]);
 
     const handleAdd = (id: number) => {
         setOrderData((prevData) =>
             prevData.map((item) =>
                 item.id === id ? {...item, items: item.items + 1} : item
+            )
+        );
+
+        setSelectedItems((prevSelected: any) =>
+            prevSelected.map((item: any) =>
+                item.id === id ? { ...item, items: item.items + 1 } : item
             )
         );
     };
@@ -132,6 +154,12 @@ function Checkout() {
             setOrderData((prevData) =>
                 prevData.map((item) =>
                     item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
+                )
+            );
+
+            setSelectedItems((prevSelected: any) =>
+                prevSelected.map((item: any) =>
+                    item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
                 )
             );
     };
@@ -212,7 +240,11 @@ function Checkout() {
                 </View>
 
                 <View className={"w-full justify-self-end"} style={{}}>
-                    <Button text={"Place Order"} onPress={() => router.push('/payment')} buttonColor={colors.Orange_2}
+                    <Button text={"Place Order"} onPress={() => {
+                        router.push('/payment')
+                        console.log(selectedItems);    
+                    }
+                    } buttonColor={colors.Orange_2}
                             textColor={colors.Orange_Base}></Button>
                 </View>
 

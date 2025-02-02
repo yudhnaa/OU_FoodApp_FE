@@ -1,9 +1,23 @@
 import axios from 'axios';
 import {getObjectValue} from "@/components/asyncStorage";
 
-const BASE_URL = 'http://192.168.1.9:8000/';
-
+const BASE_URL = 'https://wangedoc0602.pythonanywhere.com/'
+// const BASE_URL = 'http://192.168.1.9:8000/';
 export const endpoints = {
+    'dish' : '/dish/',
+    'dish_type' : '/dish_type/',
+    'list_dish' : (typeId : any) => `/dish_type/${typeId}/dishes/`,
+    'dish_topping' : (dishId : any) => `/dish/${dishId}/topping/`,
+    'add-to-cart' : '/cart/add-to-cart/',
+    'cart_items' : '/cart/items/',
+    'payment_type' : '/payment_type/',
+    'user_payment' : '/users/payment_methods/',
+    'location' : '/users/location/',
+    'create_order' : '/create-order-from-selected-cart-items/',
+    'deleted_items' : '/cart/delete-multiple/',
+    'delete_item' : (id : number) => `/cart/items/${id}/`,
+    'order_by_type' : '/users/orders_by_type/',
+
     'register': '/users/',
     'login': '/o/token/',
     'roles': '/users/roles/',
@@ -25,13 +39,6 @@ export const endpoints = {
 
     'questionAnswer': '/question_and_answer/',
     'contact': '/contact/',
-
-
-    'dish': '/dish/',
-    'dish_type': '/dish_type/',
-    'list_dish': (typeId: any) => `/dish_type/${typeId}/dishes/`,
-    'dish_topping': (dishId: any) => `/dish/${dishId}/topping/`,
-
 }
 
 
