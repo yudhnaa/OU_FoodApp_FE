@@ -1,11 +1,29 @@
 import axios from 'axios';
 import {getObjectValue} from "@/components/asyncStorage";
 
+// const BASE_URL = 'https://wangedoc0602.pythonanywhere.com/'
 const BASE_URL = 'http://192.168.1.9:8000/';
 
 export const endpoints = {
+    'dish' : '/dish/',
+    'dish_type' : '/dish_type/',
+    'list_dish' : (typeId : any) => `/dish_type/${typeId}/dishes/`,
+    'dish_topping' : (dishId : any) => `/dish/${dishId}/topping/`,
+
+    'add-to-cart' : '/cart/add-to-cart/',
+    'cart_items' : '/cart/items/',
+
+    'payment_type' : '/payment_type/',
+    'user_payment' : '/users/payment_methods/',
+    'location' : '/users/location/',
+    'create_order' : '/create-order-from-selected-cart-items/',
+    'deleted_items' : '/cart/delete-multiple/',
+    'delete_item' : (id : number) => `/cart/items/${id}/`,
+    'order_by_type' : '/user/orders_by_type/',
+
     'register': '/users/',
     'login': '/o/token/',
+    'update_user': '/users/',
     'roles': '/users/roles/',
     'get_user': '/users/current_user/',
     'logout': '/o/revoke_token/',
@@ -22,20 +40,15 @@ export const endpoints = {
 
     'notification': '/user/notifications/',
 
-    'follow': '/users/following_store/', //list of stores that user is following
+    'following': '/users/following_store/',
+    'follow': '/user/follow/',
+    'get_store' : '/store/',
     'follow_store': '/user/follow/',
     'unfollow_store': '/user/follow/',
+    'is_following': '/user/follow/is_follow/',
 
     'questionAnswer': '/question_and_answer/',
     'contact': '/contact/',
-
-
-
-
-    'dish': '/dish/',
-    'dish_type': '/dish_type/',
-    'list_dish': (typeId: any) => `/dish_type/${typeId}/dishes/`,
-    'dish_topping': (dishId: any) => `/dish/${dishId}/topping/`,
 
 }
 

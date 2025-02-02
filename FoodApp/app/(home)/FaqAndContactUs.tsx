@@ -1,4 +1,4 @@
-import {View, Text, Pressable, FlatList} from "react-native";
+import {View, Text, FlatList, TouchableOpacity} from "react-native";
 import {Image} from "expo-image";
 import {StyleSheet} from "react-native";
 import colors from "@/styles/colors";
@@ -50,11 +50,12 @@ export default function FaqAndContactUs() {
     const fetchContacts = async () => {
         setLoading(true);
         APIs.get(endpoints.contact).then((res) => {
-            let contactsWithIcons = contacts.map((contact) => {
+            let contactsWithIcons = res.data.map((contact: any) => {
                 const iconKey = contact.name; // Use the name as the key
                 contact.icon = contactIconMap[iconKey] || null; // Assign icon or null if not found
                 return contact;
             });
+            console.log(contactsWithIcons)
 
             setContacts(contactsWithIcons)
         }).catch(ex => {
@@ -73,23 +74,23 @@ export default function FaqAndContactUs() {
         <View style={bgStyles.backGround}>
             <View style={bgStyles.bodyPage}>
                 <View style={styles.tabContainer}>
-                    <Pressable
+                    <TouchableOpacity
                         style={[tab === "faq" ? styles.activeTab : styles.inactiveTab, styles.tab]}
-                        onPress={() => {
+                        onPressIn={() => {
                             setTab("faq")
                         }}>
                         <Text
                             style={tab === "faq" ? styles.tabTextActive : styles.tabTextInactive}>FAQ</Text>
-                    </Pressable>
-                    <Pressable
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         style={[tab === "contactus" ? styles.activeTab : styles.inactiveTab, styles.tab]}
-                        onPress={() => {
+                        onPressIn={() => {
                             setTab("contactus")
                         }}>
                         <Text
                             style={tab === "contactus" ? styles.tabTextActive : styles.tabTextInactive}>Contact
                             Us</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
                 {tab === "faq" &&
                     <FlatList

@@ -13,7 +13,7 @@ import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import {useAuth} from "@/components/AuthContext";
 import APIs, {authApi, endpoints} from "@/configs/APIs";
-import {router} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
 import PhoneNumberInput from "@/components/welcome/phoneNumberField";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -49,6 +49,9 @@ function UpdateUserInfo() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [role, setRole] = useState("guest");
     const [date, setDate] = useState(new Date());
+
+    const show = useLocalSearchParams().origin !== "google";
+    const test = useLocalSearchParams().origin
 
     const onChange = (event: any, selectedDate: any) => {
         if (selectedDate) setDate(selectedDate);
@@ -118,8 +121,8 @@ function UpdateUserInfo() {
             if (router.canDismiss()) router.dismissAll();
             router.replace("/home");
         } catch (ex: any) {
-            alert("Update profile failed");
-            console.error(ex.response?.data);
+            alert(`Update profile failed\n${ex.response.data?.phone_number || "Status code " + ex.status}`);
+            // console.error(ex.response?.data);
         }
     };
 
@@ -157,21 +160,23 @@ function UpdateUserInfo() {
 
                 {/* Role and Date of Birth */}
                 <View style={styles.nameFieldContainer}>
-                    <View style={styles.nameFieldItem}>
-                        <Text style={inputFieldStyles.text}>Role</Text>
-                        {roles.length === 0 ? <ActivityIndicator></ActivityIndicator> :
-                            <>
-                                <DropDownPicker
-                                    style={styles.dropdown}
-                                    open={open}
-                                    value={role}
-                                    items={roles}
-                                    setOpen={setOpen}
-                                    setValue={setRole}
-                                />
-                            </>
-                        }
-                    </View>
+                    {show && (
+                        <View style={styles.nameFieldItem}>
+                            <Text style={inputFieldStyles.text}>Role</Text>
+                            {roles.length === 0 ? <ActivityIndicator></ActivityIndicator> :
+                                <>
+                                    <DropDownPicker
+                                        style={styles.dropdown}
+                                        open={open}
+                                        value={role}
+                                        items={roles}
+                                        setOpen={setOpen}
+                                        setValue={setRole}
+                                    />
+                                </>
+                            }
+                        </View>
+                    )}
 
                     <View style={[styles.nameFieldItem, {justifyContent: 'center'}]}>
                         <Text style={inputFieldStyles.text}>Date Of Birth</Text>

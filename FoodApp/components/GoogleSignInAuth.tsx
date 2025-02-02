@@ -50,7 +50,10 @@ export function GoogleSignInAuth({setLoading}: GoogleSignInAuthProps) {
                     if (router.canDismiss())
                         router.dismissAll()
                     if (res.status === 201)
-                        router.replace("/updateUserInfo")
+                        router.replace({
+                            pathname:"/updateUserInfo",
+                            params: {origin: "google"}
+                        })
                     else
                         router.replace("/home")
 

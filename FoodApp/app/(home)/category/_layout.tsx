@@ -41,9 +41,9 @@ export default function StackLayout() {
         }}>
             <Stack.Screen name="[name]"
                           options={{
+                              headerShown : true,
                               headerTitle: () => <SearchHeader showBackButton={true}/>,
                               headerLeft: () => <BackButton/>
-
                           }}
             />
             <Stack.Screen name="[name]/[id]" options={{
@@ -64,7 +64,6 @@ const styles1 = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
-        // padding: 10,
     },
     nameContainer: {
         flex: 1,

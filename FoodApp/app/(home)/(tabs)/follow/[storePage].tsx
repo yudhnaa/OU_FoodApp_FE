@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, RefreshControl, StyleSheet, Text, View} from "react-native";
+import {FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {styles as bgStyles} from "@/components/home/Styles";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
 import {authApi, endpoints} from "@/configs/APIs";
@@ -10,15 +10,16 @@ import Button from "@/components/home/button";
 import BackButton from "@/components/home/backButton";
 import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
+import Toast from "react-native-toast-message";
 
 
 type StoreInfo = {
     id: number;
-    created_at: string;
+    date_joined: string;
     is_active: boolean;
     store_name: string,
     avatar: string,
-    followers: number,
+    follower: number,
 };
 
 type Dish = {
@@ -30,17 +31,21 @@ type Dish = {
 }
 
 function StorePage() {
-    const {access_token} = useAuth()
+    const {access_token, userInfo} = useAuth()
     const [loading, setLoading] = useState(false);
-    const {storePage} = useLocalSearchParams()
+    const {storePage, followId, isFollowed} = useLocalSearchParams()
+    const [followingId, setFollowingId] = useState(followId);
+    const parsedIsFollowed = isFollowed === "true";
+    const [isFollowing, setisFollowing] = useState(parsedIsFollowed);
     const [storeInfo, setStoreInfo] = useState<StoreInfo>({
-        id: 1,
-        created_at: "2021-09-01",
-        is_active: true,
-        store_name: "Store 1",
-        avatar: "https://i.pinimg.com",
-        followers: 100,
+        id: 0,
+        date_joined: "",
+        is_active: false,
+        store_name: "",
+        avatar: "",
+        follower: 0,
     })
+
     const [dish, setDish] = useState<Dish[]>([
         {
             id: 1,
@@ -82,9 +87,12 @@ function StorePage() {
     const fetchStoreInfo = async () => {
         setLoading(true);
         try {
-            // await authApi(access_token).get(endpoints.store + storePage).then((res) => {
-            //     console.log(res.data);
-            // })
+            await authApi(access_token).get(`${endpoints.get_store}${storePage}/`).then((res) => {
+                console.log(res.data);
+                setStoreInfo(res.data);
+            }).catch((ex: any) => {
+                alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
+            })
             // setStoreInfo()
         } catch (ex: any) {
             alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
@@ -96,8 +104,52 @@ function StorePage() {
     }
 
     const unFollow = async (id: number) => {
-        console.log(id);
+        setLoading(true);
+        await authApi(access_token).delete(`${endpoints.unfollow_store}${id}/`).then((res) => {
+            // alert("Unfollowed successfully");
+            setisFollowing(false);
+            setFollowingId('0')
+            // router.dismiss();
+        }).catch((ex: any) => {
+            alert(ex.response?.data?.error_description || `Unfollow failed\nStatus code: ${ex.status}`);
+            console.error(ex)
+        }).finally(() => {
+            setLoading(false);
+        })
     }
+
+    const follow = async () => {
+        try {
+            await authApi(access_token).post(endpoints.follow_store, {
+                store: storeInfo.id,
+                guest: userInfo.id
+            }).then((res) => {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Success',
+                    text2: 'Followed successfully 👌',
+                })
+                setisFollowing(true);
+                setFollowingId(res.data.id);
+
+            }).catch((error) => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: 'Failed to follow. Please try again.',
+                });
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        // console.info("StorePage:", storePage);
+        // console.info("followId:", followId);
+        fetchStoreInfo();
+    }, []);
 
     return (
         <View style={bgStyles.backGround}>
@@ -117,17 +169,23 @@ function StorePage() {
                     borderBottomWidth: 1,
                     borderColor: "#ccc",
                     flexDirection: "row",
-                    justifyContent: "space-between"
+                    justifyContent: "space-between",
                 }}>
                     <Image source={require("@/assets/images/avt.png")}
                            style={{width: 50, height: 50, marginRight: 20}}></Image>
                     {/*<Image source={remote source)} style={{width: 30, height: 30}}></Image>*/}
-                    <View>
+                    <View className={"flex-1"}>
                         <Text style={{fontWeight: "bold", fontSize: 16}}>{storeInfo?.store_name}</Text>
-                        <Text>Created date:: {storeInfo?.created_at}</Text>
-                        <Text>Followers: {storeInfo?.followers}</Text>
+                        <Text>Date joined: {new Date(storeInfo?.date_joined).toLocaleDateString()}</Text>
+                        <Text>Followers: {storeInfo?.follower}</Text>
                     </View>
-                    <Button text={"UnFollow"} onPress={() => unFollow(storeInfo?.id || 1)} disabled={loading} buttonColor={colors.Orange_2} textColor={colors.Font}></Button>
+                    {isFollowing ? (
+                        <Button text={"UnFollow"} onPress={() => unFollow(Number.parseInt(followingId.toString()))} disabled={loading}
+                                buttonColor={colors.Orange_2} textColor={colors.Font}></Button>
+                    ): (
+                        <Button text={"Follow"} onPress={follow} disabled={loading}></Button>
+                    )}
+
                 </View>
                 <View>
                     <Text style={[fontStyles.Title, {margin: 10}]}>Danh sách các món ăn</Text>
@@ -136,7 +194,13 @@ function StorePage() {
                     data={dish}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item}) => (
-                        <View style={{padding: 10, borderBottomWidth: 1, borderColor: "#ccc", flexDirection: "row", justifyContent: "space-between"}}>
+                        <View style={{
+                            padding: 10,
+                            borderBottomWidth: 1,
+                            borderColor: "#ccc",
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                        }}>
                             <Image source={require("@/assets/images/bestSeller_pic/pic_1.png")}
                                    style={{width: 60, height: 60, marginRight: 20, borderRadius: 15}}></Image>
                             {/*<Image source={remote source)} style={{width: 30, height: 30}}></Image>*/}
@@ -145,7 +209,7 @@ function StorePage() {
                                 <Text>Mô tả: {item.description}</Text>
                                 <Text>Ngày theo dõi: {item.price}</Text>
                             </View>
-                            <Button text={"Add to card"} onPress={() => unFollow(item.id)} disabled={loading}></Button>
+                            <Button text={"Add to card"} onPress={() => (followId)} disabled={loading}></Button>
                         </View>
                     )}
                 />

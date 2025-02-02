@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {FlatList, RefreshControl, Text, View} from "react-native";
+import {FlatList, Pressable, RefreshControl, Text, View} from "react-native";
 import {styles as bgStyles} from "@/components/home/Styles";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
 import {authApi, endpoints} from "@/configs/APIs";
@@ -8,6 +8,7 @@ import {router, useFocusEffect} from "expo-router";
 import {Image} from "expo-image";
 import Button from "@/components/home/button";
 import fontStyles from "@/styles/fontStyles";
+import colors from "@/styles/colors";
 
 type Follow = {
     id: number;
@@ -29,7 +30,7 @@ function Follow() {
     const fetchFollow = async () => {
         setLoading(true);
         try {
-            await authApi(access_token).get(endpoints.follow).then((res) => {
+            await authApi(access_token).get(endpoints.following).then((res) => {
                 setFollows(res.data);
             })
         } catch (ex: any) {
@@ -54,9 +55,9 @@ function Follow() {
             alert("Unfollowed successfully");
             follows.splice(follows.findIndex((item) => item.id === id), 1);
         }).catch((ex: any) => {
-          alert(ex.response?.data?.error_description || `Unfollow failed\nStatus code: ${ex.status}`);
+            alert(ex.response?.data?.error_description || `Unfollow failed\nStatus code: ${ex.status}`);
         }).finally(() => {
-          setLoading(false);
+            setLoading(false);
         })
     }
 
@@ -64,6 +65,7 @@ function Follow() {
     useFocusEffect(
         useCallback(() => {
             fetchFollow();
+            // console.info("follows:::::", follows);
         }, [])
     )
 
@@ -80,23 +82,29 @@ function Follow() {
                     data={follows}
                     keyExtractor={item => item.id.toString()}
                     refreshControl={(
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
                     )}
-                    renderItem={({ item }) => (
-                        <View style={{ padding: 10, borderBottomWidth: 1, borderColor: "#ccc", flexDirection: "row" }}>
-                            <Image source={require("@/assets/images/avt.png")} style={{width: 50, height: 50, marginRight: 20}}></Image>
+                    renderItem={({item}) => (
+                        <View style={{padding: 10, borderBottomWidth: 1, borderColor: "#ccc", flexDirection: "row"}}>
+                            <Image source={require("@/assets/images/avt.png")}
+                                   style={{width: 50, height: 50, marginRight: 20}}></Image>
                             {/*<Image source={remote source)} style={{width: 30, height: 30}}></Image>*/}
-                            <View onTouchEnd={() => {
+                            <Pressable onPress={() => {
                                 router.push({
                                     pathname: "/follow/[storePage]",
-                                    params: {storePage: item.store}
+                                    params: {
+                                        storePage: item.store,
+                                        followId: item.id,
+                                        isFollowed: "true"
+                                    }
                                 })
                             }}>
                                 <Text style={{fontWeight: "bold", fontSize: 16}}>{item.store_name}</Text>
-                                <Text>Ngày tạo: {item.created_at}</Text>
+                                <Text>Ngày tạo: {new Date(item.created_at).toLocaleDateString()}</Text>
                                 <Text>Ngày theo dõi: {item.follow_date}</Text>
-                            </View>
-                            <Button text={"UnFollow"} onPress={() => unFollow(item.id)} disabled={loading}></Button>
+                            </Pressable>
+
+                            <Button text={"UnFollow"} onPress={() => unFollow(item.id)} disabled={loading} buttonColor={colors.Orange_2} textColor={colors.Font}></Button>
                         </View>
                     )}
                 />

@@ -1,76 +1,124 @@
-import {View, Text, FlatList, Image, Pressable} from 'react-native';
+import { View, Text, FlatList, Image, Pressable, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native';
+import { router, Link } from "expo-router";
 import colors from "@/styles/colors";
-import {styles} from "@/components/home/Styles";
-import {useFocusEffect, useRouter} from 'expo-router';
-import {Icon} from 'react-native-paper'
+import { styles } from "@/components/home/Styles";
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Icon } from 'react-native-paper';
 import Carousel from 'react-native-reanimated-carousel';
-import {useSharedValue} from 'react-native-reanimated';
-import {useFoodContext} from "@/app/(home)/category/FoodContext";
+import { useSharedValue, useDerivedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { useFoodContext } from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
-import APIs, {endpoints, authApi} from '@/configs/APIs';
-import {useCallback, useEffect, useState} from 'react';
-import {useAuth} from "@/components/AuthContext";
+import APIs, { endpoints, authApi } from '@/configs/APIs';
+import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from "@/components/AuthContext";
+
+
+import {
+    configureReanimatedLogger,
+    ReanimatedLogLevel,
+} from 'react-native-reanimated';
+
+// This is the default configuration
+configureReanimatedLogger({
+    level: ReanimatedLogLevel.warn,
+    strict: false, // Reanimated runs in strict mode by default
+});
+
 
 export default function HomePage() {
     const router = useRouter();
+    const { setSelectedFood } = useFoodContext();
     const activeIndex = useSharedValue(0);
-    const {setSelectedFood} = useFoodContext();
-    const {access_token, userInfo, setUserInfo} = useAuth()
+    const [categories, setCategories] = useState<any[]>([]);
+    const [promotion, setPromotion] = useState<any>({});
+    const [foodData, setFoodData] = useState<any[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
-    const [new_Data, setNewData] = useState<Array<{
-        type: string;
-        items?: any;
-        title?: string;
-        text?: string;
-        discount?: string
-    }>>([]);
+    const { access_token, userInfo, setUserInfo } = useAuth();
 
-    const fetchData = async () => {
+    const fetchInitialData = async () => {
         try {
             const dishType = await APIs.get(endpoints['dish_type']);
-            const dish = await APIs.get(endpoints['dish']);
+            const promotionData = {
+                type: 'promotion',
+                text: 'Experience our delicious new dish',
+                discount: '30% OFF',
+            };
 
             const categories = dishType.data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
-                icon: {uri: item.image}
+                icon: { uri: item.image }
             }));
 
-            const food = dish.data.map((item: any) => ({
+            setCategories(categories);
+            setPromotion(promotionData);
+        } catch (error) {
+            console.error("Error fetching initial data:", error);
+        }
+    };
+
+    const fetchFoodData = async (page = 1) => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        try {
+            const dish = await APIs.get(`${endpoints['dish']}?page=${page}`);
+
+            if (!dish.data || !Array.isArray(dish.data.results)) {
+                console.error("Invalid food data format:", dish.data);
+                setHasMore(false);
+                return;
+            }
+
+
+            const food = dish.data.results.map((item: any) => ({
                 id: item.id,
                 name: item.name,
                 price: `$${item.price}`,
-                image: {uri: item.image},
+                image: { uri: item.image },
                 description: item.description,
                 category: item.food_type,
                 categoryID: item.food_type_id,
+                storeId: item.store_id,
             }));
 
-            const formattedData = [
-                {
-                    type: 'categories',
-                    items: categories
-                },
-                {
-                    type: 'bestSeller',
-                    title: 'Best Seller',
-                    items: food
-                },
-                {
-                    type: 'promotion',
-                    text: 'Experience our delicious new dish',
-                    discount: '30% OFF',
-                },
-                {
-                    type: 'recommend',
-                    title: 'Recommend',
-                    items: food
-                }
-            ];
-            setNewData(formattedData);
+            setFoodData(prevData => (page === 1 ? food : [...prevData, ...food]));
+            setHasMore(dish.data.next !== null);
+            setCurrentPage(page);
         } catch (error) {
-            console.log(error);
+            console.error("Error fetching food data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        setCurrentPage(1);
+        await fetchInitialData();
+        await fetchFoodData(1);
+        setRefreshing(false);
+    };
+
+    useEffect(() => {
+        fetchInitialData();
+        fetchFoodData(1);
+    }, []);
+
+
+    useEffect(() => {
+        if (currentPage > 1) {
+            fetchFoodData(currentPage);
+        }
+    }, [currentPage]);
+
+    const handleLoadMore = () => {
+        if (!loading && hasMore) {
+            setCurrentPage(prevPage => prevPage + 1);
         }
     };
 
@@ -90,24 +138,31 @@ export default function HomePage() {
         }
     };
 
-// Correct usage of useFocusEffect
     useFocusEffect(
         useCallback(() => {
             fetchUserInfo();
-        }, []) // Empty dependency array ensures this runs every time the screen is focused
+        }, [])
     );
 
-    const renderItem = ({item}: {
-        item: { type: string; items?: any; title?: string; text?: string; discount?: string }
-    }) => {
+    const derivedIndex = useDerivedValue(() => {
+        return activeIndex.value;
+    });
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ translateX: derivedIndex.value * 10 }],
+        };
+    });
+
+    const renderItem = ({ item }: any) => {
         switch (item.type) {
             case 'categories':
                 return (
                     <FlatList
-                        data={item.items}
-                        horizontal // cuộn theo chiều ngang
-                        keyExtractor={(category) => category.id}
-                        renderItem={({item: category}) => (
+                        data={categories}
+                        horizontal
+                        keyExtractor={(category) => category.id.toString()}
+                        renderItem={({ item: category }) => (
                             <View className='ml-4 flex-col justify-center items-center'>
                                 <View className='h-20 rounded-full' style={{
                                     backgroundColor: '#F3E9B5',
@@ -116,7 +171,7 @@ export default function HomePage() {
                                     alignItems: 'center'
                                 }}>
                                     <Pressable
-                                        onPress={() => router.navigate(`/category/${category.id.toString()}`)}
+                                        onPress={() => router.push(`/category/${category.id.toString()}`)}
                                         style={styles.categoryItem}
                                     >
                                         <Image source={category.icon}
@@ -139,8 +194,8 @@ export default function HomePage() {
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
                             <Pressable onPress={() => router.push('/best_seller')}
-                                       style={{flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{color: '#E95322', fontFamily: 'Spartan_600SemiBold'}}>View all</Text>
+                                       style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: '#E95322', fontFamily: 'Spartan_600SemiBold' }}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
@@ -149,19 +204,19 @@ export default function HomePage() {
                             </Pressable>
                         </View>
                         <FlatList
-                            data={item.items}
+                            data={foodData}
                             horizontal
-                            keyExtractor={(product) => product.id}
-                            renderItem={({item: product}) => (
+                            keyExtractor={(product) => product.id.toString()}
+                            renderItem={({ item: product }) => (
                                 <Pressable
                                     style={styles.productItem}
                                     onPress={() => {
                                         setSelectedFood(product);
-                                        console.log(product);
+                                        // console.log(product);
                                         router.push(`/category/${product.categoryID.toString()}/${product.id}`);
                                     }}
                                 >
-                                    <Image source={product.image} style={styles.productImage}/>
+                                    <Image source={product.image} style={styles.productImage} />
                                     <Text style={styles.categoryText}>{product.name}</Text>
                                     <Text style={styles.productPrice}>{product.price}</Text>
                                 </Pressable>
@@ -179,13 +234,13 @@ export default function HomePage() {
                             width={350}
                             height={160}
                             autoPlay={true}
-                            data={[1, 2, 3, 4]}
+                            data={[promotion]}
                             scrollAnimationDuration={500}
                             onSnapToItem={(index) => {
-                                activeIndex.value = index; // Update shared value
+                                activeIndex.value = index;
                             }}
-                            renderItem={({index}) => (
-                                <View style={styles.promotionSlide}>
+                            renderItem={({ item }) => (
+                                <View style={[styles.promotionSlide, animatedStyle]}>
                                     <View style={styles.promotionContent}>
                                         <View style={styles.promotionTextContainer}>
                                             <Text style={styles.promotionText}>{item.text}</Text>
@@ -207,8 +262,8 @@ export default function HomePage() {
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
                             <Pressable onPress={() => router.push('/recommend_page')}
-                                       style={{flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{color: '#E95322', fontFamily: 'Spartan_600SemiBold'}}>View all</Text>
+                                       style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: '#E95322', fontFamily: 'Spartan_600SemiBold' }}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
@@ -216,9 +271,7 @@ export default function HomePage() {
                                 />
                             </Pressable>
                         </View>
-
-                        <FoodFlatList data={item.items}/>
-
+                        <FoodFlatList data={foodData} />
                     </View>
                 );
             default:
@@ -228,20 +281,34 @@ export default function HomePage() {
 
     return (
         <FlatList
-            data={new_Data}
+            data={[
+                { type: 'categories' },
+                { type: 'bestSeller', title: 'Best Seller' },
+                { type: 'promotion' },
+                { type: 'recommend', title: 'Recommend' }
+            ]}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
-            contentContainerStyle={[
-                {
-                    paddingBottom: 50, // Thêm khoảng trống để cuộn mượt
-                    flexGrow: 1,
-                    backgroundColor: colors.Font_2,
-                    borderTopLeftRadius: 30,
-                    borderTopRightRadius: 30,
-                    paddingVertical: 20,
-                }// Đảm bảo chiều cao FlatList
-            ]}
-            style={{flex: 1, backgroundColor: colors.Yellow_Base}}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={[colors.Orange_Base]}
+                    tintColor={colors.Orange_Base}
+                />
+            }
+            contentContainerStyle={{
+                paddingBottom: 50,
+                flexGrow: 1,
+                backgroundColor: colors.Font_2,
+                borderTopLeftRadius: 30,
+                borderTopRightRadius: 30,
+                paddingVertical: 20,
+            }}
+            style={{ flex: 1, backgroundColor: colors.Yellow_Base }}
         />
     );
 }

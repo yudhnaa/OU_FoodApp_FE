@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from "react-native";
+import {Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {Image} from "expo-image"
 import {Button} from "react-native-paper";
 
@@ -12,7 +12,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import {useAuth} from "@/components/AuthContext";
-import {authApi} from "@/configs/APIs";
+import {authApi, endpoints} from "@/configs/APIs";
 import {router} from "expo-router";
 
 function MyProfile() {
@@ -31,7 +31,7 @@ function MyProfile() {
     };
 
     const updateProfile = async () => {
-        await authApi(access_token).patch(`/users/${userInfo.id}/`, {
+        await authApi(access_token).patch(`${endpoints.update_user}${userInfo.id}/`, {
             first_name: firstName,
             last_name: lastName,
             email: email,
@@ -93,7 +93,7 @@ function MyProfile() {
                     </View>
                 </View>
 
-                <Pressable
+                <TouchableOpacity
                     style={{
                         borderRadius: 30,
                         alignItems: "center",
@@ -102,14 +102,14 @@ function MyProfile() {
                         padding: 10,
                         margin: 20
                     }}
-                    onPress={updateProfile}>
+                    onPressIn={updateProfile}>
                     <Text
                         style={{
                             ...fontStyles.titulo_screen,
                             fontSize: 15,
                             color: colors.Font_2
                         }}>Update profile</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </View>
     );

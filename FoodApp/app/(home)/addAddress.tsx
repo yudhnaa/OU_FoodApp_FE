@@ -59,9 +59,7 @@ function AddAddress() {
             })
         }
 
-        if (router.canDismiss())
-            router.dismiss(2)
-        router.replace("/deliveryAddress")
+        router.back()
 
     }
 

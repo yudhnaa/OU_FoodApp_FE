@@ -17,8 +17,6 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
     "app/index.tsx",
     "app/(welcome)/welcome.tsx",
     "app/_layout.tsx",
@@ -27,6 +25,9 @@
     "app/index.tsx",
     "app/(welcome)/_layout.tsx",
     "app/(home)/(tabs)/home.tsx",
-    "nativewind-env.d.ts"
-, "app/(home)/(tabs)/food.tdbvagsdfahjskdj;lasdvghassx"  ]
+    "nativewind-env.d.ts",
+    "app/(home)/(tabs)/food.tdbvagsdfahjskdj;lasdvghassx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

@@ -43,7 +43,7 @@ export default function ProfileMenu() {
             {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={styles.profileContainer}>
                 <Image
-                    source={require('../../assets/images/avt.png')}
+                    source={require('@/assets/images/avt.png')}
                     style={styles.profileImage}
                 />
                 <View>
@@ -53,48 +53,50 @@ export default function ProfileMenu() {
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('../../assets/images/icons/profile.png')} style={styles.icon}/>
-                <TouchableOpacity onPress={() => router.push('/myProfile')}>
+                <Image source={require('@/assets/images/icons/profile.png')} style={styles.icon}/>
+                <TouchableOpacity onPressIn={() => {
+                    router.push('/myProfile')
+                }}>
                     <Text style={styles.menuText}>My Profile</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('../../assets/images/icons/location.png')} style={styles.icon}/>
-                <TouchableOpacity onPress={() => router.push('/deliveryAddress')}>
+                <Image source={require('@/assets/images/icons/location.png')} style={styles.icon}/>
+                <TouchableOpacity onPressIn={() => router.push('/deliveryAddress')}>
                     <Text style={styles.menuText}>Delivery Address</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('../../assets/images/icons/payment.png')} style={styles.icon}/>
-                <TouchableOpacity onPress={() => router.push('/paymentMethods')}>
+                <Image source={require('@/assets/images/icons/payment.png')} style={styles.icon}/>
+                <TouchableOpacity onPressIn={() => router.push('/paymentMethods')}>
                     <Text style={styles.menuText}>Payment Methods</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('../../assets/images/icons/contact.png')} style={styles.icon}/>
-                <TouchableOpacity onPress={() => router.push('/FaqAndContactUs')}>
+                <Image source={require('@/assets/images/icons/contact.png')} style={styles.icon}/>
+                <TouchableOpacity onPressIn={() => router.push('/FaqAndContactUs')}>
                     <Text style={styles.menuText}>FAQ & Contact Us</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('../../assets/images/icons/settings.png')} style={styles.icon}/>
-                <TouchableOpacity onPress={() => router.push('/(settings)/setting')}>
+                <Image source={require('@/assets/images/icons/settings.png')} style={styles.icon}/>
+                <TouchableOpacity onPressIn={() => router.push('/(settings)/setting')}>
                     <Text style={styles.menuText}>Settings</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.logoutButton}>
-                <TouchableOpacity onPress={() => setShowLogout(true)}>
+                <TouchableOpacity onPressIn={() => setShowLogout(true)}>
                     <Text style={styles.logoutText}>Log Out</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.logoutButton}>
-                <TouchableOpacity onPress={() => {
+                <TouchableOpacity onPressIn={() => {
                     if (router.canDismiss())
                         router.dismissAll()
                     router.replace("/loading")

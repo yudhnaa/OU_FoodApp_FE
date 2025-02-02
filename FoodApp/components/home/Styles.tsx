@@ -128,7 +128,7 @@ export const styles = StyleSheet.create({
   sortContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    // gap: 8,
   },
   sortButton: {
     flexDirection: 'row',

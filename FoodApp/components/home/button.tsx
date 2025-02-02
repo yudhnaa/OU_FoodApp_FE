@@ -32,7 +32,7 @@ const Button = ({
                 margin: 20
             }}
             className={buttonClassName}
-            onPress={onPress}
+            onPressIn={onPress}
             disabled={disabled}>
             <Text
                 style={{

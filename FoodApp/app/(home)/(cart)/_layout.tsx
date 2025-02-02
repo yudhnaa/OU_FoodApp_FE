@@ -1,35 +1,37 @@
 import React from 'react';
-import {StyleSheet, View} from "react-native";
-import {Stack} from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { Stack } from "expo-router";
 import BackButton from "@/components/home/backButton";
+import { CartProvider } from '@/components/home/cartContext';
+import Cart from './cart';
 
 function CartLayout() {
     return (
         <Stack screenOptions={{
             headerShown: true,
-            headerStyle: {backgroundColor: '#F5CB58'},
+            headerStyle: { backgroundColor: '#F5CB58' },
             headerShadowVisible: false,
         }}>
             <Stack.Screen
                 name="checkout"
                 options={{
                     headerShown: true,
-                    headerStyle: {backgroundColor: '#F5CB58'},
+                    headerStyle: { backgroundColor: '#F5CB58' },
                     title: "Confirm Order",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton/>)
+                    headerLeft: () => (<BackButton />)
                 }}
             />
             <Stack.Screen
                 name="payment"
                 options={{
                     headerShown: true,
-                    headerStyle: {backgroundColor: '#F5CB58'},
+                    headerStyle: { backgroundColor: '#F5CB58' },
                     title: "Payment",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton/>)
+                    headerLeft: () => (<BackButton />)
                 }}
             />
 
@@ -37,11 +39,11 @@ function CartLayout() {
                 name="orderConfirmed"
                 options={{
                     headerShown: true,
-                    headerStyle: {backgroundColor: '#F5CB58'},
+                    headerStyle: { backgroundColor: '#F5CB58' },
                     title: "",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton/>)
+                    headerLeft: () => (<BackButton />)
                 }}
             />
         </Stack>

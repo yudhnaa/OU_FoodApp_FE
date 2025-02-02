@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Text, View, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {router} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import DropDownPicker from 'react-native-dropdown-picker';
 import InputField from "@/components/welcome/inputField";
 import PhoneNumberInput from "../../components/welcome/phoneNumberField";
@@ -12,8 +12,9 @@ import axios from "axios";
 import APIs, {endpoints} from "@/configs/APIs";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
 import {useAuth} from "@/components/AuthContext";
+import {GoogleSignInAuth} from "@/components/GoogleSignInAuth";
 
-
+type boolStr = "true" | "false"
 
 export default function Registration() {
     const [open, setOpen] = useState(false);
@@ -29,6 +30,7 @@ export default function Registration() {
     const [role, setRole] = useState("guest");
     const [date, setDate] = useState(new Date());
     const {location} = useAuth();
+
 
     const onChange = (event: any, selectedDate: any) => {
         if (selectedDate) {
@@ -74,7 +76,10 @@ export default function Registration() {
 
         setLoading(true)
         let res = await APIs.post(endpoints.register, data).then(res => {
-            alert("Register successfully")
+            if (data.role === "guest")
+                alert("Register successfully")
+            else
+                alert("Register successfully. Please wait for admin to approve your account")
             router.dismissAll()
             router.replace("/welcome")
         }).catch(ex => {
@@ -156,6 +161,7 @@ export default function Registration() {
 
                 {/* Role and Date of Birth */}
                 <View style={styles.nameFieldContainer}>
+
                     <View style={styles.nameFieldItem}>
                         <Text style={inputFieldStyles.text}>Role</Text>
                         {roles.length === 0 ? <ActivityIndicator></ActivityIndicator> :
@@ -171,6 +177,7 @@ export default function Registration() {
                             </>
                         }
                     </View>
+
 
                     <View style={[styles.nameFieldItem, {justifyContent: 'center'}]}>
                         <Text style={inputFieldStyles.text}>Date Of Birth</Text>
@@ -191,7 +198,7 @@ export default function Registration() {
                         <Text style={[styles.loginText, {}]}>Sign Up</Text>
                     </TouchableOpacity>
                     <Text style={[{paddingHorizontal: 30}]}>Or</Text>
-                    <Text style={[{paddingHorizontal: 30}]}>Google</Text>
+                    <GoogleSignInAuth setLoading={setLoading}></GoogleSignInAuth>
                 </View>
 
                 {/* Terms of Use */}
