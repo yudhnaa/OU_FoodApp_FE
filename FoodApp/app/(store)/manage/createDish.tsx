@@ -17,7 +17,6 @@ export default function CreateDish() {
     const [category,setCategory] = useState<number | null>(null);
     const [openCategory,setOpenCategory] = useState(false);
     const [image,setImage] = useState<string | null>(null);
-
     const [dishType, setDishType] = useState([]);
 
     const loadFoodType = async () => {

@@ -7,6 +7,7 @@ import fontsStyles from "@/styles/fontStyles";
 import { useEffect, useState } from "react";
 import { Icon } from "react-native-paper";
 import { router } from "expo-router";
+import { useFoodContext} from "@/app/(store)/manage/FoodDetailsContext";
 // import {useAuth} from "@/components/AuthContext";
 
 
@@ -14,6 +15,7 @@ import { router } from "expo-router";
 export default function ManageStore() {
 
     const [data, setData] = useState<any[]>([]);
+    const {setSelectedFood} = useFoodContext();
     // const {access_token} = useAuth();
 
     useEffect(() => {
@@ -51,7 +53,10 @@ export default function ManageStore() {
                     data={data}
                     renderItem={({ item }) => (
                         <View className="m-3">
-                            <Pressable style={styles1.orderContainer} onPress={() => router.push(`/manage/${item.id.toString()}`)}>
+                            <Pressable style={styles1.orderContainer} onPress={() => {
+                                setSelectedFood(item);
+                                router.push(`/manage/${item.id.toString()}`)
+                            }}>
                                 <Image source={item.image} style={styles1.image} />
                                 <View className="ml-5 flex-1 flex-row justify-between items-center">
                                     <View>
