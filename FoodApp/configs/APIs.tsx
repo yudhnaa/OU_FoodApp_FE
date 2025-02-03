@@ -16,6 +16,10 @@ export const endpoints = {
     'deleted_items' : '/cart/delete-multiple/',
     'delete_item' : (id : number) => `/cart/items/${id}/`,
     'order_by_type' : '/users/orders_by_type/',
+
+    // store
+    'store_dishes' : '/stores/dishes/', 
+    'store_dishes_create' : '/stores/dishes/create/'
 }
 
 export default axios.create({
