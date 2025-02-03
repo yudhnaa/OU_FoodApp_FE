@@ -50,6 +50,9 @@ export const endpoints = {
     'questionAnswer': '/question_and_answer/',
     'contact': '/contact/',
 
+    'send_otp': '/twilio/send-sms-otp/',
+    'verify_otp': '/twilio/verify-sms-otp/',
+
 }
 
 

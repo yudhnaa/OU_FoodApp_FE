@@ -1,5 +1,4 @@
-import {View, Text, FlatList, Image, Pressable, StyleSheet, ActivityIndicator, RefreshControl} from 'react-native';
-import {router, Link} from "expo-router";
+import {View, Text, FlatList, Image, Pressable, ActivityIndicator, RefreshControl} from 'react-native';
 import colors from "@/styles/colors";
 import {styles} from "@/components/home/Styles";
 import {useFocusEffect, useRouter} from 'expo-router';
@@ -37,7 +36,7 @@ export default function HomePage() {
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    const {access_token, userInfo, setUserInfo} = useAuth();
+    const {access_token, setUserInfo} = useAuth();
 
     const fetchInitialData = async () => {
         try {
@@ -54,7 +53,7 @@ export default function HomePage() {
                 icon: {uri: item.image}
             }));
 
-            console.log("Item:", dishType.data)
+            // console.log("Item:", dishType.data)
 
             setCategories(categories);
             setPromotion(promotionData);

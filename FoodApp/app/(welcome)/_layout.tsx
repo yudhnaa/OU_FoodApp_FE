@@ -74,6 +74,22 @@ export default function WelcomeLayout() {
                     </View>),
             }}/>
             <Stack.Screen name="updateUserInfo" options={{headerShown: true, title: "Update User Info"}}/>
+            <Stack.Screen name={"forgotPassword"} options={{
+                headerShown: true,
+                title: "Forgot Password",
+                headerLeft: () =>
+                    (<View>
+                        <Pressable onPressIn={() => {
+                            router.back()
+                        }}>
+                            <Icon
+                                source="chevron-left"
+                                color={"#E95322"}
+                                size={35}
+                            />
+                        </Pressable>
+                    </View>),
+            }}/>
         </Stack>
     );
 }

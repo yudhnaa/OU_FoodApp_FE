@@ -77,6 +77,12 @@ export default function Login() {
                     <GoogleSignInAuth setLoading={setLoading}></GoogleSignInAuth>
                 </View>
 
+                <TouchableOpacity style={{marginTop: 10}} onPressIn={() => {
+                    router.push("/forgotPassword")
+                }}>
+                    <Text style={{color: colors.Font}}>Forgot Password?</Text>
+                </TouchableOpacity>
+
                 {/* Terms of Use */}
                 <View style={styles.termsContainer}>
                     <Text style={styles.termsText}>
