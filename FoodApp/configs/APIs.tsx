@@ -5,21 +5,21 @@ import {getObjectValue} from "@/components/asyncStorage";
 const BASE_URL = 'http://192.168.1.9:8000/';
 
 export const endpoints = {
-    'dish' : '/dish/',
-    'dish_type' : '/dish_type/',
-    'list_dish' : (typeId : any) => `/dish_type/${typeId}/dishes/`,
-    'dish_topping' : (dishId : any) => `/dish/${dishId}/topping/`,
+    'dish': '/dish/',
+    'dish_type': '/dish_type/',
+    'list_dish': (typeId: any) => `/dish_type/${typeId}/dishes/`,
+    'dish_topping': (dishId: any) => `/dish/${dishId}/topping/`,
 
-    'add-to-cart' : '/cart/add-to-cart/',
-    'cart_items' : '/cart/items/',
+    'add-to-cart': '/cart/add-to-cart/',
+    'cart_items': '/cart/items/',
 
-    'payment_type' : '/payment_type/',
-    'user_payment' : '/users/payment_methods/',
-    'location' : '/users/location/',
-    'create_order' : '/create-order-from-selected-cart-items/',
-    'deleted_items' : '/cart/delete-multiple/',
-    'delete_item' : (id : number) => `/cart/items/${id}/`,
-    'order_by_type' : '/user/orders_by_type/',
+    'payment_type': '/payment_type/',
+    'user_payment': '/users/payment_methods/',
+    'location': '/users/location/',
+    'create_order': '/create-order-from-selected-cart-items/',
+    'deleted_items': '/cart/delete-multiple/',
+    'delete_item': (id: number) => `/cart/items/${id}/`,
+    'order_by_type': '/user/orders_by_type/',
 
     'register': '/users/',
     'login': '/o/token/',
@@ -28,7 +28,7 @@ export const endpoints = {
     'get_user': '/users/current_user/',
     'logout': '/o/revoke_token/',
 
-    'google_signin' : '/firebase/auth/google/authenticate/',
+    'google_signin': '/firebase/auth/google/authenticate/',
     'update_google_user_info': '/firebase/auth/google/',
 
     "payment_methods": '/user/payment_methods/',
@@ -42,7 +42,7 @@ export const endpoints = {
 
     'following': '/users/following_store/',
     'follow': '/user/follow/',
-    'get_store' : '/store/',
+    'get_store': '/store/',
     'follow_store': '/user/follow/',
     'unfollow_store': '/user/follow/',
     'is_following': '/user/follow/is_follow/',
@@ -53,11 +53,12 @@ export const endpoints = {
 }
 
 
-export const authApi = (access_token:string) => {
+export const authApi = (access_token: string) => {
     return axios.create({
         baseURL: BASE_URL,
         headers: {
-            'Authorization': 'Bearer ' + access_token
+            'Authorization': 'Bearer ' + access_token,
+            "Content-Type": "multipart/form-data",
         }
     });
 }

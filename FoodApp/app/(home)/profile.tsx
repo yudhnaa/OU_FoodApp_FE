@@ -43,7 +43,7 @@ export default function ProfileMenu() {
             {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={styles.profileContainer}>
                 <Image
-                    source={require('@/assets/images/avt.png')}
+                    source={{uri: userInfo.avatar_url}}
                     style={styles.profileImage}
                 />
                 <View>

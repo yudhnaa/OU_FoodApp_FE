@@ -1,9 +1,9 @@
 import React from 'react';
 import {useState} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Alert, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {Image} from "expo-image"
 import {Button} from "react-native-paper";
-
+import * as ImagePicker from "expo-image-picker";
 
 import {styles as homeStyles} from "@/components/home/Styles";
 import InputField from "@/components/welcome/inputField";
@@ -14,6 +14,8 @@ import fontStyles from "@/styles/fontStyles";
 import {useAuth} from "@/components/AuthContext";
 import {authApi, endpoints} from "@/configs/APIs";
 import {router} from "expo-router";
+import uri from "ajv/lib/runtime/uri";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
 
 function MyProfile() {
     const {userInfo, access_token} = useAuth()
@@ -23,6 +25,9 @@ function MyProfile() {
     const [dateOfBirth, setDateOfBirth] = useState(new Date(userInfo.birthday));
     const [phoneNumber, setPhoneNumber] = useState(userInfo.phone_number);
 
+    const [image, setImage] = useState<string>(userInfo.avatar_url);
+    const [loading, setLoading] = useState(false);
+
 
     const onChange = (event: any, selectedDate: any) => {
         if (selectedDate) {
@@ -30,30 +35,68 @@ function MyProfile() {
         }
     };
 
+    // Pick an image from the gallery
+    const pickImage = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            alert("Permission Denied");
+            return;
+        }
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+
     const updateProfile = async () => {
-        await authApi(access_token).patch(`${endpoints.update_user}${userInfo.id}/`, {
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            phone_number: phoneNumber,
-            birthday: dateOfBirth.toISOString().split("T")[0]
-        }).then(res => {
+
+        const formData = new FormData();
+        formData.append("first_name", firstName);
+        formData.append("last_name", lastName);
+        formData.append("email", email);
+        formData.append("phone_number", phoneNumber);
+        formData.append("birthday", dateOfBirth.toISOString().split("T")[0]);
+        if (image) {
+            formData.append("avatar", {
+                uri: image,
+                name: `avt_user${userInfo.id}.jpg`,
+                type: "image/jpeg",
+            } as any);
+        }
+
+        setLoading(true)
+
+        await authApi(access_token).patch(`${endpoints.update_user}${userInfo.id}/`, formData).then(res => {
             alert("Update profile successfully")
+            setImage(res.data.avatar_url)
+            // console.log("Res::", res.data)
             if (router.canDismiss())
                 router.dismissAll()
             router.replace("/home");
         }).catch(ex => {
             alert("Update profile failed")
             console.error(ex.response.data)
+        }).finally(() => {
+            setLoading(false)
         })
     }
 
 
     return (
         <View className={"flex-1"} style={homeStyles.backGround}>
+            {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View className={" align-center flex-1 p-5 items-center"} style={homeStyles.bodyPage}>
                 <Image
-                    source={require("@/assets/images/avt_square.png")}
+                    // source={require("@/assets/images/avt_square.png")}
+                    source={{uri: image}}
                     style={{
                         width: 100,
                         height: 100,
@@ -63,8 +106,7 @@ function MyProfile() {
                     icon={"camera"}
                     textColor={"black"}
                     mode={"text"}
-                    onPress={() => {
-                    }}>Change avatar</Button>
+                    onPress={pickImage}>Change avatar</Button>
                 {/*<InputField label={"Full name"} value={fullName} onChange={setFullName}/>*/}
                 <View style={styles.nameFieldContainer}>
                     <View style={styles.nameFieldItem}>

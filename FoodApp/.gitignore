@@ -44,7 +44,7 @@ certs/
 
 GoogleService-Info.plist
 *.ipa
-*.ipa.zip
+*.ipa.*
 firebaseConfig.js
 
 # @generated expo-cli sync-8d4afeec25ea8a192358fae2f8e2fc766bdce4ec

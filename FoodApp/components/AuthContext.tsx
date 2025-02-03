@@ -34,7 +34,7 @@ type userInfo = {
     date_joined: string;
     store_name: string;
     role: string;
-    avatar: string;
+    avatar: { uri: string };
     phone_number: string;
     birthday: string;
 }

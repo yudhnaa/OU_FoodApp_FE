@@ -4,8 +4,9 @@ import {
     statusCodes,
     isErrorWithCode
 } from '@react-native-google-signin/google-signin';
-import {getAuth, GoogleAuthProvider, signInWithCredential} from "firebase/auth";
-import {app} from "@/firebaseConfig";
+import {getAuth, GoogleAuthProvider, signInWithCredential, getReactNativePersistence, initializeAuth} from "firebase/auth";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import {app, auth} from "@/firebaseConfig";
 import {View} from "react-native";
 import {useAuth} from "@/components/AuthContext";
 import {router} from "expo-router";
@@ -14,9 +15,6 @@ import APIs, {endpoints} from "@/configs/APIs";
 //firbase: " “Headful” auth methods such as signInWithPopup(), signInWithRedirect(), linkWithPopup(), and linkWithRedirect()
 // do not work in React Native (or Cordova, for that matter). You can still sign in or link with a federated provider
 // by using signInWithCredential() with an OAuth token from your provider of choice."
-
-
-const auth = getAuth(app);
 
 GoogleSignin.configure({
     webClientId: '986206586435-v4vk45m94on0otif6of2r4jqiq25dm1r.apps.googleusercontent.com', // From your plist's CLIENT_ID
