@@ -9,6 +9,7 @@ import fontStyles from "@/styles/fontStyles";
 import DropDownPicker from "react-native-dropdown-picker";
 import APIs,{endpoints} from '@/configs/APIs';
 import {useFoodContext} from "@/app/(store)/manage/FoodDetailsContext";
+import * as ImagePicker from 'expo-image-picker';
 
 
 export default function Detail() {
@@ -24,9 +25,7 @@ export default function Detail() {
     const loadFoodType = async () => {
         try{
             const response = await APIs.get(endpoints['dish_type']);
-            console.log(response.data);
             const formattedData = response.data.map((item: any) => ({label : item.name,value : item.id}));
-            console.log(formattedData);
             setDishType(formattedData);
         }
         catch(error){
@@ -39,18 +38,55 @@ export default function Detail() {
     },[selectedFood.id])
 
 
+    const pickImage = async () => {
+            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!permissionResult.granted) {
+                alert("Permission to access camera roll is required!");
+                return;
+            }
+        
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+        
+            if (!result.canceled) {
+                setImage(result.assets[0].uri);
+            }
+        };
+
+
     const updateDish = async () => {
         try{
-            const payload = {
-                "name": name,
-                "price": price,
-                "food_type": category,
-                "description": description,
-                "image": image
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('price', price);
+            formData.append('food_type', category);
+            formData.append('description', description);
+    
+            // Check if image exists and upload it
+            if (image) {
+                const localUri = image;
+                const filename = localUri.split('/').pop();
+                const match = /\.(\w+)$/.exec(filename);
+                const type = match ? `image/${match[1]}` : `image`;
+                
+                formData.append('image', {
+                    uri: localUri,
+                    name: filename,
+                    type
+                });
             }
-            console.log(payload);
 
-            let res = await APIs.put(endpoints['store_dishes_update'](selectedFood.id),payload);
+            console.log(formData);
+
+            let res = await APIs.put(endpoints['store_dishes_update'](selectedFood.id),formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
             if(res.status === 200){
                 alert('Dish updated successfully');
@@ -69,7 +105,7 @@ export default function Detail() {
         <View className={"flex-1"} style={homeStyles.backGround}>
             <View className={" align-center flex-1 p-5 items-center"} style={homeStyles.bodyPage}>
                 <Image
-                    source={require("@/assets/images/bestSeller_pic/pic_1.png")}
+                    source={{uri : image}}
                     style={{
                         width: 100,
                         height: 100,
@@ -79,8 +115,7 @@ export default function Detail() {
                     icon={"camera"}
                     textColor={"black"}
                     mode={"text"}
-                    onPress={() => {
-                    }}>Change Image</Button>
+                    onPress={pickImage}>Change Image</Button>
                 <InputField label={"Name"} value={name} onChange={setName}/>
 
                 <InputField

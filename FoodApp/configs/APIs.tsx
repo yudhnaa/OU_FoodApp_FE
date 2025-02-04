@@ -20,8 +20,8 @@ export const endpoints = {
     // store
     'store_dishes' : '/stores/dishes/', 
     'store_dishes_create' : '/stores/dishes/create/',
-    // stores/dishes/<int:dish_id>/update/
     'store_dishes_update' : (dishId : number) => `/stores/dishes/${dishId}/update/`,
+    'store_dishes_delete' : (dishId : number) => `/dish/${dishId}/`,
 }
 
 export default axios.create({

@@ -8,6 +8,7 @@ import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import DropDownPicker from "react-native-dropdown-picker";
 import APIs,{endpoints} from '@/configs/APIs';
+import * as ImagePicker from 'expo-image-picker';
 
 
 export default function CreateDish() {
@@ -19,12 +20,11 @@ export default function CreateDish() {
     const [image,setImage] = useState<string | null>(null);
     const [dishType, setDishType] = useState([]);
 
+
     const loadFoodType = async () => {
         try{
             const response = await APIs.get(endpoints['dish_type']);
-            console.log(response.data);
             const formattedData = response.data.map((item: any) => ({label : item.name,value : item.id}));
-            console.log(formattedData);
             setDishType(formattedData);
         }
         catch(error){
@@ -32,33 +32,93 @@ export default function CreateDish() {
         }
     }
 
+    const pickImage = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            alert("Permission to access camera roll is required!");
+            return;
+        }
+    
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+    
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+
     useEffect(() => {
         loadFoodType();
     },[])
 
 
+    // const createDish = async () => {
+    //     try{
+    //         const payload = {
+    //             "name": name,
+    //             "price": price,
+    //             "food_type": category,
+    //             "description": description,
+    //             "image": image
+    //         }
+    //         console.log(payload);
+
+    //         let res = await APIs.post(endpoints['store_dishes_create'],payload);
+
+    //         if(res.status === 201){
+    //             alert('Dish created successfully');
+    //         }
+    //         else{
+    //             alert('Failed to create dish');
+    //         }
+    //     }
+    //     catch(error){
+    //         console.log(error);
+    //     }
+    // }
+
     const createDish = async () => {
-        try{
-            const payload = {
-                "name": name,
-                "price": price,
-                "food_type": category,
-                "description": description,
-                "image": image
+        try {
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('price', price);
+            formData.append('food_type', category);
+            formData.append('description', description);
+    
+            // Check if image exists and upload it
+            if (image) {
+                const localUri = image;
+                const filename = localUri.split('/').pop();
+                const match = /\.(\w+)$/.exec(filename);
+                const type = match ? `image/${match[1]}` : `image`;
+                
+                formData.append('image', {
+                    uri: localUri,
+                    name: filename,
+                    type
+                });
             }
-            console.log(payload);
-
-            let res = await APIs.post(endpoints['store_dishes_create'],payload);
-
+    
+            // Use multipart/form-data for file upload
+            const res = await APIs.post(endpoints['store_dishes_create'], formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+    
             if(res.status === 201){
                 alert('Dish created successfully');
-            }
-            else{
+            } else {
                 alert('Failed to create dish');
             }
-        }
-        catch(error){
+        } catch(error) {
             console.log(error);
+            alert('Error creating dish');
         }
     }
 
@@ -67,7 +127,7 @@ export default function CreateDish() {
         <View className={"flex-1"} style={homeStyles.backGround}>
             <View className={" align-center flex-1 p-5 items-center"} style={homeStyles.bodyPage}>
                 <Image
-                    source={require("@/assets/images/bestSeller_pic/pic_1.png")}
+                    source={{uri : image}}
                     style={{
                         width: 100,
                         height: 100,
@@ -77,8 +137,7 @@ export default function CreateDish() {
                     icon={"camera"}
                     textColor={"black"}
                     mode={"text"}
-                    onPress={() => {
-                    }}>Change Image</Button>
+                    onPress={pickImage}>Change Image</Button>
                 <InputField label={"Name"} value={name} onChange={setName}/>
 
                 <InputField label={"Price"} value={price} onChange={setPrice}/>
