@@ -10,6 +10,7 @@ import {Tabs} from "expo-router";
 import APIs, {authApi, endpoints} from "@/configs/APIs";
 import {useAuth} from "@/components/AuthContext";
 import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import {IconButton} from "react-native-paper";
 
 export default function OrderPage() {
     const [loading, setLoading] = useState<boolean>(true);
@@ -20,13 +21,24 @@ export default function OrderPage() {
 
     const {access_token} = useAuth()
 
-
     const handlePress = (item: { status: string }) => {
         switch (item.status) {
             case "active":
-                return router.push('/order/orderCancel');
+                router.push({
+                    pathname: '/order/orderCancel',
+                    params: {
+                        orderInfo: JSON.stringify(item)
+                    }
+                })
+                return
             case "completed":
-                return router.push('/order/reviewOrder');
+                router.push({
+                    pathname: '/order/reviewOrder',
+                    params: {
+                        orderInfo: JSON.stringify(item)
+                    }
+                })
+                return
             case "cancelled":
                 return console.log(item.status)
             case "not paid":
@@ -36,23 +48,22 @@ export default function OrderPage() {
                         orderInfo: JSON.stringify(item)
                     }
                 })
-                // return console.log(item)
+                return
+            case "reviewed":
+                return console.log(item.status)
         }
     }
 
     const fetchData = async () => {
         setLoading(true);
         try {
-
             await authApi(access_token).get(endpoints['order_by_type']).then(res => {
                 setOrders(res.data.results)
-                // console.info(res.data.results)
-
-
             }).finally(() => {
-                setLoading(false);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 200)
             });
-
         } catch (error) {
             console.log(error);
         }
@@ -67,12 +78,6 @@ export default function OrderPage() {
     useEffect(() => {
         setHasOrders(orders.length > 0)
     }, [orders]);
-
-    // useEffect(() => {
-    //
-    //
-    // }, []);
-
 
     return (
         <View style={styles.backGround}>
@@ -112,6 +117,14 @@ export default function OrderPage() {
                             style={filteredOrders === "not paid" ? styles1.tabTextActive : styles1.tabTextInactive}>Not
                             paid</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[filteredOrders === "reviewed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, {marginTop: 10}]}
+                        onPress={() => {
+                            setFilteredOrders("reviewed")
+                        }}>
+                        <Text
+                            style={filteredOrders === "reviewed" ? styles1.tabTextActive : styles1.tabTextInactive}>Reviewed</Text>
+                    </TouchableOpacity>
                 </View>
                 {hasOrders ? (
                     <FlatList
@@ -138,14 +151,13 @@ export default function OrderPage() {
                                                     {item.status === "completed" ? "Leave a review" : "Cancel Order"}
                                                 </Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={styles1.trackButton}>
-                                                <Text style={{
-                                                    color: colors.Orange_Base, ...fontsStyles.subtitulo,
-                                                    fontSize: 13
-                                                }}>
-                                                    {item.status === "completed" ? "Order again" : "Track Driver"}
-                                                </Text>
+
+                                            <TouchableOpacity>
+                                                <IconButton icon={"message-badge-outline"} size={20}
+                                                            iconColor={colors.Orange_Base}>
+                                                </IconButton>
                                             </TouchableOpacity>
+
                                         </View>
                                     )}
                                     {item.status === "canceled" && (
@@ -197,7 +209,6 @@ export default function OrderPage() {
     );
 }
 
-
 const styles1 = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
@@ -239,7 +250,6 @@ const styles1 = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 10,
-        // marginBottom: 10,
     },
     orderTitle: {
         fontSize: 18,

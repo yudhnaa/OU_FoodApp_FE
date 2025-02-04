@@ -1,4 +1,4 @@
-import {View, Text, FlatList, Image, Pressable, ActivityIndicator, RefreshControl} from 'react-native';
+import {View, Text, FlatList, Image, Pressable, ActivityIndicator, RefreshControl, Alert} from 'react-native';
 import colors from "@/styles/colors";
 import {styles} from "@/components/home/Styles";
 import {useFocusEffect, useRouter} from 'expo-router';
@@ -36,7 +36,7 @@ export default function HomePage() {
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    const {access_token, setUserInfo} = useAuth();
+    const {access_token, setUserInfo, clearToken} = useAuth();
 
     const fetchInitialData = async () => {
         try {
@@ -130,11 +130,12 @@ export default function HomePage() {
             setUserInfo(res.data);
             // console.log('User info:', res.data);
         } catch (ex) {
-            alert('Please login to continue');
+            Alert.alert("Hey Bestie",'Please login to continue');
             if (router.canDismiss()) {
                 router.dismissAll();
+                clearToken();
             }
-            router.replace('/login');
+            router.replace('/welcome');
         } finally {
             setLoading(false);
         }

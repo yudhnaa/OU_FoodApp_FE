@@ -6,6 +6,7 @@ const BASE_URL = 'http://192.168.1.9:8000/';
 
 export const endpoints = {
     'dish': '/dish/',
+    'dish_by_store': '/dish/get-by-store/',
     'dish_type': '/dish_type/',
     'list_dish': (typeId: any) => `/dish_type/${typeId}/dishes/`,
     'dish_topping': (dishId: any) => `/dish/${dishId}/topping/`,
@@ -20,6 +21,10 @@ export const endpoints = {
     'deleted_items': '/cart/delete-multiple/',
     'delete_item': '/cart/items/',
     'order_by_type': '/user/orders_by_type/',
+    'user_order': '/user/orders/',
+    'change_password': '/users/change_password/',
+
+    "dish_review": "/dish-review/",
 
     'register': '/users/',
     'login': '/o/token/',

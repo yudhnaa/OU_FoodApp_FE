@@ -22,12 +22,15 @@ type StoreInfo = {
     follower: number,
 };
 
-type Dish = {
+interface Dish {
     id: number;
     name: string;
     price: number;
-    description: string;
+    food_type: number;
+    description: string | null;
     image: string;
+    food_type_id: number;
+    store_id: number;
 }
 
 function StorePage() {
@@ -46,43 +49,7 @@ function StorePage() {
         follower: 0,
     })
 
-    const [dish, setDish] = useState<Dish[]>([
-        {
-            id: 1,
-            name: "Dish 1",
-            price: 10000,
-            description: "Description",
-            image: "https://i.pinimg.com",
-        },
-        {
-            id: 2,
-            name: "Dish 2",
-            price: 20000,
-            description: "Description",
-            image: "https://i.pinimg.com",
-        },
-        {
-            id: 3,
-            name: "Dish 3",
-            price: 30000,
-            description: "Description",
-            image: "https://i.pinimg.com",
-        },
-        {
-            id: 4,
-            name: "Dish 4",
-            price: 40000,
-            description: "Description",
-            image: "https://i.pinimg.com",
-        },
-        {
-            id: 5,
-            name: "Dish 5",
-            price: 50000,
-            description: "Description",
-            image: "https://i.pinimg.com",
-        }
-    ])
+    const [dish, setDish] = useState<Dish[]>([]);
 
     const fetchStoreInfo = async () => {
         setLoading(true);
@@ -94,6 +61,24 @@ function StorePage() {
                 alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
             })
             // setStoreInfo()
+        } catch (ex: any) {
+            alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
+        } finally {
+            setTimeout(() => {
+                setLoading(false);
+            }, 200);
+        }
+    }
+
+    const fetchDishes = async () => {
+        setLoading(true);
+        try {
+            await authApi(access_token).get(`${endpoints.dish_by_store}${storePage}/`).then((res) => {
+                console.log(res.data.results);
+                setDish(res.data.results);
+            }).catch((ex: any) => {
+                alert(ex.response?.data?.error_description || ex.response?.data?.message || `Loading failed\nStatus code: ${ex.status}`);
+            })
         } catch (ex: any) {
             alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
         } finally {
@@ -149,6 +134,7 @@ function StorePage() {
         // console.info("StorePage:", storePage);
         // console.info("followId:", followId);
         fetchStoreInfo();
+        fetchDishes()
     }, []);
 
     return (
@@ -180,9 +166,10 @@ function StorePage() {
                         <Text>Followers: {storeInfo?.follower}</Text>
                     </View>
                     {isFollowing ? (
-                        <Button text={"UnFollow"} onPress={() => unFollow(Number.parseInt(followingId.toString()))} disabled={loading}
+                        <Button text={"UnFollow"} onPress={() => unFollow(Number.parseInt(followingId.toString()))}
+                                disabled={loading}
                                 buttonColor={colors.Orange_2} textColor={colors.Font}></Button>
-                    ): (
+                    ) : (
                         <Button text={"Follow"} onPress={follow} disabled={loading}></Button>
                     )}
 
@@ -201,7 +188,7 @@ function StorePage() {
                             flexDirection: "row",
                             justifyContent: "space-between"
                         }}>
-                            <Image source={require("@/assets/images/bestSeller_pic/pic_1.png")}
+                            <Image source={{uri: item.image}}
                                    style={{width: 60, height: 60, marginRight: 20, borderRadius: 15}}></Image>
                             {/*<Image source={remote source)} style={{width: 30, height: 30}}></Image>*/}
                             <View>
