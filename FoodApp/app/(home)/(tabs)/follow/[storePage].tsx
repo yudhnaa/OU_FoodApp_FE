@@ -130,6 +130,39 @@ function StorePage() {
         }
     }
 
+    const addToCart = async (id: any) => {
+        try {
+            const payload = {
+                dish_id: id,
+                quantity: 1,
+                toppings: [],
+            };
+
+            console.log("Body 'add to cart' api:",payload)
+
+
+            await authApi(access_token).post(endpoints["add-to-cart"], payload).then((res) => {
+                if (res.status === 201) {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Success',
+                        text2: 'Added to cart successfully 👌',
+                    })
+                }
+
+            }).catch((error) => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: 'Failed to add to cart. Please try again.',
+                });
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         // console.info("StorePage:", storePage);
         // console.info("followId:", followId);
@@ -189,14 +222,13 @@ function StorePage() {
                             justifyContent: "space-between"
                         }}>
                             <Image source={{uri: item.image}}
-                                   style={{width: 60, height: 60, marginRight: 20, borderRadius: 15}}></Image>
-                            {/*<Image source={remote source)} style={{width: 30, height: 30}}></Image>*/}
+                                   style={{width: 60, height: 60, borderRadius: 15}}></Image>
                             <View>
                                 <Text style={{fontWeight: "bold", fontSize: 16}}>{item.name}</Text>
-                                <Text>Mô tả: {item.description}</Text>
-                                <Text>Ngày theo dõi: {item.price}</Text>
+                                <Text>Description: {item.description}</Text>
+                                <Text>Price: {item.price}</Text>
                             </View>
-                            <Button text={"Add to card"} onPress={() => (followId)} disabled={loading}></Button>
+                            <Button text={"Add to cart"} onPress={()=> addToCart(item.id)} disabled={loading}></Button>
                         </View>
                     )}
                 />
