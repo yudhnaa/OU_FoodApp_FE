@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Modal, StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
-import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Image } from 'expo-image';
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import {Modal, StyleSheet, Text, View, FlatList, Pressable, Alert} from 'react-native';
+import {PanGestureHandler, GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Image} from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
 import Button from '@/components/home/button';
-import {router} from "expo-router";
-import {IconButton,Icon} from "react-native-paper";
+import {router, useFocusEffect} from "expo-router";
+import {IconButton, Icon} from "react-native-paper";
 import APIs, {authApi, endpoints} from '@/configs/APIs';
-import { useCart } from '@/components/home/cartContext';
+import {useCart} from '@/components/home/cartContext';
 import {useAuth} from "@/components/AuthContext";
 
 
@@ -120,66 +120,70 @@ type OrderData = {
     }[];
 }
 
-const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
+const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
     const [orderData, setOrderData] = useState<OrderData[]>([]);
-    const { selectedItems, setSelectedItems } = useCart();
+    const {selectedItems, setSelectedItems} = useCart();
     const [subtotal, setSubtotal] = useState(0);
     const {access_token} = useAuth();
     const deleveryFee = selectedItems.length > 0 ? 10.00 : 0;
 
+    useFocusEffect(
+        useCallback(() => {
+            console.log("Cart focused");
+            setSelectedItems([]);
+        }, [])
+    )
+
     useEffect(() => {
         const fetchData = async () => {
-            try{
+            try {
                 const response = await authApi(access_token).get(endpoints['cart_items']);
                 setOrderData(response.data);
                 const formattedData = response.data.map((item: any) => ({
-                        id: item.id,
-                        dish_id : item.dish_id,
-                        name: item.dish_name,
-                        price: item.total_price,
-                        dish_price : item.dish_price,
-                        date: new Date(item.date).toLocaleString("en-US", {
-                            day: "2-digit",
-                            month: "short", // Nov
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                        }),
-                        image: { uri: item.image },
-                        items: item.quantity,
-                        selected: false,
-                        toppings: item.toppings.map((topping: any) => ({
-                            id: topping.topping.id,
-                            name: topping.topping.name,
-                            price: topping.topping.price,
-                            quantity: topping.quantity
-                        }))
+                    id: item.id,
+                    dish_id: item.dish_id,
+                    name: item.dish_name,
+                    price: item.total_price,
+                    dish_price: item.dish_price,
+                    date: new Date(item.date).toLocaleString("en-US", {
+                        day: "2-digit",
+                        month: "short", // Nov
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    }),
+                    image: {uri: item.image},
+                    items: item.quantity,
+                    selected: false,
+                    toppings: item.toppings.map((topping: any) => ({
+                        id: topping.topping.id,
+                        name: topping.topping.name,
+                        price: topping.topping.price,
+                        quantity: topping.quantity
+                    }))
                 }));
                 setOrderData(formattedData);
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
             }
         };
         fetchData();
-    },[]);
+    }, []);
 
     const updateItem = async (id: number, quantity: number) => {
-        try{
-            const response = await authApi(access_token).put(`${endpoints['cart_items']}${id}/`,{
+        try {
+            const response = await authApi(access_token).put(`${endpoints['cart_items']}${id}/`, {
                 quantity: quantity
             });
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
         }
     }
 
     const deleteItem = async (id: number) => {
-        try{
+        try {
             const response = await authApi(access_token).delete(`${endpoints['cart_items']}${id}/`);
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
         }
     }
@@ -190,23 +194,23 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
     };
 
     const toggleSelectItem = (id: number) => {
-        setOrderData((prevData : any) =>
-          prevData.map((item : any) =>
-            item.id === id ? { ...item, selected: !item.selected } : item
-          )
+        setOrderData((prevData: any) =>
+            prevData.map((item: any) =>
+                item.id === id ? {...item, selected: !item.selected} : item
+            )
         );
 
-        setSelectedItems((prevSelected : any) => {
-          const isSelected = prevSelected.find((item: any) => item.id === id);
+        setSelectedItems((prevSelected: any) => {
+            const isSelected = prevSelected.find((item: any) => item.id === id);
 
-          if (isSelected) {
-            return prevSelected.filter((item: any) => item.id !== id);
-          } else {
-            const selectedItem = orderData.find((item) => item.id === id);
-            return [...prevSelected, selectedItem];
-          }
+            if (isSelected) {
+                return prevSelected.filter((item: any) => item.id !== id);
+            } else {
+                const selectedItem = orderData.find((item) => item.id === id);
+                return [...prevSelected, selectedItem];
+            }
         });
-      };
+    };
 
     // Tính lại tổng tiền
     useEffect(() => {
@@ -222,38 +226,38 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
     const handleAdd = (id: number) => {
         setOrderData((prevData: any) =>
             prevData.map((item: any) =>
-                item.id === id ? { ...item, items: item.items + 1 } : item
+                item.id === id ? {...item, items: item.items + 1} : item
             )
         );
 
         setSelectedItems((prevSelected: any) =>
             prevSelected.map((item: any) =>
-                item.id === id ? { ...item, items: item.items + 1 } : item
+                item.id === id ? {...item, items: item.items + 1} : item
             )
         );
 
-        updateItem(id, (orderData.find((item : any) => item.id === id)?.items ?? 0) + 1)
+        updateItem(id, (orderData.find((item: any) => item.id === id)?.items ?? 0) + 1)
     };
 
     const handleSubtract = (id: number) => {
-        if (orderData.find((item : any) => item.id === id)?.items === 1)
+        if (orderData.find((item: any) => item.id === id)?.items === 1)
             removeItem(id);
         else
-        setOrderData((prevData: any) =>
-            prevData.map((item: any) =>
-                item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
-            )
-        );
+            setOrderData((prevData: any) =>
+                prevData.map((item: any) =>
+                    item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
+                )
+            );
 
         setSelectedItems((prevSelected: any) =>
             prevSelected.map((item: any) =>
-                item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
+                item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
             )
         );
     };
 
     const handleGesture = (event: any) => {
-        const { translationX } = event.nativeEvent;
+        const {translationX} = event.nativeEvent;
         if (translationX > 100) {
             onCancel();
         }
@@ -261,7 +265,7 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
 
     return (
         <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
-            <GestureHandlerRootView style={{ flex: 1 }}>
+            <GestureHandlerRootView style={{flex: 1}}>
                 <PanGestureHandler onGestureEvent={handleGesture}>
                     <View style={styles.overlay}>
                         <View style={styles.modalContainer}>
@@ -286,7 +290,7 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
                             <FlatList
                                 data={orderData}
                                 keyExtractor={(item) => item.id.toString()}
-                                renderItem={({ item }) => (
+                                renderItem={({item}) => (
                                     <View style={styles.orderContainer}>
                                         <IconButton
                                             icon={item.selected ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
@@ -294,21 +298,24 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
                                             iconColor={colors.Font_2}
                                             onPress={() => toggleSelectItem(item.id)}
                                         />
-                                        <Image source={item.image} style={styles.image} />
+                                        <Image source={item.image} style={styles.image}/>
                                         <View style={styles.orderDetailsContainer}>
                                             <Text style={styles.orderTitle}>{item.name}</Text>
                                             <Text style={styles.orderPrice}>${item.price.toFixed(2)}</Text>
                                             <Text style={styles.orderDetails}>{item.date}</Text>
                                             <View style={styles.quantityControls}>
-                                                <Pressable style={styles.trackButton} onPress={() => handleSubtract(item.id)}>
+                                                <Pressable style={styles.trackButton}
+                                                           onPress={() => handleSubtract(item.id)}>
                                                     <Text style={styles.trackButtonText}>-</Text>
                                                 </Pressable>
                                                 <Text style={styles.orderQuantity}>{item.items} items</Text>
-                                                <Pressable style={styles.trackButton} onPress={() => handleAdd(item.id)}>
+                                                <Pressable style={styles.trackButton}
+                                                           onPress={() => handleAdd(item.id)}>
                                                     <Text style={styles.trackButtonText}>+</Text>
                                                 </Pressable>
-                                                <IconButton className={""} icon={"trash-can"} iconColor={colors.Orange_2} size={20}
-                                                            onPress={()=> removeItem(item.id)}/>
+                                                <IconButton className={""} icon={"trash-can"}
+                                                            iconColor={colors.Orange_2} size={20}
+                                                            onPress={() => removeItem(item.id)}/>
                                             </View>
                                         </View>
                                     </View>
@@ -325,14 +332,13 @@ const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
                             {/* Checkout Button */}
                             <Button
                                 text="Check out"
-                                onPress={()=>{
-                                    if (orderData.length > 0) {
-                                        router.push("/checkout")
+                                onPress={() => {
+                                    if (selectedItems.length > 0) {
+                                        // console.log("Length;;;;",selectedItems.length)
+                                        router.push("/payment")
                                         onCancel();
-                                        // console.log(JSON.stringify(selectedItems));
-                                    }
-                                    else
-                                        alert("Your cart is empty")
+                                    } else
+                                        Alert.alert("Hey Bestie", "Select items to checkout")
                                 }}
                                 buttonColor={colors.Yellow_Base}
                                 textColor={colors.Orange_Base}

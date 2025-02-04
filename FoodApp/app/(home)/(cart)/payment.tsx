@@ -1,258 +1,25 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {FlatList, StyleSheet, Text, View} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import {IconButton} from "react-native-paper";
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import Button from "@/components/home/button";
 import {styles as homeStyles} from "@/components/home/Styles";
 import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
 import {useCart} from "@/components/home/cartContext";
-import APIs,{endpoints} from '@/configs/APIs';
-
-// const addresses = [
-//     {label: 'Address 1', value: 'address1'},
-//     {label: 'Address 2', value: 'address2'},
-//     {label: 'Address 3', value: 'address3'},
-// ];
-
-// const paymentMethods = [
-//     {label: 'Paypal', value: 'paypal'},
-//     {label: 'Visa', value: 'visa'},
-//     {label: 'MasterCard', value: 'mastercard'},
-// ];
-
-const orders = [
-    {
-        id: 1,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 2,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 3,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 4,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 5,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 6,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 7,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 8,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 9,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 10,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 11,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 12,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 13,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 14,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 15,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 16,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 17,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 18,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 19,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 20,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 21,
-        name: "Strawberry shake",
-        price: 20.00,
-        date: "29 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-        items: 2,
-    },
-    {
-        id: 22,
-        name: "Blackberry shake",
-        price: 23.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-        items: 3,
-    },
-    {
-        id: 23,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 24,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-    {
-        id: 25,
-        name: "Mango shake",
-        price: 25.00,
-        date: "30 Nov, 01:20 pm",
-        image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-        items: 4,
-    },
-];
-
-// {
-//     "payment_type": 1,
-//     "order_status": 1,
-//     "delivery_fee": 10,
-//     "location": 1,
-//     "dishes": [
-//         {
-//             "dish": 5,
-//             "quantity": 2,
-//             "toppings": [
-//                 {"id": 1, "quantity": 1},
-//                 {"id": 2, "quantity": 2}
-//             ]
-//         },
-//         {
-//             "dish": 4,
-//             "quantity": 1,
-//             "toppings": []
-//         }
-//     ]
-// }
+import APIs, {authApi, endpoints} from '@/configs/APIs';
+import {useAuth} from "@/components/AuthContext";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
 
 const deliveryFee = 10.00;
 const estimateTime = "30-40 mins";
 
 const Payment: React.FC = () => {
+    const [loading, setLoading] = useState(false);
 
-    const {selectedItems} = useCart();
+    const {selectedItems, setSelectedItems} = useCart();
+    const {access_token} = useAuth();
 
     const initialTotal = selectedItems.reduce((sum, item) => sum + item.price * item.items, deliveryFee);
     const [total] = useState(initialTotal);
@@ -263,58 +30,71 @@ const Payment: React.FC = () => {
     const [openPaymentMethod, setOpenPaymentMethod] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState<number | null>(null);
 
-    const [addresses, setAddresses] = useState([]);
-    const [userPaymentMethods, setPaymentMethods] = useState([]);
+    const [addresses, setAddresses] = useState<{ id: number, address: string, name: string }[]>([]);
+    const [userPaymentMethods, setUserPaymentMethods] = useState<{
+        id: number,
+        payment_type: number,
+        payment_type_name: string,
+        isDefault: boolean
+    }[]>([]);
 
     const [deletedData, setDeletedData] = useState<number[]>([]);
 
+    // const [orderStatus, setOrderStatus] = useState<string>('');
+    const [orderInfo, setOrderInfo] = useState<any>();
+
     const loadAddresses = async () => {
-        try{
-            let res = await APIs.get(endpoints['location']);
-            setAddresses(res.data.map((item: any) => ({label: item.address, value: item.id})));
+        try {
+            setLoading(true);
+            let res = await authApi(access_token).get(endpoints.address).finally(() => setLoading(false));
+            setAddresses(res.data.map((item: any) => ({id: item.id, address: item.address, name: item.name})));
+
+        } catch (error) {
+            console.log(error);
         }
-        catch(error){
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        let ids = selectedItems.map((item) => item.id);
-        setDeletedData(prev => {
-            console.log("Previous deletedData:", prev);
-            console.log("New deletedData:", ids);
-            return ids;
-        });
-    },[selectedItems])
-
-
-    useEffect(() => {
-        loadAddresses();
-    },[]);
+    };
 
     const loadPaymentMethods = async () => {
-        try{
-            let res = await APIs.get(endpoints['user_payment']);
-            setPaymentMethods(res.data.map((item: any) => ({label: item.payment_type_name, value: item.payment_type})));
+        try {
+            setLoading(true);
+            let res = await authApi(access_token).get(endpoints.payment_methods).finally(() => setLoading(false));
+            setUserPaymentMethods(res.data.map((item: any) => ({
+                id: item.id,
+                payment_type: item.payment_type,
+                payment_type_name: item.payment_type_name,
+                isDefault: item.isDefault
+            })));
+        } catch (error) {
+            console.log(error);
         }
-        catch(error){
-            console.log(error)
-        }
-    }
-    
+    };
+
     useEffect(() => {
-        loadPaymentMethods();
-    },[]);
+        if (userPaymentMethods.length > 0) {
+            const defaultPaymentMethod = userPaymentMethods.find((item) => item.isDefault);
+            if (defaultPaymentMethod) {
+                setPaymentMethod(defaultPaymentMethod.payment_type);
+            }
+        }
+    }, [userPaymentMethods]);
 
-    
+    useEffect(() => {
+        if (addresses.length > 0) {
+            setAddress(addresses[0].id);
+        }
+    }, [addresses]);
 
-    const creatOrder = async () => {
-        try{
+    useFocusEffect(
+        useCallback(() => {
+            loadAddresses();
+            loadPaymentMethods();
+        }, [])
+    );
+
+    const createOrder = async () => {
+        try {
             const orderData = {
-                "payment_type": paymentMethod,
-                "order_status": "active",
                 "delivery_fee": 10,
-                "location" : address,
                 "dishes": selectedItems.map((item) => ({
                     "dish": item.dish_id,
                     "quantity": item.items,
@@ -322,39 +102,67 @@ const Payment: React.FC = () => {
                         "id": topping.id,
                         "quantity": topping.quantity
                     })) : []
-                }))
-            }
+                })),
+                "location": address,
+                "payment_type": paymentMethod,
+            };
 
-            let res = await APIs.post(endpoints['create_order'], orderData);
-            if(res.status === 201){
-                for (let i = 0; i < deletedData.length; i++){
-                    await APIs.delete(endpoints['delete_item'](deletedData[i]));
+            // console.log(orderData)
+            setLoading(true);
+            let res = await authApi(access_token).post(endpoints['create_order'], orderData).finally(() => setLoading(false));
 
-                    
-                }
-                console.log('Order created successfully')
+            if (res.status === 201) {
+                console.log('Order created successfully');
+
+                setDeletedData(selectedItems.map((item) => item.id));
+
+                console.log("DHGSHGDJDSJ",res.data);
+
+                setOrderInfo(res.data);
+
+
+            } else {
+                console.log('Order creation failed');
             }
-            else{
-                console.log('Order creation failed')
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const deleteItems = async () => {
+        setLoading(true);
+        for (let i = 0; i < deletedData.length; i++) {
+            try {
+                await authApi(access_token).delete(`${endpoints.delete_item}${deletedData[i]}/`);
+                setSelectedItems(selectedItems.filter((item) => !deletedData.includes(item.id)));
+                console.log('Item deleted successfully');
+            } catch (error) {
+                console.log(`Failed to delete item with id ${deletedData[i]}`, error);
             }
-            console.log(res.data)
         }
-        catch(error){
-            console.log(error)
-        }
+        setLoading(false);
     }
 
-    // const handlePayment = () => {
-    //     console.log(paymentMethod, address);
-    //     creatOrder();
-    //     router.dismissAll()
-    //     router.replace('/(cart)/orderConfirmed')
-    // };
+    useEffect(() => {
+        deleteItems()
+    }, [deletedData]);
 
-    
+    useEffect(() => {
+        if (orderInfo) {
+            if (orderInfo.order_status === 'not paid') {
+                router.replace({
+                    pathname: '/payForOrder',
+                    params: {orderInfo: JSON.stringify(orderInfo)}
+                })
+            } else
+                router.replace('/orderConfirmed');
+        }
+    }, [orderInfo]);
+
 
     return (
         <View className={"flex-1"} style={homeStyles.backGround}>
+            {loading && <LoadingOverlay></LoadingOverlay>}
             <View className={"p-5 flex-col"} style={homeStyles.bodyPage}>
                 <View style={styles.body}>
                     {/* Shipping Address */}
@@ -366,7 +174,7 @@ const Payment: React.FC = () => {
                                     style={styles.dropdown}
                                     open={openAddress}
                                     value={address}
-                                    items={addresses}
+                                    items={addresses.map((item) => ({label: item.name, value: item.id}))}
                                     setOpen={setOpenAddress}
                                     setValue={setAddress}
                                     placeholder="Select Address"
@@ -392,7 +200,10 @@ const Payment: React.FC = () => {
                                 renderItem={({item}) => (
                                     <View style={styles.orderRow}>
                                         <Text style={fontStyles.Paragraph}>{item.name}</Text>
-                                        <Text style={[fontStyles.Paragraph, {color: colors.Orange_Base, paddingRight: 7}]}>
+                                        <Text style={[fontStyles.Paragraph, {
+                                            color: colors.Orange_Base,
+                                            paddingRight: 7
+                                        }]}>
                                             {item.items} items
                                         </Text>
                                     </View>
@@ -413,7 +224,10 @@ const Payment: React.FC = () => {
                                     style={styles.dropdown}
                                     open={openPaymentMethod}
                                     value={paymentMethod}
-                                    items={userPaymentMethods}
+                                    items={userPaymentMethods.map((item) => ({
+                                        label: item.payment_type_name,
+                                        value: item.payment_type
+                                    }))}
                                     setOpen={setOpenPaymentMethod}
                                     setValue={setPaymentMethod}
                                     placeholder="Select Payment Method"
@@ -438,12 +252,8 @@ const Payment: React.FC = () => {
                     </View>
 
                     {/* Pay Now Button */}
-                    <Button text="Pay Now" onPress={() => {
-                        console.log(paymentMethod, address);
-                        creatOrder();
-                        router.dismissAll();
-                        router.replace('/(cart)/orderConfirmed');
-                    }} buttonColor={colors.Orange_2} textColor={colors.Orange_Base}/>
+                    <Button text="Pay Now" onPress={createOrder} buttonColor={colors.Orange_2}
+                            textColor={colors.Orange_Base}/>
                 </View>
             </View>
         </View>
@@ -462,7 +272,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     header: {
-        // fontSize: 20,
         marginBottom: 10,
         ...fontStyles.subtitulo,
     },

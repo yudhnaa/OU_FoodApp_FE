@@ -106,7 +106,7 @@ function MyProfile() {
                     icon={"camera"}
                     textColor={"black"}
                     mode={"text"}
-                    onPress={pickImage}>Change avatar</Button>
+                    onPressIn={pickImage}>Change avatar</Button>
                 {/*<InputField label={"Full name"} value={fullName} onChange={setFullName}/>*/}
                 <View style={styles.nameFieldContainer}>
                     <View style={styles.nameFieldItem}>

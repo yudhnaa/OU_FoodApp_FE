@@ -18,7 +18,7 @@ export const endpoints = {
     'location': '/users/location/',
     'create_order': '/create-order-from-selected-cart-items/',
     'deleted_items': '/cart/delete-multiple/',
-    'delete_item': (id: number) => `/cart/items/${id}/`,
+    'delete_item': '/cart/items/',
     'order_by_type': '/user/orders_by_type/',
 
     'register': '/users/',
@@ -53,6 +53,8 @@ export const endpoints = {
     'send_otp': '/twilio/send-sms-otp/',
     'verify_otp': '/twilio/verify-sms-otp/',
 
+    'momo_payment': "/momo-payment/api/momo/create-payment/",
+    'check_order_status': "/user/order/check_status/"
 }
 
 
@@ -60,8 +62,7 @@ export const authApi = (access_token: string) => {
     return axios.create({
         baseURL: BASE_URL,
         headers: {
-            'Authorization': 'Bearer ' + access_token,
-            "Content-Type": "multipart/form-data",
+            'Authorization': 'Bearer ' + access_token
         }
     });
 }

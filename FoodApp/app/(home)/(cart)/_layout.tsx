@@ -12,17 +12,17 @@ function CartLayout() {
             headerStyle: { backgroundColor: '#F5CB58' },
             headerShadowVisible: false,
         }}>
-            <Stack.Screen
-                name="checkout"
-                options={{
-                    headerShown: true,
-                    headerStyle: { backgroundColor: '#F5CB58' },
-                    title: "Confirm Order",
-                    headerTitleAlign: "center",
-                    headerTitleStyle: styles.headerTitle,
-                    headerLeft: () => (<BackButton />)
-                }}
-            />
+            {/*<Stack.Screen*/}
+            {/*    name="checkout"*/}
+            {/*    options={{*/}
+            {/*        headerShown: true,*/}
+            {/*        headerStyle: { backgroundColor: '#F5CB58' },*/}
+            {/*        title: "Confirm Order",*/}
+            {/*        headerTitleAlign: "center",*/}
+            {/*        headerTitleStyle: styles.headerTitle,*/}
+            {/*        headerLeft: () => (<BackButton />)*/}
+            {/*    }}*/}
+            {/*/>*/}
             <Stack.Screen
                 name="payment"
                 options={{
@@ -41,6 +41,17 @@ function CartLayout() {
                     headerShown: true,
                     headerStyle: { backgroundColor: '#F5CB58' },
                     title: "",
+                    headerTitleAlign: "center",
+                    headerTitleStyle: styles.headerTitle,
+                    headerLeft: () => (<BackButton />)
+                }}
+            />
+            <Stack.Screen
+                name="payForOrder"
+                options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: '#F5CB58' },
+                    title: "Pay For Order",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
                     headerLeft: () => (<BackButton />)
