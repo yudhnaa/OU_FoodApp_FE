@@ -4,11 +4,10 @@ import { Icon } from 'react-native-paper';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Cart from '@/app/(home)/(cart)/cart';
 import { useSearch } from '@/components/context/SearchContext';
-import { debounce, keys } from 'lodash';
-import { endpoints, authApi } from '@/configs/APIs';
 
 interface SearchFilters {
-    keyword?: string;
+    store_keyword?: string;
+    dish_keyword?: string;
     min_price?: number;
     max_price?: number;
     food_type?: number;
@@ -40,7 +39,7 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
     const router = useRouter();
     const params = useLocalSearchParams();
     const [showCart, setShowCart] = useState(false);
-    const { searchText, setSearchText, filters, setFilters, searchResults, isLoading, performSearch } = useSearch();
+    const { searchText, setSearchText, filters, setFilters, searchResults, searchResults2, isLoading, performSearch } = useSearch();
     const [showResults, setShowResults] = useState(false);
 
     useEffect(() => {
@@ -50,18 +49,32 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
             food_type: params?.food_type ? Number(params.food_type) : undefined,
         };
 
-        if (Object.keys(searchParams).length !== Object.keys(filters).length) {
-            setFilters(searchParams);
-            performSearch(searchParams);
+        const isFiltersDifferent = Object.entries(searchParams).some(([key, value]) => {
+            const currentValue = filters[key as keyof SearchFilters];
+            return value !== currentValue && value !== undefined;
+        });
+
+        if (isFiltersDifferent) {
+            const newFilters = Object.fromEntries(
+                Object.entries(searchParams).filter(([_, value]) => value !== undefined)
+            ) as SearchFilters;
         }
-    }, [params, performSearch]);
+    }, [params]);
+
 
     const handleSearch = useCallback((text: string) => {
         setSearchText(text);
         setShowResults(true);
-        const newFilters = { ...filters, keyword: text };
-        setFilters(newFilters);
-        performSearch(newFilters);
+
+        // Perform search for dish_keyword
+        const dishFilters = {
+            ...filters,
+            dish_keyword: text,
+            store_keyword: text
+        };
+        setFilters(dishFilters);
+        performSearch(filters)
+
     }, [filters, performSearch]);
 
     return (
@@ -96,9 +109,8 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                                                 const updatedFilters = { ...filters };
                                                 delete updatedFilters[key as keyof SearchFilters];
                                                 setFilters(updatedFilters);
-                                                performSearch(updatedFilters);
+                                                performSearch(updatedFilters); // Ensure search is performed with updated filters
                                             }}
-
                                         >
                                             <Icon source="close" size={16} color="#666" />
                                         </TouchableOpacity>
@@ -111,34 +123,49 @@ export default function SearchHeader({ showBackButton = false }: SearchHeaderPro
                             <ActivityIndicator size="small" color="#E95322" />
                         ) : (
                             <>
-                                {searchResults.length === 0 && searchText ? (
+                                {searchResults.length === 0 && searchResults2.length === 0 && searchText ? (
                                     <Text style={styles.noResults}>No results found</Text>
                                 ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => `dish-${item.id}`}
-                                        renderItem={({ item }) => (
-                                            <Pressable
-                                                style={styles.resultItem}
-                                                onPress={() => {
-                                                    router.push(`/category/${item.food_type_id}/${item.id}`);
-                                                    setShowResults(false);
-                                                    setSearchText('');
-                                                }}
-                                            >
-                                                <Image
-                                                    source={{ uri: item.image }}
-                                                    style={styles.resultImage}
-                                                />
-                                                <View>
-                                                    <Text style={styles.itemName}>{item.name}</Text>
-                                                    <Text style={styles.itemPrice}>${item.price}</Text>
-                                                    <Text style={styles.itemDescription}>{item.description}</Text>
-                                                </View>
-                                            </Pressable>
-                                        )}
-                                        maxToRenderPerBatch={5}
-                                    />
+                                    <>
+                                        <FlatList
+                                            data={[
+                                                ...searchResults.map(item => ({ ...item, type: 'dish' })),
+                                                ...searchResults2.map(item => ({ ...item, type: 'store' }))
+                                            ]}
+                                            keyExtractor={(item) => `${item.type}-${item.id}`}
+                                            renderItem={({ item }) => (
+                                                <Pressable
+                                                    style={styles.resultItem}
+                                                    onPress={() => {
+                                                        if (item.type === 'dish') {
+                                                            router.push(`/category/${item.food_type_id}/${item.id}`);
+                                                        } else {
+                                                            router.push('/storePage');
+                                                        }
+                                                        setShowResults(false);
+                                                        setSearchText('');
+                                                    }}
+                                                >
+                                                    <Image
+                                                        source={{ uri: item.type === 'dish' ? item.image : item.avatar_url }}
+                                                        style={styles.resultImage}
+                                                    />
+                                                    <View>
+                                                        <Text style={styles.itemName}>
+                                                            {item.type === 'dish' ? item.name : item.store_name}
+                                                        </Text>
+                                                        <Text style={styles.itemPrice}>
+                                                            {item.type === 'dish' ? `$${item.price}` : item.follower}
+                                                        </Text>
+                                                        <Text style={styles.itemDescription}>
+                                                            {item.type === 'dish' ? item.description : item.address}
+                                                        </Text>
+                                                    </View>
+                                                </Pressable>
+                                            )}
+                                            maxToRenderPerBatch={5}
+                                        />
+                                    </>
                                 )}
                             </>
                         )}

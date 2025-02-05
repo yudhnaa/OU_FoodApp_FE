@@ -6,7 +6,6 @@ import colors from '@/styles/colors';
 import PriceSlider from '@/components/home/priceSlider';
 import { Rating } from '@kolking/react-native-rating';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Icon } from 'react-native-paper';
 import { useSearch } from '@/components/context/SearchContext';
 
 type Category = {
@@ -31,18 +30,18 @@ export default function FilterPage() {
             ...filters,
             min_price: priceRange.min,
             max_price: priceRange.max,
-            food_type: selectedCategory !== null ? selectedCategory : undefined, // Ensure food_type is number or undefined
-            rating: rating > 0 ? rating : undefined
+            food_type: selectedCategory !== null ? selectedCategory : undefined,
+            rating: rating > 0 ? rating : undefined,
+            // Preserve the existing search keywords
+            store_keyword: filters.store_keyword,
+            dish_keyword: filters.dish_keyword
         };
 
         setFilters(newFilters);
         performSearch(newFilters);
-
-        router.replace({
-            pathname: '/home',
-            params: newFilters
-        });
+        router.back();
     };
+
 
 
     const loadCategories = async () => {
