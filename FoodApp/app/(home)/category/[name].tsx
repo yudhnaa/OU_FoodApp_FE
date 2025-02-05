@@ -22,7 +22,7 @@ export default function CategoryPage() {
 
             try{
                 let url = `${endpoints['list_dish'](name)}?page=${page}`
-                let res = await APIs.get(url);
+                let res = await APIs.get(url)
                 const mappedData = res.data.results.map((item: any) => ({
                     id : item.id,
                     name : item.name,
@@ -31,6 +31,7 @@ export default function CategoryPage() {
                     description : item.description,
                     category : item.food_type,
                     categoryID : item.food_type_id,
+                    storeId: item.store_id
                 }));
 
                 if(page > 1){
@@ -53,6 +54,7 @@ export default function CategoryPage() {
             }
         }
     }
+
 
     useEffect(() => {
         load_dish();

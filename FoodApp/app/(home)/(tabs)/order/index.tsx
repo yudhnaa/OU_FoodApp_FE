@@ -1,128 +1,138 @@
-import {View, Text, Pressable, FlatList} from "react-native";
+import {View, Text, TouchableOpacity, FlatList} from "react-native";
 import {Image} from "expo-image";
-import {router, Link} from "expo-router";
+import {router, Link, useFocusEffect} from "expo-router";
 import {StyleSheet} from "react-native";
 import colors from "@/styles/colors";
 import {styles} from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Tabs} from "expo-router";
-import APIs, { endpoints } from "@/configs/APIs";
+import APIs, {authApi, endpoints} from "@/configs/APIs";
+import {useAuth} from "@/components/AuthContext";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import {IconButton} from "react-native-paper";
 
-// const orders = [
-//     {
-//         id: 1,
-//         name: "Strawberry shake",
-//         price: 20.00,
-//         date: "29 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-//         items: 2,
-//         status: "active"
-//     },
-//     {
-//         id: 2,
-//         name: "Blackberry shake",
-//         price: 23.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-//         items: 3,
-//         status: "completed"
-//     },
-//     {
-//         id: 3,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//         status: "cancelled"
-//     },
-//     {
-//         id: 4,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//         status: "active"
-//     },
-//     {
-//         id: 5,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//         status: "completed"
-//     },
-// ]
 export default function OrderPage() {
-    const [orders,setOrder] = useState<any[]>([]);
-    const [filteredOrders, setFilteredOrders] = useState<string>("active");
+    const [loading, setLoading] = useState<boolean>(true);
 
+    const [orders, setOrders] = useState<any[]>([]);
+    const [filteredOrders, setFilteredOrders] = useState<string>("active");
+    const [hasOrders, setHasOrders] = useState<boolean>(false);
+
+    const {access_token} = useAuth()
 
     const handlePress = (item: { status: string }) => {
         switch (item.status) {
             case "active":
-                return router.push('/order/orderCancel');
+                router.push({
+                    pathname: '/order/orderCancel',
+                    params: {
+                        orderInfo: JSON.stringify(item)
+                    }
+                })
+                return
             case "completed":
-                return router.push('/order/reviewOrder');
+                router.push({
+                    pathname: '/order/reviewOrder',
+                    params: {
+                        orderInfo: JSON.stringify(item)
+                    }
+                })
+                return
             case "cancelled":
+                return console.log(item.status)
+            case "not paid":
+                router.push({
+                    pathname: '/payForOrder',
+                    params: {
+                        orderInfo: JSON.stringify(item)
+                    }
+                })
+                return
+            case "reviewed":
                 return console.log(item.status)
         }
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try{
-                const order_by_type = await APIs.get(endpoints['order_by_type']);
-                setOrder(order_by_type.data);
-            }
-            catch (error){
-                console.log(error);
-            }
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            await authApi(access_token).get(endpoints['order_by_type']).then(res => {
+                setOrders(res.data.results)
+            }).finally(() => {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 200)
+            });
+        } catch (error) {
+            console.log(error);
         }
-        fetchData();
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [])
+    )
+
+    useEffect(() => {
+        setHasOrders(orders.length > 0)
     }, [orders]);
-
-
-    const hasOrders = orders.filter(order => order.status === filteredOrders).length > 0;
 
     return (
         <View style={styles.backGround}>
+            {loading && <LoadingOverlay/>}
             <View style={styles.bodyPage}>
                 <View style={styles1.tabContainer}>
-                    <Pressable
+                    <TouchableOpacity
                         style={[filteredOrders === "active" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
                         onPress={() => {
                             setFilteredOrders("active")
                         }}>
                         <Text
                             style={filteredOrders === "active" ? styles1.tabTextActive : styles1.tabTextInactive}>Active</Text>
-                    </Pressable>
-                    <Pressable
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         style={[filteredOrders === "completed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
                         onPress={() => {
                             setFilteredOrders("completed")
                         }}>
                         <Text
                             style={filteredOrders === "completed" ? styles1.tabTextActive : styles1.tabTextInactive}>Completed</Text>
-                    </Pressable>
-                    <Pressable
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         style={[filteredOrders === "canceled" ? styles1.activeTab : styles1.inactiveTab, styles1.tab]}
                         onPress={() => {
                             setFilteredOrders("canceled")
                         }}>
                         <Text
                             style={filteredOrders === "canceled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
-                    </Pressable>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[filteredOrders === "not paid" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, {marginTop: 10}]}
+                        onPress={() => {
+                            setFilteredOrders("not paid")
+                        }}>
+                        <Text
+                            style={filteredOrders === "not paid" ? styles1.tabTextActive : styles1.tabTextInactive}>Not
+                            paid</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[filteredOrders === "reviewed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, {marginTop: 10}]}
+                        onPress={() => {
+                            setFilteredOrders("reviewed")
+                        }}>
+                        <Text
+                            style={filteredOrders === "reviewed" ? styles1.tabTextActive : styles1.tabTextInactive}>Reviewed</Text>
+                    </TouchableOpacity>
                 </View>
                 {hasOrders ? (
                     <FlatList
                         data={orders.filter(order => order.status === filteredOrders)}
+                        keyExtractor={(item) => item.id.toString()} // Ensure each key is unique
                         renderItem={({item}) => (
                             <View className="m-5" style={styles1.orderContainer}>
-                                <Image source={item.image} style={styles1.image}/>
+                                <Image source={{uri: item.image}} style={styles1.image}/>
                                 <View className="ml-5 flex-1">
                                     <Text style={styles1.orderTitle}>{item.name}</Text>
                                     <Text style={styles1.orderPrice}>${item.price}</Text>
@@ -132,23 +142,22 @@ export default function OrderPage() {
                                     </View>
                                     {(item.status === "completed" || item.status === "active") && (
                                         <View className="flex-row justify-between">
-                                            <Pressable style={styles1.cancelButton}
-                                                       onPress={() => handlePress(item)}>
+                                            <TouchableOpacity style={styles1.cancelButton}
+                                                              onPress={() => handlePress(item)}>
                                                 <Text style={{
                                                     color: colors.Font_2, ...fontsStyles.subtitulo,
                                                     fontSize: 13
                                                 }}>
                                                     {item.status === "completed" ? "Leave a review" : "Cancel Order"}
                                                 </Text>
-                                            </Pressable>
-                                            <Pressable style={styles1.trackButton}>
-                                                <Text style={{
-                                                    color: colors.Orange_Base, ...fontsStyles.subtitulo,
-                                                    fontSize: 13
-                                                }}>
-                                                    {item.status === "completed" ? "Order again" : "Track Driver"}
-                                                </Text>
-                                            </Pressable>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity>
+                                                <IconButton icon={"message-badge-outline"} size={20}
+                                                            iconColor={colors.Orange_Base}>
+                                                </IconButton>
+                                            </TouchableOpacity>
+
                                         </View>
                                     )}
                                     {item.status === "canceled" && (
@@ -160,6 +169,28 @@ export default function OrderPage() {
                                                 fontSize: 13,
                                                 paddingLeft: 5,
                                             }}>Order cancelled</Text>
+                                        </View>
+                                    )}
+                                    {(item.status === "not paid") && (
+                                        <View className="flex-row justify-between">
+                                            <TouchableOpacity style={styles1.cancelButton}
+                                                              onPress={() => handlePress(item)}>
+                                                <Text style={{
+                                                    color: colors.Font_2, ...fontsStyles.subtitulo,
+                                                    fontSize: 13
+                                                }}>
+                                                    Pay now
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles1.trackButton}
+                                                              onPress={() => handlePress({status: "active"})}>
+                                                <Text style={{
+                                                    color: colors.Orange_Base, ...fontsStyles.subtitulo,
+                                                    fontSize: 13
+                                                }}>
+                                                    Cancel Order
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                     )}
                                 </View>
@@ -178,12 +209,13 @@ export default function OrderPage() {
     );
 }
 
-
 const styles1 = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: 20,
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        flexWrap: 'wrap',
+        marginHorizontal: 10,
     },
     tab: {
         padding: 10,
@@ -218,7 +250,6 @@ const styles1 = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 10,
-        // marginBottom: 10,
     },
     orderTitle: {
         fontSize: 18,

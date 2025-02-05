@@ -5,67 +5,60 @@ import {Icon, IconButton} from "react-native-paper";
 import {Image} from "expo-image";
 import Colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
-import {router} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import Button from "@/components/home/button";
+import {authApi, endpoints} from "@/configs/APIs";
+import {useAuth} from "@/components/AuthContext";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
 
-
-const paymentMethods = [
-    {
-        id: 1,
-        methodName: "Credit card",
-        icon: require("@/assets/images/icons/ico_card.svg"),
-        isDefault: true
-    },
-    {
-        id: 2,
-        methodName: "Apple Pay",
-        icon: require("@/assets/images/icons/ico_apple.svg"),
-        isDefault: false
-    },
-    {
-        id: 3,
-        methodName: "Paypal",
-        icon: require("@/assets/images/icons/ico_paypal.svg"),
-        isDefault: false
-    },
-    {
-        id: 4,
-        methodName: "Google Pay",
-        icon: require("@/assets/images/icons/ico_ggpay.svg"),
-        isDefault: false
-    }]
 
 function AddPaymentMethod() {
-
-    const [defaultMethod, setDefaultMethod] = useState();
-
-    const setDefault = (method) => {
-
-        if (method) {
-            if (defaultMethod) {
-                defaultMethod.isDefault = false;
-            }
-            method.isDefault = true;
-            setDefaultMethod(method);
-        }
-
+    type paymentMethod = {
+        id: number,
+        type: string,
+        icon: any,
     }
+    const iconMap: { [key: string]: any } = {
+        momo: require("@/assets/images/icons/ico_momo.svg"),
+        zalopay: require("@/assets/images/icons/ico_zalopay.svg"),
+        paypal: require("@/assets/images/icons/ico_paypal.svg"),
+        stripe: require("@/assets/images/icons/ico_stripe.svg"),
+        cash: require("@/assets/images/icons/ico_cash.svg"),
+    };
+
+    // const [method, setMethod] = useState<paymentMethod>();
+    const [paymentMethods, setPaymentMethods] = useState<Array<paymentMethod>>([]);
+    const {access_token} = useAuth();
+    const [loading, setLoading] = useState(false);
+
+    const parsedUserMethods = useLocalSearchParams().methods.toString().split(',');
 
     useEffect(() => {
-        paymentMethods.find((method) => {
-            if (method.isDefault) {
-                setDefaultMethod(method);
-            }
-        })
+        setLoading(true);
+        const getPaymentMethods = async () => {
+            await authApi(access_token).get(endpoints.get_payment_type).then((res) => {
+                let notUserMethods = res.data.filter((method : paymentMethod) => !parsedUserMethods.includes(method.type))
+                let methodWithIcon = notUserMethods.map((method: paymentMethod) => {
+                    const iconKey = method.type.toLowerCase().replace(" ", "_");
+                    method.icon = iconMap[iconKey] || null;
+                    return method;
+                });
+                setPaymentMethods(methodWithIcon);
+            }).catch((ex: any) => {
+                alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
+        getPaymentMethods()
 
-    }, [])
-
-    const removeMethod = (method, index) => {
-    }
+        // console.log(parsedUserMethods)
+    }, []);
 
 
     return (
         <View className={"flex-1"} style={homeStyles.backGround}>
+            {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View className={" align-center flex-1 p-5 items-center"} style={homeStyles.bodyPage}>
                 {paymentMethods.map((method, index) => {
                     return (
@@ -78,16 +71,15 @@ function AddPaymentMethod() {
                                         height: 30,
                                     }}
                                     contentFit="contain"></Image>
-                                <Text className={"justify-self-start"} style={styles.text}>{method.methodName}</Text>
-                                {(method.methodName == "Credit card") &&
-                                    <Button text={"Add"}
-                                            onPress={() => router.push("/(payment)/addCreditCard")}></Button>}
+                                <Text className={"justify-self-start"} style={styles.text}>{method.type}</Text>
 
-                                {(method.methodName != "Credit card") &&
-                                    <Button text={"Add"} onPress={() => router.push({
-                                        pathname: "/(home)/(payment)/[addOtherMethod]",
-                                        params: {method: JSON.stringify(method)}
-                                    })}></Button>}
+                                <Button text={"Add"} onPress={() => router.push({
+                                    pathname: "/(home)/(payment)/[addOtherMethod]",
+                                    params: {
+                                        addOtherMethod: method.id,
+                                        method: JSON.stringify(method)
+                                    }
+                                })}></Button>
                             </View>
                         </View>
                     )

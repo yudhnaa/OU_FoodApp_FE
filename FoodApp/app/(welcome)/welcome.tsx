@@ -1,7 +1,6 @@
-import { Text, View, StyleSheet, Alert, Linking, Platform, Button, Pressable } from "react-native";
-import { useState, useEffect } from "react";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
-import { router, Link } from "expo-router";
+import { router } from "expo-router";
 import colors from "../../styles/colors";
 import fontStyles from "../../styles/fontStyles";
 
@@ -14,12 +13,12 @@ export default function Welcome() {
         source={require("../../assets/images/logo/logo-welcome.svg")}
         contentFit="contain" />
       <View style={{ flex: 0.5, marginTop: "30%" }}>
-        <Pressable style={[styles.button, { backgroundColor: "#f5cb58" }]} onPress={() => { router.push("/login") }}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: "#f5cb58" }]} onPress={() => { router.push("/login") }}>
           <Text style={[styles.text, fontStyles.Title]}>Log In</Text>
-        </Pressable>
-        <Pressable style={[styles.button, { backgroundColor: "#F3E9B5" }]} onPress={() => { router.push("/registration") }}>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: "#F3E9B5" }]} onPress={() => { router.push("/registration") }}>
           <Text style={[styles.text, fontStyles.Title]}>Register</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

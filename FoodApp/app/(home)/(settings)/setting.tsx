@@ -2,8 +2,6 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import {styles as bgStyle} from "@/components/home/Styles";
 import {Image} from "expo-image";
-import colors from "@/styles/colors";
-import fontsStyles from "@/styles/fontStyles";
 import {router} from "expo-router";
 import fontStyles from "../../../styles/fontStyles";
 

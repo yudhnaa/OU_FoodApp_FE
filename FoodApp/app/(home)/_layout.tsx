@@ -1,5 +1,4 @@
-import {transformFileAsync} from '@babel/core'
-import {router, Stack, useRouter} from 'expo-router'
+import {router, Stack} from 'expo-router'
 import {View, Text, Pressable, TextInput} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {Icon} from 'react-native-paper'
@@ -116,17 +115,6 @@ export default function HomeLayout() {
                         headerShown: true,
                         headerStyle: {backgroundColor: '#F5CB58'},
                         title: "Delivery Address",
-                        headerTitleAlign: "center",
-                        headerTitleStyle: styles.headerTitle,
-                        headerLeft: () => (<BackButton/>)
-                    }}
-                />
-                <Stack.Screen
-                    name="paymentMethods"
-                    options={{
-                        headerShown: true,
-                        headerStyle: {backgroundColor: '#F5CB58'},
-                        title: "Payment Methods",
                         headerTitleAlign: "center",
                         headerTitleStyle: styles.headerTitle,
                         headerLeft: () => (<BackButton/>)

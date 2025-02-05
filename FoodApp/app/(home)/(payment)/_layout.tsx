@@ -1,8 +1,5 @@
-import {transformFileAsync} from '@babel/core'
-import {router, Stack, useRouter} from 'expo-router'
-import {View, Text, Pressable, TextInput} from 'react-native'
+import {Stack} from 'expo-router'
 import {StyleSheet} from 'react-native'
-import {Icon} from 'react-native-paper'
 
 import BackButton from '@/components/home/backButton'
 
@@ -14,11 +11,11 @@ export default function paymentLayout() {
             headerShadowVisible: false,
         }}>
             <Stack.Screen
-                name="addCreditCard"
+                name="paymentMethods"
                 options={{
                     headerShown: true,
                     headerStyle: {backgroundColor: '#F5CB58'},
-                    title: "Add Credit Card",
+                    title: "Payment Methods",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,
                     headerLeft: () => (<BackButton/>)

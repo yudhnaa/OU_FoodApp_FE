@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, ScrollView, Pressable} from 'react-native';
+import {View, Text, ScrollView, Pressable, Alert} from 'react-native';
 import {RadioButton} from "react-native-paper";
 import {StyleSheet} from 'react-native';
 
@@ -7,34 +7,58 @@ import {StyleSheet} from 'react-native';
 import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {router} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import TextInputUser from "@/components/home/textInput";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import {useAuth} from "@/components/AuthContext";
+import {authApi, endpoints} from "@/configs/APIs";
+
 
 const reasons = [
-    "Lorem ipsum dolor sit amet1",
-    "Lorem ipsum dolor sit amet2",
-    "Lorem ipsum dolor sit amet3",
-    "Lorem ipsum dolor sit amet4",
-    "Lorem ipsum dolor sit amet5",
+    "Too expensive",
+    "I don't want it anymore",
+    "I don't like the product",
+    "I don't like the service",
+    "I don't like the delivery",
     "Others",
 ];
 
 function OrderCancel() {
+    const [loading, setLoading] = useState(false);
+    const {access_token} = useAuth();
+
     const [reason, setReason] = useState(reasons[0]);
     const [otherReason, setOtherReason] = useState('');
+    const orderInfo = JSON.parse(useLocalSearchParams().orderInfo as string);
 
-    const handleSubmit = () => {
-        router.replace("/order/orderCancelled");
+    const handleSubmit = async () => {
+        try{
+            setLoading(true);
+            const response = await authApi(access_token).patch(`${endpoints.user_order}${orderInfo.order_id}/`, {
+                cancelReason: reason === "Others" ? otherReason : reason
+            });
+            console.log("Response:", response.data);
+            router.replace("/order/orderCancelled");
+        } catch (e:any) {
+            Alert.alert("Error:", e.response.data);
+        } finally {
+            setLoading(false);
+        }
+
         // if (reason === "Others") {
         //     console.log("Reason:", reason)
         //     console.log("Other reason:", otherReason)
         // } else
         //     console.log("Reason:", reason)
-
     };
+
+    useEffect(() => {
+        // console.log("Order Info:", orderInfo)
+    }, [orderInfo]);
 
     return (
         <View style={[homeStyles.backGround]}>
+            {loading && <LoadingOverlay/>}
             <ScrollView className={"p-5"} style={[homeStyles.bodyPage, {backgroundColor: colors.Font_2}]}>
                 <Text className={"mt-6 mb-6 ml-0"} style={{...fontStyles.Title, fontSize: 17}}>Hãy chọn lý do hủy đơn
                     hàng phù hợp:</Text>

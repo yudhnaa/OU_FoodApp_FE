@@ -42,12 +42,6 @@ export default function Home() {
         }
     }, [fontsLoaded]);
 
-    // useEffect(() => {
-    //   if (fontsLoaded) {
-    //     router.replace("/loading");
-    //   }
-    // }, [fontsLoaded]);
-
     if (!fontsLoaded) {
         return (
             <SafeAreaProvider>

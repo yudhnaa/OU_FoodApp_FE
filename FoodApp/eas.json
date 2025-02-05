@@ -1,25 +1,33 @@
 {
   "cli": {
-    "version": ">= 14.7.1",
+    "version": ">= 14.5.0",
     "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "ios": {
+        "credentialsSource": "local"
+      },
       "android": {
         "gradleCommand": ":app:assembleDebug"
       }
     },
     "preview": {
-      "android" : {
+      "distribution": "internal",
+      "android": {
         "buildType": "apk"
       }
     },
     "production": {
       "autoIncrement": true,
+      "distribution": "internal",
       "android": {
         "gradleCommand": ":app:assembleRelease"
+      },
+      "ios": {
+        "credentialsSource": "local"
       }
     }
   },

@@ -1,23 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, Button, ScrollView, Pressable} from 'react-native';
-import {RadioButton} from "react-native-paper";
+import React from 'react';
+import {View, Text} from 'react-native';
 import {StyleSheet} from 'react-native';
 
 
 import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {router, Stack} from "expo-router";
+import { Stack} from "expo-router";
 import {Image} from "expo-image";
 
-const reasons = [
-    "Lorem ipsum dolor sit amet1",
-    "Lorem ipsum dolor sit amet2",
-    "Lorem ipsum dolor sit amet3",
-    "Lorem ipsum dolor sit amet4",
-    "Lorem ipsum dolor sit amet5",
-    "Others",
-];
 
 function OrderCancel() {
 

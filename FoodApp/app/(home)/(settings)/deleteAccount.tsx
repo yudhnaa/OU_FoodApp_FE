@@ -6,7 +6,7 @@ import {router} from "expo-router";
 import fontStyles from "../../../styles/fontStyles";
 import Button from "../../../components/home/button";
 
-function DeleteAccount(props) {
+function DeleteAccount() {
 
     const deleteAccount = () => {
         alert("Account deleted");

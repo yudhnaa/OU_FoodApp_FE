@@ -1,37 +1,71 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, Text, View} from "react-native";
 import {styles as homeStyles} from "@/components/home/Styles";
-import {Icon} from "react-native-paper";
 import {Image} from "expo-image";
 import InputField from "@/components/welcome/inputField";
 import Button from "@/components/home/button";
-import {useLocalSearchParams} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
+import {authApi, endpoints} from "@/configs/APIs";
+import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import {useAuth} from "@/components/AuthContext";
 
 function AddAddress() {
-
-    const address = useLocalSearchParams();
+    const pageType = useLocalSearchParams().pageType;
+    const parsedAddress = pageType === "edit" ? JSON.parse(useLocalSearchParams().address as string) : {};
 
     const [id, setId] = useState<string>("");
     const [name, setName] = useState<string>("");
-    const [addressState, setAddressState] = useState<string>("");
+    const [address, setAddress] = useState<string>("");
+    const [loading, setLoading] = useState(false);
+
+    const {access_token, userInfo} = useAuth()
 
 
     useEffect(() => {
-        // console.log(address)
-        if (Object.keys(address).length !== 0) {
-            setId(address.id.toString())
-            setName(address.addressName.toString())
-            setAddressState(address.address.toString())
+        if (pageType === "edit") {
+            setId(parsedAddress.id)
+            setName(parsedAddress.name)
+            setAddress(parsedAddress.address)
         }
     }, [])
 
-    const apply = () => {
-        // console.log(id, name, addressState)
+    const apply = async () => {
+        // console.log(id, name, address)
         console.log("Apply");
+        setLoading(true);
+        if (pageType === "edit") {
+            await authApi(access_token).patch(endpoints.address + parsedAddress.id + "/", {
+                name: name,
+                address: address
+            }).then((res) => {
+              alert("Address updated successfully")
+            }).catch(ex => {
+                alert(ex.response.data?.error_description || "Loading failed\nStatus code" + ex.status)
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
+        else {
+            await authApi(access_token).post(endpoints.address, {
+                name: name,
+                address: address,
+                user: userInfo.id
+            }).then((res) => {
+                alert("Address added successfully")
+            }).catch(ex => {
+                alert(ex.response.data?.error_description || "Loading failed\nStatus code" + ex.status)
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
+
+        router.back()
+
     }
 
     return (
         <View className={"flex-1"} style={homeStyles.backGround}>
+            {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View className={" align-center flex-1 p-5 items-center"} style={homeStyles.bodyPage}>
                 <Pressable>
                     <Image
@@ -46,8 +80,8 @@ function AddAddress() {
                             placeholder={"Enter address..."}></InputField>
 
                 <InputField label={"Address"}
-                            value={addressState}
-                            onChange={setAddressState}
+                            value={address}
+                            onChange={setAddress}
                             placeholder={"Enter name..."}
                             height={80}
                             multiline={true}

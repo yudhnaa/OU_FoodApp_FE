@@ -1,32 +1,30 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "~/*": [
-        "./*"
-      ]
-    },
-    "jsx": "react-native",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "app/index.tsx",
-    "app/(welcome)/welcome.tsx",
-    "app/_layout.tsx",
-    "app/(welcome)/registration.tsx",
-    "app/(welcome)/login.tsx",
-    "app/index.tsx",
-    "app/(welcome)/_layout.tsx",
-    "app/(home)/(tabs)/home.tsx",
-    "nativewind-env.d.ts"
-, "app/(home)/(tabs)/food.tdbvagsdfahjskdj;lasdvghassx"  ]
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"strict": true,
+		"paths": {
+			"@/*": ["./*"],
+			"~/*": ["./*"],
+			"@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+		},
+		"jsx": "react-native",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"app/index.tsx",
+		"app/(welcome)/welcome.tsx",
+		"app/_layout.tsx",
+		"app/(welcome)/registration.tsx",
+		"app/(welcome)/login.tsx",
+		"app/index.tsx",
+		"app/(welcome)/_layout.tsx",
+		"app/(home)/(tabs)/home.tsx",
+		"nativewind-env.d.ts",
+		"app/(home)/(tabs)/food.tdbvagsdfahjskdj;lasdvghassx",
+		".expo/types/**/*.ts",
+		"expo-env.d.ts"
+	]
 }

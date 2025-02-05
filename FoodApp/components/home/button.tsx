@@ -1,5 +1,5 @@
 import colors from "@/styles/colors";
-import {Pressable, Text} from "react-native";
+import {TouchableOpacity, Text} from "react-native";
 import fontStyles from "@/styles/fontStyles";
 import React from "react";
 
@@ -9,28 +9,31 @@ const Button = ({
                     buttonColor = colors.Orange_Base,
                     textColor = colors.Font_2,
                     textClassName = "",
-                    buttonClassName = ""
+                    buttonClassName = "",
+                    disabled = false
                 }: {
     text: string,
     onPress: () => void,
     buttonColor?: string,
     textColor?: string,
     buttonClassName?: string,
-    textClassName?: string
+    textClassName?: string,
+    disabled?: boolean
 }) => {
     return (
-        <Pressable
+        <TouchableOpacity
             style={{
                 borderRadius: 30,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: buttonColor,
                 padding: 10,
-                paddingHorizontal: 20,
+                paddingHorizontal: 10,
                 margin: 20
             }}
             className={buttonClassName}
-            onPress={onPress}>
+            onPressIn={onPress}
+            disabled={disabled}>
             <Text
                 style={{
                     ...fontStyles.titulo_screen,
@@ -39,7 +42,7 @@ const Button = ({
                 }}
                 className={textClassName}
             >{text}</Text>
-        </Pressable>
+        </TouchableOpacity>
     );
 }
 

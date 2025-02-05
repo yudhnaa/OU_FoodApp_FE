@@ -1,29 +1,60 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-// import {Slider} from '@react-native-community/slider';
 import Slider from '@react-native-community/slider';
 
+interface PriceSliderProps {
+  onValueChange: (values: number[]) => void;
+}
 
-export default function PriceSlider() {
-  const [price, setPrice] = useState(1); // Giá trị ban đầu là $1
+export default function PriceSlider({ onValueChange }: PriceSliderProps) {
+  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(1000);
+
+  const handleMinValueChange = (value: number) => {
+    const newMin = Math.min(value, maxValue - 1);
+    setMinValue(newMin);
+    onValueChange([newMin, maxValue]);
+  };
+
+  const handleMaxValueChange = (value: number) => {
+    const newMax = Math.max(value, minValue + 1);
+    setMaxValue(newMax);
+    onValueChange([minValue, newMax]);
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Price : {price} $</Text>
-      <Slider
-        style={styles.slider}
-        minimumValue={1}
-        maximumValue={100}
-        step={1}
-        value={price}
-        minimumTrackTintColor="#FF5722"
-        maximumTrackTintColor="#CCCCCC"
-        thumbTintColor="#FF5722"
-        onValueChange={(value) => setPrice(value)}
-      />
-      <View style={styles.priceLabels}>
-        <Text style={styles.priceText}>$1</Text>
-        <Text style={styles.priceText}>$100 &gt;</Text>
+      <Text style={styles.label}>Price Range</Text>
+
+      <View style={styles.slidersContainer}>
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={1000}
+          value={minValue}
+          onValueChange={handleMinValueChange}
+          minimumTrackTintColor="#E95322"
+          maximumTrackTintColor="#F3E9B5"
+          thumbTintColor="#E95322"
+          step={1}
+        />
+
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={1000}
+          value={maxValue}
+          onValueChange={handleMaxValueChange}
+          minimumTrackTintColor="#E95322"
+          maximumTrackTintColor="#F3E9B5"
+          thumbTintColor="#E95322"
+          step={1}
+        />
+      </View>
+
+      <View style={styles.priceDisplay}>
+        <Text style={styles.priceText}>${Math.round(minValue)}</Text>
+        <Text style={styles.priceText}>${Math.round(maxValue)}</Text>
       </View>
     </View>
   );
@@ -32,23 +63,29 @@ export default function PriceSlider() {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
+    padding: 10,
   },
   label: {
     fontSize: 18,
-    fontFamily : 'Spartan_500Medium',
+    fontFamily: 'Spartan_500Medium',
     marginBottom: 10,
+  },
+  slidersContainer: {
+    marginVertical: 10,
   },
   slider: {
     width: '100%',
     height: 40,
   },
-  priceLabels: {
+  priceDisplay: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginVertical: 10,
+    paddingHorizontal: 10,
   },
   priceText: {
     fontSize: 14,
     color: '#8C8C8C',
+    fontFamily: 'Spartan_500Medium',
   },
 });
