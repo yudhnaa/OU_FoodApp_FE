@@ -16,7 +16,7 @@ export default {
                     "image": "./assets/images/splash-icon.png",
                     "imageWidth": 200,
                     "resizeMode": "contain",
-                    "backgroundColor": "#ffffff"
+                    "backgroundColor": "#E95322"
                 }
             ],
             "expo-font",
@@ -36,7 +36,10 @@ export default {
                 {
                     "photosPermission": "The app accesses your photos to let you share them with your friends."
                 }
-            ]
+            ],
+
+
+
         ],
         "ios": {
             "supportsTablet": true,
@@ -50,6 +53,12 @@ export default {
                 "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
                 "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
                 "NSLocationAlwaysUsageDescription": "This app requires access to your location when open.",
+                "NSCameraUsageDescription": "This app requires access to your camera to take photos.",
+                "NSMicrophoneUsageDescription": "This app requires access to your microphone for audio recording.",
+                "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to save images.",
+                "NSPhotoLibraryAddUsageDescription": "This app needs access to your photo library to store media files.",
+                "NSUserNotificationUsageDescription": "This app would like to send you notifications.",
+                "NSMotionUsageDescription": "This app needs access to motion sensors for better user experience.",
                 "deploymentTarget": "15"
             },
             "appleTeamId": "U8H6FJX25X",
@@ -66,8 +75,15 @@ export default {
                 "android.permission.ACCESS_FINE_LOCATION",
                 "android.permission.ACCESS_BACKGROUND_LOCATION",
                 "android.permission.FOREGROUND_SERVICE",
-                "android.permission.FOREGROUND_SERVICE_LOCATION"
+                "android.permission.FOREGROUND_SERVICE_LOCATION",
+                "android.permission.CAMERA",
+                "android.permission.RECORD_AUDIO",
+                "android.permission.READ_EXTERNAL_STORAGE",
+                "android.permission.WRITE_EXTERNAL_STORAGE",
+                "android.permission.POST_NOTIFICATIONS",
+                "android.permission.VIBRATE"
             ],
+            "useNextNotificationsApi": true
         },
         "web": {
             "bundler": "metro",
@@ -83,7 +99,6 @@ export default {
             },
             "eas": {
                 "projectId": "9ff97309-a234-4e13-b8a5-c5349bd6edf7"
-
             }
         },
         "owner": "hoanganhduy"

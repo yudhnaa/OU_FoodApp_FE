@@ -1,8 +1,8 @@
 import React from 'react';
-import {Tabs} from 'expo-router';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {StyleSheet} from 'react-native';
-import {usePathname} from 'expo-router';
+import { Tabs } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+import { usePathname } from 'expo-router';
 import SearchHeader from '@/components/home/searchHeader';
 
 export default function TabBarLayout() {
@@ -25,16 +25,16 @@ export default function TabBarLayout() {
             <Tabs.Screen
                 name="home"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <MaterialCommunityIcons name="home-outline" color={focused ? "white" : "black"} size={24}/>
+                    tabBarIcon: ({ focused }) => (
+                        <MaterialCommunityIcons name="home-outline" color={focused ? "white" : "black"} size={24} />
                     ),
                     headerShown: true,
-                    headerStyle: {backgroundColor: '#F5CB58'},
+                    headerStyle: { backgroundColor: '#F5CB58' },
                     headerShadowVisible: false,
-                    headerTitle: () => <SearchHeader showBackButton={false}/>
+                    headerTitle: () => <SearchHeader showBackButton={false} />
                 }}
             />
-            <Tabs.Screen
+            {/* <Tabs.Screen
                 name="favorite"
                 options={{
                     tabBarIcon: ({focused}) => (
@@ -48,13 +48,13 @@ export default function TabBarLayout() {
                     headerShadowVisible: false,
                     // headerLeft: () => (<BackButton />)
                 }}
-            />
+            /> */}
             <Tabs.Screen
                 name="follow"
                 options={{
-                    tabBarIcon: ({focused}) => (
+                    tabBarIcon: ({ focused }) => (
                         <MaterialCommunityIcons name="account-heart-outline" color={focused ? "white" : "black"}
-                                                size={24}/>
+                            size={24} />
                     ),
                     headerShown: false
                 }}
@@ -62,8 +62,8 @@ export default function TabBarLayout() {
             <Tabs.Screen
                 name="order"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <MaterialCommunityIcons name="clipboard-outline" color={focused ? "white" : "black"} size={24}/>
+                    tabBarIcon: ({ focused }) => (
+                        <MaterialCommunityIcons name="clipboard-outline" color={focused ? "white" : "black"} size={24} />
                     ),
                     headerShown: false
                 }}
@@ -71,12 +71,12 @@ export default function TabBarLayout() {
             <Tabs.Screen
                 name="help"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <MaterialCommunityIcons name="headset" color={focused ? "white" : "black"} size={24}/>
+                    tabBarIcon: ({ focused }) => (
+                        <MaterialCommunityIcons name="headset" color={focused ? "white" : "black"} size={24} />
                     ),
                     headerShown: true,
                     headerShadowVisible: false,
-                    headerStyle: {backgroundColor: '#F5CB58'},
+                    headerStyle: { backgroundColor: '#F5CB58' },
                     title: "Help",
                     headerTitleAlign: "center",
                     headerTitleStyle: styles.headerTitle,

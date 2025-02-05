@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getObjectValue} from "@/components/asyncStorage";
+import { getObjectValue } from "@/components/asyncStorage";
 
 // const BASE_URL = 'https://wangedoc0602.pythonanywhere.com/'
 const BASE_URL = 'http://192.168.1.9:8000/';
@@ -59,7 +59,9 @@ export const endpoints = {
     'verify_otp': '/twilio/verify-sms-otp/',
 
     'momo_payment': "/momo-payment/api/momo/create-payment/",
-    'check_order_status': "/user/order/check_status/"
+    'check_order_status': "/user/order/check_status/",
+
+    'search': '/search/',
 }
 
 

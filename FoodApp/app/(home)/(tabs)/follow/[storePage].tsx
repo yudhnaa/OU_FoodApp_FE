@@ -1,16 +1,17 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {styles as bgStyles} from "@/components/home/Styles";
-import {LoadingOverlay} from "@/components/home/LoadingComponents";
-import {authApi, endpoints} from "@/configs/APIs";
-import {useAuth} from "@/components/AuthContext";
-import {router, Stack, useFocusEffect, useLocalSearchParams} from "expo-router";
-import {Image} from "expo-image";
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { styles as bgStyles } from "@/components/home/Styles";
+import { LoadingOverlay } from "@/components/home/LoadingComponents";
+import { authApi, endpoints } from "@/configs/APIs";
+import { useAuth } from "@/components/AuthContext";
+import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { Image } from "expo-image";
 import Button from "@/components/home/button";
 import BackButton from "@/components/home/backButton";
 import colors from "@/styles/colors";
 import fontStyles from "@/styles/fontStyles";
 import Toast from "react-native-toast-message";
+import { Linking } from 'react-native';
 
 
 type StoreInfo = {
@@ -20,6 +21,7 @@ type StoreInfo = {
     store_name: string,
     avatar: string,
     follower: number,
+    address: string,
 };
 
 interface Dish {
@@ -34,9 +36,9 @@ interface Dish {
 }
 
 function StorePage() {
-    const {access_token, userInfo} = useAuth()
+    const { access_token, userInfo } = useAuth()
     const [loading, setLoading] = useState(false);
-    const {storePage, followId, isFollowed} = useLocalSearchParams()
+    const { storePage, followId, isFollowed } = useLocalSearchParams()
     const [followingId, setFollowingId] = useState(followId);
     const parsedIsFollowed = isFollowed === "true";
     const [isFollowing, setisFollowing] = useState(parsedIsFollowed);
@@ -47,6 +49,7 @@ function StorePage() {
         store_name: "",
         avatar: "",
         follower: 0,
+        address: "",
     })
 
     const [dish, setDish] = useState<Dish[]>([]);
@@ -55,7 +58,7 @@ function StorePage() {
         setLoading(true);
         try {
             await authApi(access_token).get(`${endpoints.get_store}${storePage}/`).then((res) => {
-                console.log(res.data);
+                console.log("Store info:", res.data);
                 setStoreInfo(res.data);
             }).catch((ex: any) => {
                 alert(ex.response?.data?.error_description || `Loading failed\nStatus code: ${ex.status}`);
@@ -138,7 +141,7 @@ function StorePage() {
                 toppings: [],
             };
 
-            console.log("Body 'add to cart' api:",payload)
+            console.log("Body 'add to cart' api:", payload)
 
 
             await authApi(access_token).post(endpoints["add-to-cart"], payload).then((res) => {
@@ -163,6 +166,11 @@ function StorePage() {
         }
     };
 
+    const openInGoogleMaps = (address: string) => {
+        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+        Linking.openURL(url).catch((err) => console.error('Error opening maps:', err));
+    };
+
     useEffect(() => {
         // console.info("StorePage:", storePage);
         // console.info("followId:", followId);
@@ -174,63 +182,90 @@ function StorePage() {
         <View style={bgStyles.backGround}>
             <Stack.Screen options={{
                 headerShown: true,
-                headerStyle: {backgroundColor: '#F5CB58'},
+                headerStyle: { backgroundColor: '#F5CB58' },
                 title: "Store",
                 headerTitleAlign: "center",
                 headerTitleStyle: styles.headerTitle,
                 headerShadowVisible: false,
-                headerLeft: () => (<BackButton/>)
+                headerLeft: () => (<BackButton />)
             }}></Stack.Screen>
             {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={bgStyles.bodyPage}>
-                <View style={{
-                    padding: 10,
-                    borderBottomWidth: 1,
-                    borderColor: "#ccc",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                }}>
-                    <Image source={require("@/assets/images/avt.png")}
-                           style={{width: 50, height: 50, marginRight: 20}}></Image>
-                    {/*<Image source={remote source)} style={{width: 30, height: 30}}></Image>*/}
-                    <View className={"flex-1"}>
-                        <Text style={{fontWeight: "bold", fontSize: 16}}>{storeInfo?.store_name}</Text>
-                        <Text>Date joined: {new Date(storeInfo?.date_joined).toLocaleDateString()}</Text>
-                        <Text>Followers: {storeInfo?.follower}</Text>
+                <View style={styles.storeInfoContainer}>
+                    <View style={styles.headerSection}>
+                        <Image
+                            source={storeInfo.avatar ? { uri: storeInfo.avatar } : require("@/assets/images/avt_square.png")}
+                            style={styles.storeAvatar}
+                        />
+                        <View style={styles.mainInfo}>
+                            <Text style={styles.storeName}>{storeInfo?.store_name}</Text>
+                            <View className='flex-row'>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.statsText}>👥 {storeInfo?.follower} followers</Text>
+                                    <Text style={styles.statsText}>•</Text>
+                                    <Text style={styles.statsText}>📅 Joined {new Date(storeInfo?.date_joined).toLocaleDateString()}</Text>
+                                    <TouchableOpacity
+                                        style={styles.addressButton}
+                                        onPress={() => openInGoogleMaps(storeInfo?.address)}
+                                    >
+                                        <Text style={styles.addressText}>📍 {storeInfo?.address}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.followButtonContainer}>
+                                    {isFollowing ? (
+                                        <Button
+                                            text={"Unfollow"}
+                                            onPress={() => unFollow(Number.parseInt(followingId.toString()))}
+                                            disabled={loading}
+                                            buttonColor={colors.Orange_2}
+                                            textColor={colors.Font}
+                                        />
+                                    ) : (
+                                        <Button
+                                            text={"Follow"}
+                                            onPress={follow}
+                                            disabled={loading}
+                                        />
+                                    )}
+                                </View>
+                            </View>
+                        </View>
                     </View>
-                    {isFollowing ? (
-                        <Button text={"UnFollow"} onPress={() => unFollow(Number.parseInt(followingId.toString()))}
-                                disabled={loading}
-                                buttonColor={colors.Orange_2} textColor={colors.Font}></Button>
-                    ) : (
-                        <Button text={"Follow"} onPress={follow} disabled={loading}></Button>
-                    )}
+
 
                 </View>
                 <View>
-                    <Text style={[fontStyles.Title, {margin: 10}]}>Danh sách các món ăn</Text>
+                    <Text style={[fontStyles.Title, { margin: 10 }]}>Danh sách các món ăn</Text>
                 </View>
                 <FlatList
                     data={dish}
                     keyExtractor={item => item.id.toString()}
-                    renderItem={({item}) => (
-                        <View style={{
-                            padding: 10,
-                            borderBottomWidth: 1,
-                            borderColor: "#ccc",
-                            flexDirection: "row",
-                            justifyContent: "space-between"
-                        }}>
-                            <Image source={{uri: item.image}}
-                                   style={{width: 60, height: 60, borderRadius: 15}}></Image>
-                            <View>
-                                <Text style={{fontWeight: "bold", fontSize: 16}}>{item.name}</Text>
-                                <Text>Description: {item.description}</Text>
-                                <Text>Price: {item.price}</Text>
+                    renderItem={({ item }) => (
+                        <View style={styles.dishItem}>
+                            <View style={styles.dishImageContainer}>
+                                <Image
+                                    source={{ uri: item.image }}
+                                    style={styles.dishImage}
+                                />
                             </View>
-                            <Button text={"Add to cart"} onPress={()=> addToCart(item.id)} disabled={loading}></Button>
+                            <View style={styles.dishInfo}>
+                                <Text style={styles.dishName}>{item.name}</Text>
+                                <Text style={styles.dishDescription} numberOfLines={2}>
+                                    {item.description || 'No description available'}
+                                </Text>
+                                <Text style={styles.dishPrice}>${item.price.toLocaleString()}</Text>
+                            </View>
+                            <View style={styles.addToCartContainer}>
+                                <Button
+                                    text={"Add to cart"}
+                                    onPress={() => addToCart(item.id)}
+                                    disabled={loading}
+                                />
+                            </View>
                         </View>
                     )}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                    contentContainerStyle={styles.flatListContent}
                 />
             </View>
         </View>
@@ -248,9 +283,9 @@ const styles = StyleSheet.create({
         fontFamily: "Spartan_700Bold"
     },
     header: {
-        backgroundColor: '#F8C471', // Màu nền của header
+        backgroundColor: '#F8C471',
         padding: 10,
-        paddingTop: 40, // Để tạo khoảng cách cho status bar
+        paddingTop: 40,
     },
     headerTitle: {
         fontFamily: "Spartan_700Bold",
@@ -262,6 +297,108 @@ const styles = StyleSheet.create({
         fontSize: 12,
         width: 100,
     },
-})
+    storeInfoContainer: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        backgroundColor: colors.Font_2,
+    },
+    headerSection: {
+        flexDirection: "row",
+        marginBottom: 12,
+    },
+    storeAvatar: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginRight: 16,
+    },
+    mainInfo: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    storeName: {
+        fontSize: 22,
+        fontWeight: "700",
+        marginBottom: 8,
+        color: colors.Font,
+    },
+    statsRow: {
+        flexDirection: "column",
+        marginBottom: 8,
+    },
+    statsText: {
+        color: colors.Font,
+        marginHorizontal: 0,
+        fontSize: 14,
+    },
+    addressButton: {
+        marginTop: 4,
+    },
+    addressText: {
+        color: colors.Orange_Base,
+        fontSize: 14,
+    },
+    followButtonContainer: {
+        alignItems: "flex-end",
+        flex: 1
+    },
+    flatListContent: {
+        paddingHorizontal: 16,
+        paddingBottom: 20,
+    },
+    dishItem: {
+        flexDirection: "row",
+        padding: 12,
+        backgroundColor: colors.Font_2,
+        borderRadius: 12,
+        marginVertical: 8,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    dishImageContainer: {
+        marginRight: 12,
+    },
+    dishImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 8,
+    },
+    dishInfo: {
+        flex: 1,
+        justifyContent: "space-between",
+        marginRight: 8,
+    },
+    dishName: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: colors.Font,
+        marginBottom: 4,
+    },
+    dishDescription: {
+        fontSize: 14,
+        color: colors.Font,
+        opacity: 0.8,
+        marginBottom: 4,
+    },
+    dishPrice: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: colors.Orange_Base,
+    },
+    addToCartContainer: {
+        justifyContent: "center",
+    },
+    separator: {
+        height: 1,
+        backgroundColor: colors.Font_2,
+    },
+});
 
 export default StorePage;

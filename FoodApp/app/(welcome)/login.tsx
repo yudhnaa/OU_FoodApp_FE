@@ -17,14 +17,15 @@ export default function Login() {
 
     const {saveOauth2Token} = useAuth();
 
+
     const login = async () => {
 
         let data = {
             "grant_type": "password",
             "username": userName,
             "password": password,
-            "client_id": process.env.EXPO_PUBLIC_CLIENT_ID,
-            "client_secret": process.env.EXPO_PUBLIC_CLIENT_SECRET
+            "client_id": "Ri4D3idLtSGLXUhGcrEyaupmuie1TYWbf5aAqUde",
+            "client_secret": "vVkPNBcbuWiy6Y79Ei7JaazdcCRk5yzB3AZtEp655utXJFJdj4HEiTsGaOeOEItF7zXwTgqdfdDREA3B5bF5oyyY5Z5s0IzlKUiPl8vmPYNQRUaZqzIZIxQSX2sn8aib"
         }
 
         setLoading(true)

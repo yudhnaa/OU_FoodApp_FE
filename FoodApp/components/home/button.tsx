@@ -28,7 +28,7 @@ const Button = ({
                 justifyContent: "center",
                 backgroundColor: buttonColor,
                 padding: 10,
-                paddingHorizontal: 20,
+                paddingHorizontal: 10,
                 margin: 20
             }}
             className={buttonClassName}

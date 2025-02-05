@@ -1,23 +1,23 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
-import {Stack} from 'expo-router'
+import { Stack } from 'expo-router'
 import BackButton from '@/components/home/backButton'
 
 function FollowLayout() {
     return (
         <Stack screenOptions={{
             headerShown: true,
-            headerStyle: {backgroundColor: '#F5CB58'},
+            headerStyle: { backgroundColor: '#F5CB58' },
             headerTitleAlign: "center",
             headerTitleStyle: styles.headerTitle,
-            headerLeft: () => (<BackButton/>),
+            headerLeft: () => (<BackButton />),
             headerShadowVisible: false
         }}>
 
             <Stack.Screen name="index" options={{
                 headerTitle: "Following",
                 headerLeft: () => <></>
-            }}/>
+            }} />
 
             {/*<Stack.Screen name="follow/[storePage]" options={{*/}
             {/*    headerTitle: "Store",*/}
