@@ -48,20 +48,23 @@ import React, { createContext, useContext, useState } from 'react';
 type CartContextType = {
   selectedItems: any[];
   setSelectedItems: React.Dispatch<React.SetStateAction<any[]>>;
-  clearSelectedItems: () => void; // Thêm thuộc tính này
+  deliveryFee: number;
+  setDeliveryFee: React.Dispatch<React.SetStateAction<number>>;
+  clearSelectedItems: () => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [deliveryFee, setDeliveryFee] = useState<number>(0);
 
   const clearSelectedItems = () => {
-    setSelectedItems([]); // Đặt selectedItems thành mảng rỗng
+    setSelectedItems([]);
   };
 
   return (
-    <CartContext.Provider value={{ selectedItems, setSelectedItems, clearSelectedItems }}>
+    <CartContext.Provider value={{ selectedItems, setSelectedItems, clearSelectedItems, deliveryFee, setDeliveryFee }}>
       {children}
     </CartContext.Provider>
   );

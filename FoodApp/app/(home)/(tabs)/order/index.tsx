@@ -1,16 +1,16 @@
-import {View, Text, TouchableOpacity, FlatList} from "react-native";
-import {Image} from "expo-image";
-import {router, Link, useFocusEffect} from "expo-router";
-import {StyleSheet} from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import { Image } from "expo-image";
+import { router, Link, useFocusEffect } from "expo-router";
+import { StyleSheet } from "react-native";
 import colors from "@/styles/colors";
-import {styles} from "@/components/home/Styles";
+import { styles } from "@/components/home/Styles";
 import fontsStyles from "@/styles/fontStyles";
-import {useCallback, useEffect, useState} from "react";
-import {Tabs} from "expo-router";
-import APIs, {authApi, endpoints} from "@/configs/APIs";
-import {useAuth} from "@/components/AuthContext";
-import {LoadingOverlay} from "@/components/home/LoadingComponents";
-import {IconButton} from "react-native-paper";
+import { useCallback, useEffect, useState } from "react";
+import { Tabs } from "expo-router";
+import APIs, { authApi, endpoints } from "@/configs/APIs";
+import { useAuth } from "@/components/AuthContext";
+import { LoadingOverlay } from "@/components/home/LoadingComponents";
+import { IconButton } from "react-native-paper";
 
 export default function OrderPage() {
     const [loading, setLoading] = useState<boolean>(true);
@@ -19,7 +19,7 @@ export default function OrderPage() {
     const [filteredOrders, setFilteredOrders] = useState<string>("active");
     const [hasOrders, setHasOrders] = useState<boolean>(false);
 
-    const {access_token} = useAuth()
+    const { access_token } = useAuth()
 
     const handlePress = (item: { status: string }) => {
         switch (item.status) {
@@ -45,7 +45,8 @@ export default function OrderPage() {
                 router.push({
                     pathname: '/payForOrder',
                     params: {
-                        orderInfo: JSON.stringify(item)
+                        orderInfo: JSON.stringify(item),
+                        isNewOrder: 'false'
                     }
                 })
                 return
@@ -81,7 +82,7 @@ export default function OrderPage() {
 
     return (
         <View style={styles.backGround}>
-            {loading && <LoadingOverlay/>}
+            {loading && <LoadingOverlay />}
             <View style={styles.bodyPage}>
                 <View style={styles1.tabContainer}>
                     <TouchableOpacity
@@ -109,7 +110,7 @@ export default function OrderPage() {
                             style={filteredOrders === "canceled" ? styles1.tabTextActive : styles1.tabTextInactive}>Cancelled</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[filteredOrders === "not paid" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, {marginTop: 10}]}
+                        style={[filteredOrders === "not paid" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, { marginTop: 10 }]}
                         onPress={() => {
                             setFilteredOrders("not paid")
                         }}>
@@ -118,7 +119,7 @@ export default function OrderPage() {
                             paid</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[filteredOrders === "reviewed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, {marginTop: 10}]}
+                        style={[filteredOrders === "reviewed" ? styles1.activeTab : styles1.inactiveTab, styles1.tab, { marginTop: 10 }]}
                         onPress={() => {
                             setFilteredOrders("reviewed")
                         }}>
@@ -130,9 +131,9 @@ export default function OrderPage() {
                     <FlatList
                         data={orders.filter(order => order.status === filteredOrders)}
                         keyExtractor={(item) => item.id.toString()} // Ensure each key is unique
-                        renderItem={({item}) => (
+                        renderItem={({ item }) => (
                             <View className="m-5" style={styles1.orderContainer}>
-                                <Image source={{uri: item.image}} style={styles1.image}/>
+                                <Image source={{ uri: item.image }} style={styles1.image} />
                                 <View className="ml-5 flex-1">
                                     <Text style={styles1.orderTitle}>{item.name}</Text>
                                     <Text style={styles1.orderPrice}>${item.price}</Text>
@@ -143,7 +144,7 @@ export default function OrderPage() {
                                     {(item.status === "completed" || item.status === "active") && (
                                         <View className="flex-row justify-between">
                                             <TouchableOpacity style={styles1.cancelButton}
-                                                              onPress={() => handlePress(item)}>
+                                                onPress={() => handlePress(item)}>
                                                 <Text style={{
                                                     color: colors.Font_2, ...fontsStyles.subtitulo,
                                                     fontSize: 13
@@ -154,7 +155,7 @@ export default function OrderPage() {
 
                                             <TouchableOpacity>
                                                 <IconButton icon={"message-badge-outline"} size={20}
-                                                            iconColor={colors.Orange_Base}>
+                                                    iconColor={colors.Orange_Base}>
                                                 </IconButton>
                                             </TouchableOpacity>
 
@@ -163,7 +164,7 @@ export default function OrderPage() {
                                     {item.status === "canceled" && (
                                         <View className={"flex-row items-center justify-start"}>
                                             <Image source={require('@/assets/images/icons/cancelled.png')}
-                                                   style={{width: 15, height: 15}}/>
+                                                style={{ width: 15, height: 15 }} />
                                             <Text style={{
                                                 color: colors.Orange_Base, ...fontsStyles.subtitulo,
                                                 fontSize: 13,
@@ -174,7 +175,7 @@ export default function OrderPage() {
                                     {(item.status === "not paid") && (
                                         <View className="flex-row justify-between">
                                             <TouchableOpacity style={styles1.cancelButton}
-                                                              onPress={() => handlePress(item)}>
+                                                onPress={() => handlePress(item)}>
                                                 <Text style={{
                                                     color: colors.Font_2, ...fontsStyles.subtitulo,
                                                     fontSize: 13
@@ -183,7 +184,7 @@ export default function OrderPage() {
                                                 </Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={styles1.trackButton}
-                                                              onPress={() => handlePress({status: "active"})}>
+                                                onPress={() => handlePress({ status: "active" })}>
                                                 <Text style={{
                                                     color: colors.Orange_Base, ...fontsStyles.subtitulo,
                                                     fontSize: 13
@@ -200,7 +201,7 @@ export default function OrderPage() {
 
                 ) : (
                     <View style={styles1.emptyState}>
-                        <Image source={require('@/assets/images/icons/empty_order.png')} style={styles1.emptyImage}/>
+                        <Image source={require('@/assets/images/icons/empty_order.png')} style={styles1.emptyImage} />
                         <Text style={styles1.emptyText}>You don't have any active orders at this time</Text>
                     </View>
                 )}

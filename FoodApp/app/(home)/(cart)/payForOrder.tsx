@@ -1,31 +1,32 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {FlatList, StyleSheet, Text, View, Alert, Linking} from "react-native";
+import React, { useState, useEffect, useCallback } from 'react';
+import { FlatList, StyleSheet, Text, View, Alert, Linking } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import {IconButton} from "react-native-paper";
-import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
+import { IconButton } from "react-native-paper";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import Button from "@/components/home/button";
-import {styles as homeStyles} from "@/components/home/Styles";
+import { styles as homeStyles } from "@/components/home/Styles";
 import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
-import {authApi, endpoints} from '@/configs/APIs';
-import {useAuth} from "@/components/AuthContext";
-import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import { authApi, endpoints } from '@/configs/APIs';
+import { useAuth } from "@/components/AuthContext";
+import { LoadingOverlay } from "@/components/home/LoadingComponents";
 
 const Payment = () => {
     const [parsedOrderInfo, setparsedOrderInfo] = useState(JSON.parse(useLocalSearchParams().orderInfo as string))
+    const [isNewOrder, setIsNewOrder] = useState(false);
     const [loading, setLoading] = useState(false);
-    const {access_token} = useAuth();
+    const { access_token } = useAuth();
     const [orderStatus, setOrderStatus] = useState('not paid');
 
-    const [supportedURL, setSupportedURL] = useState('https://google.com');
-    const [unsupportedURL, setUnsupportedURL] = useState('https://google.com');
+    const [supportedURL, setSupportedURL] = useState('');
+    const [unsupportedURL, setUnsupportedURL] = useState('');
 
     type OpenURLButtonProps = {
         url: string;
         children: string;
     };
 
-    const OpenURLButton = ({url, children}: OpenURLButtonProps) => {
+    const OpenURLButton = ({ url, children }: OpenURLButtonProps) => {
         const handlePress = useCallback(async () => {
             const supported = await Linking.canOpenURL(url);
 
@@ -36,7 +37,7 @@ const Payment = () => {
             }
         }, [url]);
 
-        return <Button text={children} onPress={handlePress}/>;
+        return <Button text={children} onPress={handlePress} />;
     };
 
     const getPaymentInfo = async () => {
@@ -48,7 +49,12 @@ const Payment = () => {
         try {
             const response = await authApi(access_token).post(endpoints.momo_payment, data);
             setSupportedURL(response.data.payUrl);
-            setUnsupportedURL(response.data.deeplink);
+
+            if (response.data.deeplink) {
+                console.log(response.data.deeplink);
+                setUnsupportedURL(response.data.deeplink);
+                setIsNewOrder(true)
+            }
         } catch (e) {
             console.log(e);
         } finally {
@@ -56,7 +62,6 @@ const Payment = () => {
         }
     }
 
-    // Hàm kiểm tra trạng thái thanh toán
     const checkPaymentStatus = async () => {
         try {
             const res = await authApi(access_token).get(
@@ -104,11 +109,11 @@ const Payment = () => {
 
     return (
         <View className={"flex-1"} style={homeStyles.backGround}>
-            {loading && <LoadingOverlay/>}
+            {loading && <LoadingOverlay />}
             <View className={"p-5 flex-col"} style={homeStyles.bodyPage}>
                 <View style={styles.container}>
                     <OpenURLButton url={supportedURL}>Open in Browser</OpenURLButton>
-                    <OpenURLButton url={unsupportedURL}>Open in MoMo App</OpenURLButton>
+                    {isNewOrder && <OpenURLButton url={unsupportedURL}>Open in MoMo App</OpenURLButton>}
                 </View>
             </View>
         </View>

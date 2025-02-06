@@ -1,25 +1,24 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {FlatList, StyleSheet, Text, View} from "react-native";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import {IconButton} from "react-native-paper";
-import {router, useFocusEffect} from "expo-router";
+import { IconButton } from "react-native-paper";
+import { router, useFocusEffect } from "expo-router";
 import Button from "@/components/home/button";
-import {styles as homeStyles} from "@/components/home/Styles";
+import { styles as homeStyles } from "@/components/home/Styles";
 import fontStyles from "@/styles/fontStyles";
 import colors from "@/styles/colors";
-import {useCart} from "@/components/home/cartContext";
-import APIs, {authApi, endpoints} from '@/configs/APIs';
-import {useAuth} from "@/components/AuthContext";
-import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import { useCart } from "@/components/home/cartContext";
+import APIs, { authApi, endpoints } from '@/configs/APIs';
+import { useAuth } from "@/components/AuthContext";
+import { LoadingOverlay } from "@/components/home/LoadingComponents";
 
-const deliveryFee = 10.00;
 const estimateTime = "30-40 mins";
 
 const Payment: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
-    const {selectedItems, setSelectedItems} = useCart();
-    const {access_token} = useAuth();
+    const { selectedItems, setSelectedItems, deliveryFee } = useCart();
+    const { access_token } = useAuth();
 
     const initialTotal = selectedItems.reduce((sum, item) => sum + item.price * item.items, deliveryFee);
     const [total] = useState(initialTotal);
@@ -47,7 +46,7 @@ const Payment: React.FC = () => {
         try {
             setLoading(true);
             let res = await authApi(access_token).get(endpoints.address).finally(() => setLoading(false));
-            setAddresses(res.data.map((item: any) => ({id: item.id, address: item.address, name: item.name})));
+            setAddresses(res.data.map((item: any) => ({ id: item.id, address: item.address, name: item.name })));
 
         } catch (error) {
             console.log(error);
@@ -93,8 +92,9 @@ const Payment: React.FC = () => {
 
     const createOrder = async () => {
         try {
+
             const orderData = {
-                "delivery_fee": 10,
+                "delivery_fee": deliveryFee,
                 "dishes": selectedItems.map((item) => ({
                     "dish": item.dish_id,
                     "quantity": item.items,
@@ -107,25 +107,22 @@ const Payment: React.FC = () => {
                 "payment_type": paymentMethod,
             };
 
-            // console.log(orderData)
+            console.log("Order Data will be created:", orderData)
             setLoading(true);
             let res = await authApi(access_token).post(endpoints['create_order'], orderData).finally(() => setLoading(false));
 
-            if (res.status === 201) {
-                console.log('Order created successfully');
+            console.log('Order created successfully');
 
-                setDeletedData(selectedItems.map((item) => item.id));
+            setDeletedData(selectedItems.map((item) => item.id));
 
-                console.log("DHGSHGDJDSJ",res.data);
+            console.log("DHGSHGDJDSJ", res.data);
 
-                setOrderInfo(res.data);
+            setOrderInfo(res.data);
 
 
-            } else {
-                console.log('Order creation failed');
-            }
+
         } catch (error) {
-            console.log(error);
+            Alert.alert("Hey Besties", 'Order creation failed');
         }
     };
 
@@ -152,7 +149,10 @@ const Payment: React.FC = () => {
             if (orderInfo.order_status === 'not paid') {
                 router.replace({
                     pathname: '/payForOrder',
-                    params: {orderInfo: JSON.stringify(orderInfo)}
+                    params: {
+                        orderInfo: JSON.stringify(orderInfo),
+                        isNewOrder: "true"
+                    }
                 })
             } else
                 router.replace('/orderConfirmed');
@@ -174,7 +174,7 @@ const Payment: React.FC = () => {
                                     style={styles.dropdown}
                                     open={openAddress}
                                     value={address}
-                                    items={addresses.map((item) => ({label: item.name, value: item.id}))}
+                                    items={addresses.map((item) => ({ label: item.name, value: item.id }))}
                                     setOpen={setOpenAddress}
                                     setValue={setAddress}
                                     placeholder="Select Address"
@@ -197,7 +197,7 @@ const Payment: React.FC = () => {
                                 data={selectedItems}
                                 keyExtractor={(item) => item.id.toString()}
                                 ListEmptyComponent={<Text style={fontStyles.Paragraph}>No orders available</Text>}
-                                renderItem={({item}) => (
+                                renderItem={({ item }) => (
                                     <View style={styles.orderRow}>
                                         <Text style={fontStyles.Paragraph}>{item.name}</Text>
                                         <Text style={[fontStyles.Paragraph, {
@@ -253,7 +253,7 @@ const Payment: React.FC = () => {
 
                     {/* Pay Now Button */}
                     <Button text="Pay Now" onPress={createOrder} buttonColor={colors.Orange_2}
-                            textColor={colors.Orange_Base}/>
+                        textColor={colors.Orange_Base} />
                 </View>
             </View>
         </View>

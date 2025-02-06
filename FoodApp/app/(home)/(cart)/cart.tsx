@@ -1,106 +1,21 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import {Modal, StyleSheet, Text, View, FlatList, Pressable, Alert} from 'react-native';
-import {PanGestureHandler, GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Image} from 'expo-image';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Modal, StyleSheet, Text, View, FlatList, Pressable, Alert } from 'react-native';
+import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Image } from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
 import Button from '@/components/home/button';
-import {router, useFocusEffect} from "expo-router";
-import {IconButton, Icon} from "react-native-paper";
-import APIs, {authApi, endpoints} from '@/configs/APIs';
-import {useCart} from '@/components/home/cartContext';
-import {useAuth} from "@/components/AuthContext";
+import { router, useFocusEffect } from "expo-router";
+import { IconButton, Icon } from "react-native-paper";
+import APIs, { authApi, endpoints } from '@/configs/APIs';
+import { useCart } from '@/components/home/cartContext';
+import { useAuth } from "@/components/AuthContext";
 
 
 type CartProps = {
     visible: boolean;
     onCancel: () => void;
 }
-
-// const orders = [
-//     {
-//         id: 1,
-//         name: "Strawberry shake",
-//         price: 20.00,
-//         date: "29 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-//         items: 2,
-//     },
-//     {
-//         id: 2,
-//         name: "Blackberry shake",
-//         price: 23.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-//         items: 3,
-//     },
-//     {
-//         id: 3,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//     },
-//     {
-//         id: 4,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//     },
-//     {
-//         id: 5,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//     },
-//     {
-//         id: 6,
-//         name: "Strawberry shake",
-//         price: 20.00,
-//         date: "29 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_1.png'),
-//         items: 2,
-//     },
-//     {
-//         id: 7,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//     },
-//     {
-//         id: 8,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//     },
-//     {
-//         id: 9,
-//         name: "Mango shake",
-//         price: 25.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_3.png'),
-//         items: 4,
-//     },
-//     {
-//         id: 10,
-//         name: "Blackberry shake",
-//         price: 23.00,
-//         date: "30 Nov, 01:20 pm",
-//         image: require('@/assets/images/bestSeller_pic/pic_2.png'),
-//         items: 3,
-//     },
-// ];
-
-// const deleveryFee = 10.00;
 
 type OrderData = {
     id: number;
@@ -112,6 +27,8 @@ type OrderData = {
     image: { uri: string };
     items: number;
     selected: boolean;
+    delivery_fee: number;
+    store_id: number;
     toppings: {
         id: number;
         name: string;
@@ -120,12 +37,11 @@ type OrderData = {
     }[];
 }
 
-const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
+const Cart: React.FC<CartProps> = ({ visible, onCancel }) => {
     const [orderData, setOrderData] = useState<OrderData[]>([]);
-    const {selectedItems, setSelectedItems} = useCart();
+    const { selectedItems, setSelectedItems, deliveryFee, setDeliveryFee } = useCart();
     const [subtotal, setSubtotal] = useState(0);
-    const {access_token} = useAuth();
-    const deleveryFee = selectedItems.length > 0 ? 10.00 : 0;
+    const { access_token } = useAuth();
 
     useFocusEffect(
         useCallback(() => {
@@ -152,7 +68,7 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
                         minute: "2-digit",
                         hour12: true,
                     }),
-                    image: {uri: item.image},
+                    image: { uri: item.image },
                     items: item.quantity,
                     selected: false,
                     toppings: item.toppings.map((topping: any) => ({
@@ -160,7 +76,9 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
                         name: topping.topping.name,
                         price: topping.topping.price,
                         quantity: topping.quantity
-                    }))
+                    })),
+                    delivery_fee: Number.parseFloat(item.delivery_fee),
+                    store_id: item.store_id,
                 }));
                 setOrderData(formattedData);
             } catch (error) {
@@ -196,7 +114,7 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
     const toggleSelectItem = (id: number) => {
         setOrderData((prevData: any) =>
             prevData.map((item: any) =>
-                item.id === id ? {...item, selected: !item.selected} : item
+                item.id === id ? { ...item, selected: !item.selected } : item
             )
         );
 
@@ -212,10 +130,28 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
         });
     };
 
+    const calDeliveryFee = (selectedItems: OrderData[]) => {
+        setDeliveryFee(0)
+        let stores_id: number[] = [];
+        let delivery_fee: number = 0;
+
+        for (let item of selectedItems) {
+            if (!stores_id.includes(item.store_id)) {
+                stores_id.push(item.store_id);
+                delivery_fee += item.delivery_fee;
+            }
+        }
+
+        return delivery_fee;
+    }
+
     // Tính lại tổng tiền
     useEffect(() => {
-        const newSubtotal = selectedItems.reduce((total, item) => total + item.price * item.items, 0);
+        const newSubtotal = selectedItems.reduce((total: any, item: any) => total + item.price * item.items, 0);
+        const newDeliveryFee = calDeliveryFee(selectedItems)
+
         setSubtotal(newSubtotal);
+        setDeliveryFee(newDeliveryFee)
     }, [selectedItems]);
 
     // const subtotal = useMemo(
@@ -226,13 +162,13 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
     const handleAdd = (id: number) => {
         setOrderData((prevData: any) =>
             prevData.map((item: any) =>
-                item.id === id ? {...item, items: item.items + 1} : item
+                item.id === id ? { ...item, items: item.items + 1 } : item
             )
         );
 
         setSelectedItems((prevSelected: any) =>
             prevSelected.map((item: any) =>
-                item.id === id ? {...item, items: item.items + 1} : item
+                item.id === id ? { ...item, items: item.items + 1 } : item
             )
         );
 
@@ -245,27 +181,28 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
         else
             setOrderData((prevData: any) =>
                 prevData.map((item: any) =>
-                    item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
+                    item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
                 )
             );
 
         setSelectedItems((prevSelected: any) =>
             prevSelected.map((item: any) =>
-                item.id === id && item.items > 0 ? {...item, items: item.items - 1} : item
+                item.id === id && item.items > 0 ? { ...item, items: item.items - 1 } : item
             )
         );
     };
 
     const handleGesture = (event: any) => {
-        const {translationX} = event.nativeEvent;
+        const { translationX } = event.nativeEvent;
         if (translationX > 100) {
             onCancel();
         }
     };
 
+
     return (
         <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
-            <GestureHandlerRootView style={{flex: 1}}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
                 <PanGestureHandler onGestureEvent={handleGesture}>
                     <View style={styles.overlay}>
                         <View style={styles.modalContainer}>
@@ -290,7 +227,7 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
                             <FlatList
                                 data={orderData}
                                 keyExtractor={(item) => item.id.toString()}
-                                renderItem={({item}) => (
+                                renderItem={({ item }) => (
                                     <View style={styles.orderContainer}>
                                         <IconButton
                                             icon={item.selected ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
@@ -298,24 +235,24 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
                                             iconColor={colors.Font_2}
                                             onPress={() => toggleSelectItem(item.id)}
                                         />
-                                        <Image source={item.image} style={styles.image}/>
+                                        <Image source={item.image} style={styles.image} />
                                         <View style={styles.orderDetailsContainer}>
                                             <Text style={styles.orderTitle}>{item.name}</Text>
                                             <Text style={styles.orderPrice}>${item.price.toFixed(2)}</Text>
                                             <Text style={styles.orderDetails}>{item.date}</Text>
                                             <View style={styles.quantityControls}>
                                                 <Pressable style={styles.trackButton}
-                                                           onPress={() => handleSubtract(item.id)}>
+                                                    onPress={() => handleSubtract(item.id)}>
                                                     <Text style={styles.trackButtonText}>-</Text>
                                                 </Pressable>
                                                 <Text style={styles.orderQuantity}>{item.items} items</Text>
                                                 <Pressable style={styles.trackButton}
-                                                           onPress={() => handleAdd(item.id)}>
+                                                    onPress={() => handleAdd(item.id)}>
                                                     <Text style={styles.trackButtonText}>+</Text>
                                                 </Pressable>
                                                 <IconButton className={""} icon={"trash-can"}
-                                                            iconColor={colors.Orange_2} size={20}
-                                                            onPress={() => removeItem(item.id)}/>
+                                                    iconColor={colors.Orange_2} size={20}
+                                                    onPress={() => removeItem(item.id)} />
                                             </View>
                                         </View>
                                     </View>
@@ -324,9 +261,9 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
 
                             {/* Total Calculation */}
                             <View style={styles.totalContainer}>
-                                <Text style={styles.totalText}>Delivery fee: ${deleveryFee}</Text>
+                                <Text style={styles.totalText}>Delivery fee: ${deliveryFee}</Text>
                                 <Text style={styles.totalText}>Subtotal: ${subtotal.toFixed(2)}</Text>
-                                <Text style={styles.totalText}>Total: ${(subtotal + deleveryFee).toFixed(2)}</Text>
+                                <Text style={styles.totalText}>Total: ${(subtotal + deliveryFee).toFixed(2)}</Text>
                             </View>
 
                             {/* Checkout Button */}
@@ -350,7 +287,6 @@ const Cart: React.FC<CartProps> = ({visible, onCancel}) => {
         </Modal>
     );
 };
-
 const styles = StyleSheet.create({
     overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
