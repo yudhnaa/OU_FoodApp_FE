@@ -74,7 +74,11 @@ function MyProfile() {
 
         setLoading(true)
 
-        await authApi(access_token).patch(`${endpoints.update_user}${userInfo.id}/`, formData).then(res => {
+        await authApi(access_token).patch(`${endpoints.update_user}${userInfo.id}/`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        }).then(res => {
             alert("Update profile successfully")
             setImage(res.data.avatar)
             // console.log("Res::", res.data)
