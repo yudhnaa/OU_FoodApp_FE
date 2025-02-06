@@ -1,13 +1,13 @@
-import {View, StyleSheet, Alert, Linking} from "react-native";
+import { View, StyleSheet, Alert, Linking } from "react-native";
 import * as Location from "expo-location";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Constrains from "expo-constants";
-import {Image} from "expo-image";
-import {router} from "expo-router";
+import { Image } from "expo-image";
+import { router } from "expo-router";
 import colors from "../../styles/colors";
 // import {getObjectValue} from "@/components/asyncStorage";
 // import { canGoBack } from "expo-router/build/global-state/routing";
-import {useAuth} from "@/components/AuthContext";
+import { useAuth } from "@/components/AuthContext";
 
 
 export default function Loading() {
@@ -20,7 +20,7 @@ export default function Loading() {
     // // Dia chi hien tai
     // const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress | null>(null);
 
-    const {oauth2Token, loading, setLocation} = useAuth();
+    const { oauth2Token, loading, setLocation, userInfo } = useAuth();
 
     useEffect(() => {
         const checkAndGetLocation = async () => {
@@ -47,7 +47,7 @@ export default function Loading() {
                         },
                     },
                 ],
-                {cancelable: false}
+                { cancelable: false }
             );
         } else {
             setLocationServices(true);
@@ -55,7 +55,7 @@ export default function Loading() {
     };
 
     const checkLocationPermission = async () => {
-        let {status} = await Location.requestForegroundPermissionsAsync();
+        let { status } = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
             Alert.alert(
@@ -76,7 +76,7 @@ export default function Loading() {
     };
 
     const getCurrentLocation = async () => {
-        let {latitude, longitude} = (await Location.getCurrentPositionAsync())
+        let { latitude, longitude } = (await Location.getCurrentPositionAsync())
             .coords;
 
         let address = await Location.reverseGeocodeAsync({
@@ -84,36 +84,40 @@ export default function Loading() {
             longitude: longitude,
         });
         // setCurrentAddress(address[0]);
-        setLocation({latitude, longitude});
+        setLocation({ latitude, longitude });
         // console.info("V tri hien tai:", latitude, longitude);
         // console.info("Dia chi hien tai:", address[0]);
     };
 
     useEffect(() => {
-            const checkAndNavigate = async () => {
-                // if (locationServicesEnabled && locationPermission === "granted" && currentAddress && !loading) {
-                if (locationServicesEnabled && locationPermission === "granted" && !loading) {
-                    try{
-                        // console.info("Token:", oauth2Token)
-                        let getTokenDate = new Date(oauth2Token.date)
-                        let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
+        const checkAndNavigate = async () => {
+            // if (locationServicesEnabled && locationPermission === "granted" && currentAddress && !loading) {
+            if (locationServicesEnabled && locationPermission === "granted" && !loading) {
+                try {
+                    // console.info("Token:", oauth2Token)
+                    let getTokenDate = new Date(oauth2Token.date)
+                    let expireDate = new Date(getTokenDate.getTime() + 3600 * 1000)
 
-                        if (oauth2Token !== null && expireDate > new Date()) {
+                    if (oauth2Token !== null && expireDate > new Date()) {
+                        if (userInfo.role === "guest")
                             router.replace("/home");
-                        } else
-                            throw new Error("Token is expired");
-                    } catch(error) {
+                        if (userInfo.role === "store")
+                            router.replace("/store");
                         router.replace("/welcome");
-                    }
+                    } else
+                        throw new Error("Token is expired");
+                } catch (error) {
+                    router.replace("/welcome");
                 }
             }
-
-            checkAndNavigate()
         }
+
+        checkAndNavigate()
+    }
         ,
         [locationServicesEnabled, locationPermission]
     )
-    ;
+        ;
 
     return (
         <View style={styles.firstScreen}>

@@ -39,6 +39,8 @@ type userInfo = {
     birthday: string;
 }
 
+
+
 // Tạo Provider
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [oauth2Token, setOauth2Token] = useState<OAuth2Token | null>(null);
@@ -46,6 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const [location, setLocation] = useState<location>({longitude: 0, latitude: 0});
     const [loading, setLoading] = useState<boolean>(true);
     const [userInfo, setUserInfo] = useState<userInfo>();
+
 
 
     // Lấy oauth2-token từ AsyncStorage khi app khởi chạy

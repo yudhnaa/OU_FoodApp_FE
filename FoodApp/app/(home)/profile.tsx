@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {Image} from 'expo-image';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import fontStyles from '@/styles/fontStyles';
 import colors from '@/styles/colors';
-import {router} from 'expo-router';
+import { router } from 'expo-router';
 import Logout from './logout';
-import APIS, {endpoints} from '@/configs/APIs';
-import {useAuth} from "@/components/AuthContext";
-import {LoadingOverlay} from "@/components/home/LoadingComponents";
+import APIS, { endpoints } from '@/configs/APIs';
+import { useAuth } from "@/components/AuthContext";
+import { LoadingOverlay } from "@/components/home/LoadingComponents";
 
 export default function ProfileMenu() {
     const [showLogout, setShowLogout] = React.useState(false);
-    const {access_token, clearToken, resetAuthContext} = useAuth()
+    const { access_token, clearToken, resetAuthContext } = useAuth()
     const [loading, setLoading] = useState(false);
-    const {userInfo} = useAuth()
+    const { userInfo } = useAuth()
+    const [userName, setUserName] = useState(userInfo.last_name + userInfo.first_name);
 
 
     const handleLogout = async () => {
@@ -38,22 +39,29 @@ export default function ProfileMenu() {
         })
     };
 
+    useEffect(() => {
+        if (userName === "") {
+            setUserName(userInfo.store_name)
+        }
+    }, [])
+
     return (
         <View style={styles.container}>
             {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={styles.profileContainer}>
                 <Image
-                    source={{uri: userInfo.avatar_url}}
+                    source={{ uri: userInfo.avatar_url }}
                     style={styles.profileImage}
                 />
                 <View>
-                    <Text style={styles.name}>{`${userInfo.first_name} ${userInfo.last_name}`}</Text>
+                    <Text style={styles.name}>{userName}</Text>
+
                     <Text style={styles.email}>{userInfo.email}</Text>
                 </View>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('@/assets/images/icons/profile.png')} style={styles.icon}/>
+                <Image source={require('@/assets/images/icons/profile.png')} style={styles.icon} />
                 <TouchableOpacity onPressIn={() => {
                     router.push('/myProfile')
                 }}>
@@ -62,28 +70,28 @@ export default function ProfileMenu() {
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('@/assets/images/icons/location.png')} style={styles.icon}/>
+                <Image source={require('@/assets/images/icons/location.png')} style={styles.icon} />
                 <TouchableOpacity onPressIn={() => router.push('/deliveryAddress')}>
                     <Text style={styles.menuText}>Delivery Address</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('@/assets/images/icons/payment.png')} style={styles.icon}/>
+                <Image source={require('@/assets/images/icons/payment.png')} style={styles.icon} />
                 <TouchableOpacity onPressIn={() => router.push('/paymentMethods')}>
                     <Text style={styles.menuText}>Payment Methods</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('@/assets/images/icons/contact.png')} style={styles.icon}/>
+                <Image source={require('@/assets/images/icons/contact.png')} style={styles.icon} />
                 <TouchableOpacity onPressIn={() => router.push('/FaqAndContactUs')}>
                     <Text style={styles.menuText}>FAQ & Contact Us</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.menuItem}>
-                <Image source={require('@/assets/images/icons/settings.png')} style={styles.icon}/>
+                <Image source={require('@/assets/images/icons/settings.png')} style={styles.icon} />
                 <TouchableOpacity onPressIn={() => router.push('/(settings)/setting')}>
                     <Text style={styles.menuText}>Settings</Text>
                 </TouchableOpacity>

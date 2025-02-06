@@ -1,15 +1,15 @@
-import {View, Text, FlatList, Image, Pressable, ActivityIndicator, RefreshControl, Alert} from 'react-native';
+import { View, Text, FlatList, Image, Pressable, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import colors from "@/styles/colors";
-import {styles} from "@/components/home/Styles";
-import {useFocusEffect, useRouter} from 'expo-router';
-import {Icon} from 'react-native-paper';
+import { styles } from "@/components/home/Styles";
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Icon } from 'react-native-paper';
 import Carousel from 'react-native-reanimated-carousel';
-import {useSharedValue, useDerivedValue, useAnimatedStyle} from 'react-native-reanimated';
-import {useFoodContext} from "@/app/(home)/category/FoodContext";
+import { useSharedValue, useDerivedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { useFoodContext } from "@/app/(home)/category/FoodContext";
 import FoodFlatList from '@/components/home/foodFlatList';
-import APIs, {endpoints, authApi} from '@/configs/APIs';
-import {useCallback, useEffect, useState} from 'react';
-import {useAuth} from "@/components/AuthContext";
+import APIs, { endpoints, authApi } from '@/configs/APIs';
+import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from "@/components/AuthContext";
 
 
 import {
@@ -26,7 +26,7 @@ configureReanimatedLogger({
 
 export default function HomePage() {
     const router = useRouter();
-    const {setSelectedFood} = useFoodContext();
+    const { setSelectedFood } = useFoodContext();
     const activeIndex = useSharedValue(0);
     const [categories, setCategories] = useState<any[]>([]);
     const [promotion, setPromotion] = useState<any>({});
@@ -36,7 +36,7 @@ export default function HomePage() {
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    const {access_token, setUserInfo, clearToken} = useAuth();
+    const { access_token, setUserInfo, clearToken } = useAuth();
 
     const fetchInitialData = async () => {
         try {
@@ -50,7 +50,7 @@ export default function HomePage() {
             const categories = dishType.data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
-                icon: {uri: item.image}
+                icon: { uri: item.image }
             }));
 
             // console.log("Item:", dishType.data)
@@ -80,7 +80,7 @@ export default function HomePage() {
                 id: item.id,
                 name: item.name,
                 price: `$${item.price}`,
-                image: {uri: item.image},
+                image: { uri: item.image },
                 description: item.description,
                 category: item.food_type,
                 categoryID: item.food_type_id,
@@ -126,11 +126,13 @@ export default function HomePage() {
     const fetchUserInfo = async () => {
         setLoading(true);
         try {
+            console.log('Access token:', access_token);
             const res = await authApi(access_token).get(endpoints.get_user);
+            console.log('User info22222:', res.data);
             setUserInfo(res.data);
-            // console.log('User info:', res.data);
         } catch (ex) {
-            Alert.alert("Hey Bestie",'Please login to continue');
+            console.error('Error fetching user info:', ex);
+            Alert.alert("Hey Bestie", 'Please login to continue');
             if (router.canDismiss()) {
                 router.dismissAll();
                 clearToken();
@@ -153,11 +155,11 @@ export default function HomePage() {
 
     const animatedStyle = useAnimatedStyle(() => {
         return {
-            transform: [{translateX: derivedIndex.value * 10}],
+            transform: [{ translateX: derivedIndex.value * 10 }],
         };
     });
 
-    const renderItem = ({item}: any) => {
+    const renderItem = ({ item }: any) => {
         switch (item.type) {
             case 'categories':
                 return (
@@ -165,7 +167,7 @@ export default function HomePage() {
                         data={categories}
                         horizontal
                         keyExtractor={(category) => category.id.toString()}
-                        renderItem={({item: category}) => (
+                        renderItem={({ item: category }) => (
                             <View className='ml-4 flex-col justify-center items-center'>
                                 <View className='h-20 rounded-full' style={{
                                     backgroundColor: '#F3E9B5',
@@ -178,8 +180,8 @@ export default function HomePage() {
                                         style={styles.categoryItem}
                                     >
                                         <Image source={category.icon}
-                                               style={styles.categoryIcon}
-                                               resizeMode="contain"
+                                            style={styles.categoryIcon}
+                                            resizeMode="contain"
                                         />
                                     </Pressable>
                                 </View>
@@ -197,8 +199,8 @@ export default function HomePage() {
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
                             <Pressable onPress={() => router.push('/best_seller')}
-                                       style={{flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{color: '#E95322', fontFamily: 'Spartan_600SemiBold'}}>View all</Text>
+                                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: '#E95322', fontFamily: 'Spartan_600SemiBold' }}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
@@ -210,7 +212,7 @@ export default function HomePage() {
                             data={foodData}
                             horizontal
                             keyExtractor={(product) => product.id.toString()}
-                            renderItem={({item: product}) => (
+                            renderItem={({ item: product }) => (
                                 <Pressable
                                     style={styles.productItem}
                                     onPress={() => {
@@ -219,7 +221,7 @@ export default function HomePage() {
                                         router.push(`/category/${product.categoryID.toString()}/${product.id}`);
                                     }}
                                 >
-                                    <Image source={product.image} style={styles.productImage}/>
+                                    <Image source={product.image} style={styles.productImage} />
                                     <Text style={styles.categoryText}>{product.name}</Text>
                                     <Text style={styles.productPrice}>{product.price}</Text>
                                 </Pressable>
@@ -242,7 +244,7 @@ export default function HomePage() {
                             onSnapToItem={(index) => {
                                 activeIndex.value = index;
                             }}
-                            renderItem={({item}) => (
+                            renderItem={({ item }) => (
                                 <View style={[styles.promotionSlide, animatedStyle]}>
                                     <View style={styles.promotionContent}>
                                         <View style={styles.promotionTextContainer}>
@@ -265,8 +267,8 @@ export default function HomePage() {
                         <View className='flex-row justify-between items-center ml-4 mr-4'>
                             <Text style={styles.sectionTitle}>{item.title}</Text>
                             <Pressable onPress={() => router.push('/recommend_page')}
-                                       style={{flexDirection: 'row', alignItems: 'center'}}>
-                                <Text style={{color: '#E95322', fontFamily: 'Spartan_600SemiBold'}}>View all</Text>
+                                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: '#E95322', fontFamily: 'Spartan_600SemiBold' }}>View all</Text>
                                 <Icon
                                     source="chevron-right"
                                     color={"#E95322"}
@@ -274,7 +276,7 @@ export default function HomePage() {
                                 />
                             </Pressable>
                         </View>
-                        <FoodFlatList data={foodData}/>
+                        <FoodFlatList data={foodData} />
                     </View>
                 );
             default:
@@ -285,16 +287,16 @@ export default function HomePage() {
     return (
         <FlatList
             data={[
-                {type: 'categories'},
-                {type: 'bestSeller', title: 'Best Seller'},
-                {type: 'promotion'},
-                {type: 'recommend', title: 'Recommend'}
+                { type: 'categories' },
+                { type: 'bestSeller', title: 'Best Seller' },
+                { type: 'promotion' },
+                { type: 'recommend', title: 'Recommend' }
             ]}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.1}
-            ListFooterComponent={loading ? <ActivityIndicator size="large" color="#0000ff"/> : null}
+            ListFooterComponent={loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
@@ -311,7 +313,7 @@ export default function HomePage() {
                 borderTopRightRadius: 30,
                 paddingVertical: 20,
             }}
-            style={{flex: 1, backgroundColor: colors.Yellow_Base}}
+            style={{ flex: 1, backgroundColor: colors.Yellow_Base }}
         />
     );
 }
