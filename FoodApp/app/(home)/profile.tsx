@@ -50,7 +50,7 @@ export default function ProfileMenu() {
             {loading && (<LoadingOverlay></LoadingOverlay>)}
             <View style={styles.profileContainer}>
                 <Image
-                    source={{ uri: userInfo.avatar_url }}
+                    source={{ uri: userInfo.avatar }}
                     style={styles.profileImage}
                 />
                 <View>

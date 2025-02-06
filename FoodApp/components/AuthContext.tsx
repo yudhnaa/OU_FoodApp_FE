@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, useContext} from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import {
     getStringValue,
     storeStringValue,
@@ -42,10 +42,10 @@ type userInfo = {
 
 
 // Tạo Provider
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [oauth2Token, setOauth2Token] = useState<OAuth2Token | null>(null);
     const [access_token, setAccess_token] = useState<string | null>(null);
-    const [location, setLocation] = useState<location>({longitude: 0, latitude: 0});
+    const [location, setLocation] = useState<location>({ longitude: 0, latitude: 0 });
     const [loading, setLoading] = useState<boolean>(true);
     const [userInfo, setUserInfo] = useState<userInfo>();
 
@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     // Hàm lưu oauth2-token vào AsyncStorage
     const saveOauth2Token = async (newOauth2Token: OAuth2Token) => {
         try {
-            // console.log('Lưu oauth2-token:', newOauth2Token);
+            console.log('Lưu oauth2-token:', newOauth2Token);
             setOauth2Token({
                 ...newOauth2Token,
                 date: new Date()
@@ -102,6 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
 
     // Hàm xóa oauth2-token khỏi AsyncStorage
     const clearToken = async () => {
+        console.log('Xóa oauth2-token');
         try {
             await removeValue('oauth2-token');
             setAccess_token(null);

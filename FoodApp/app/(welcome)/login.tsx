@@ -17,7 +17,7 @@ export default function Login() {
     const [access_token, setAccessToken] = useState("");
     const [oauth2Token, setOauth2Token] = useState(null);
 
-    const { saveOauth2Token, clearToken, setUserInfo } = useAuth();
+    const { saveOauth2Token, setUserInfo } = useAuth();
 
 
     const fetchUserInfo = async (access_token: any) => {

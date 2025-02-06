@@ -103,10 +103,10 @@ export default function Loading() {
                             router.replace("/home");
                         if (userInfo.role === "store")
                             router.replace("/store");
-                        router.replace("/welcome");
                     } else
                         throw new Error("Token is expired");
                 } catch (error) {
+                    console.log("Quay lai welcome");
                     router.replace("/welcome");
                 }
             }

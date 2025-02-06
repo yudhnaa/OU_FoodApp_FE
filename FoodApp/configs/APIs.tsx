@@ -2,7 +2,8 @@ import axios from 'axios';
 import { getObjectValue } from "@/components/asyncStorage";
 
 // const BASE_URL = 'https://wangedoc0602.pythonanywhere.com/'
-const BASE_URL = 'http://192.168.1.2:8000/';
+const BASE_URL = 'https://yudhna.dynamic-dns.net/foodappou/';
+// const BASE_URL = 'http://192.168.1.2:8000/';
 
 export const endpoints = {
     'dish': '/dish/',

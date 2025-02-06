@@ -69,6 +69,8 @@ export default function HomePage() {
         try {
             const dish = await APIs.get(`${endpoints['dish']}?page=${page}`);
 
+            console.info("Food data:", dish.data);
+
             if (!dish.data || !Array.isArray(dish.data.results)) {
                 console.error("Invalid food data format:", dish.data);
                 setHasMore(false);
