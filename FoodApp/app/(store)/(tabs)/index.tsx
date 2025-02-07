@@ -27,8 +27,8 @@ export default function HomePageStore() {
                 <View className="p-5">
                     <View style={styles.seperateLine}></View>
                     <View className="flex-row justify-between items-center p-5">
-                        <Text style = {styles1.txtTitle}>Statistical Report</Text>
-                        <Pressable onPress={() => router.push('/help_center')}>
+                        <Text style = {styles1.txtTitle}>Order management</Text>
+                        <Pressable onPress={() => router.push('/order_manage')}>
                             <Icon 
                                 source="chevron-right"
                                 color={"#E95322"}
@@ -38,6 +38,22 @@ export default function HomePageStore() {
                     </View>
                     <View style={styles.seperateLine}></View>
                 </View>
+
+                <View className="p-5">
+                    <View style={styles.seperateLine}></View>
+                    <View className="flex-row justify-between items-center p-5">
+                        <Text style = {styles1.txtTitle}>Statistical Report</Text>
+                        <Pressable onPress={() => router.push('/statistics')}>
+                            <Icon 
+                                source="chevron-right"
+                                color={"#E95322"}
+                                size={28}
+                            />
+                        </Pressable>
+                    </View>
+                    <View style={styles.seperateLine}></View>
+                </View>
+
             </View>
         </View>
     );
