@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://wangedoc0602.pythonanywhere.com/'
+const BASE_URL = 'http://192.168.239.1:8000/'
 
 export const endpoints = {
     'dish' : '/dish/',
@@ -16,6 +16,15 @@ export const endpoints = {
     'deleted_items' : '/cart/delete-multiple/',
     'delete_item' : (id : number) => `/cart/items/${id}/`,
     'order_by_type' : '/users/orders_by_type/',
+
+    // store
+    'store_dishes': '/stores/dishes/',
+    'store_dishes_create': '/stores/dishes/create/',
+    'store_dishes_update': (dishId: number) => `/stores/dishes/${dishId}/update/`,
+    'store_dishes_delete': (dishId: number) => `/dish/${dishId}/`,
+    'store_orders': '/stores/orders/',
+    'store_order_detail': (orderId: number) => `/stores/orders/${orderId}/`,
+    'store_order_update': (orderId: number) => `/stores/orders/${orderId}/update/`,
 }
 
 export default axios.create({
