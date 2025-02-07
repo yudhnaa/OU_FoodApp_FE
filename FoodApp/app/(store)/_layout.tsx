@@ -16,6 +16,7 @@ export default function StoreLayout() {
         }}>
             <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
             <Stack.Screen name="manage" options={{headerShown: false}}/>
+            <Stack.Screen name="order_manage" options={{headerShown: false}}/>
         </Stack>
     );
 }

@@ -69,6 +69,10 @@ export const endpoints = {
     'store_dishes_create': '/stores/dishes/create/',
     'store_dishes_update': (dishId: number) => `/stores/dishes/${dishId}/update/`,
     'store_dishes_delete': (dishId: number) => `/dish/${dishId}/`,
+
+    'store_orders': '/stores/orders/',
+    'store_order_detail': (orderId: number) => `/stores/orders/${orderId}/`,
+    'store_order_update': (orderId: number) => `/stores/orders/${orderId}/update/`,
 }
 
 
